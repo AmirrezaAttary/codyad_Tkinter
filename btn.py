@@ -11,8 +11,8 @@ window.geometry('500x400')
 def click():
     print('گی')
 
-btn = CTkButton(
-    window,
+btn = CTkButton( # ساختن دکمه
+    window, # این که میخواهم در کدام صفحه وارد بشود
     #width=45, # اندازه 
     #height=10, # اندازه ارتفاع
     text='Click me', # تکست داخل دکمه
