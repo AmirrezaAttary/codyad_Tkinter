@@ -5,7 +5,7 @@ window = CTk()
 width = window.winfo_screenwidth()
 height = window.winfo_screenheight()
 
-btn = CTkButton(window,text='click me')
+btn = CTkButton(window,text='click me',command=window.destroy)
 btn.pack()
 
 window.geometry(f'{width}x{height}+0+0')
