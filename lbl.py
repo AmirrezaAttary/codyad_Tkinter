@@ -24,6 +24,6 @@ lbl = CTkLabel( # ساختن لیبل
 
 lbl.pack()
 
-window.geometry("500x400")
+window.geometry("500x400") # اندازه صفحه به صورت ماتریسی
 
 window.mainloop()
