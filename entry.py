@@ -16,7 +16,7 @@ lbl = CTkLabel(
     text='چه عددی در زهن شما است',
     font=font
 )
-lbl.pack(pady = 10)
+lbl.pack(pady = 10) # پدینگ دادن در ارتفاع
 
 name_input = CTkEntry(
     window, # این که میخواهم در کدام صفحه وارد بشود
