@@ -1,7 +1,5 @@
 from customtkinter import *
 
-
-
 window = CTk()
 
 window.title('amir')
