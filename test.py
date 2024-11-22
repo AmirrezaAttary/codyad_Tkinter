@@ -43,17 +43,17 @@
 # cursor.close()
 # conn.close()
 
-# import sqlite3 
-# import io 
-# conn = sqlite3.connect('pzz.db') 
+import sqlite3 
+import io 
+conn = sqlite3.connect('pz.db') 
 
-# # Open() function 
-# with io.open('backupdatabase_dumpp.sql', 'w') as p: 
+# Open() function 
+with io.open('backupdatabase_dumpp.sql', 'w' ,encoding='utf-8') as p: 
 		
-# 	# iterdump() function 
-# 	for line in conn.iterdump(): 
+	# iterdump() function 
+	for line in conn.iterdump(): 
 		
-# 		p.write('%s\n' % line) 
+		p.write('%s\n' % line) 
 	
 print(' Backup performed successfully!') 
 print(' Data Saved as backupdatabase_dump.sql') 
