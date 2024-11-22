@@ -7,28 +7,28 @@
 
 # print(miladi)
 
-import sqlite3
-data_person_name = [('amirrr','attary')]
+# import sqlite3
+# data_person_name = [('amirrr','attary')]
 
-con = sqlite3.connect("mydb.db")
+# con = sqlite3.connect("mydb.db")
 
 
 
-c = con.cursor()
+# c = con.cursor()
 
-c.execute('''create table if not exists q1_person_name
-                 (name_id INTEGER PRIMARY KEY,
-                  first_name varchar(20) NOT NULL,
-                  last_name varchar(20) NOT NULL)''')
-c.executemany('INSERT INTO q1_person_name(first_name, last_name) VALUES (?,?)', data_person_name)
+# c.execute('''create table if not exists q1_person_name
+#                  (name_id INTEGER PRIMARY KEY,
+#                   first_name varchar(20) NOT NULL,
+#                   last_name varchar(20) NOT NULL)''')
+# c.executemany('INSERT INTO q1_person_name(first_name, last_name) VALUES (?,?)', data_person_name)
 
-for row in c.execute('SELECT * FROM q1_person_name'):
-    a = row
-b = a[0]
-b=int(b)
-print(b)
-con.commit()
-con.close()
+# for row in c.execute('SELECT * FROM q1_person_name'):
+#     a = row
+# b = a[0]
+# b=int(b)
+# print(b)
+# con.commit()
+# con.close()
 
 # import sqlite3
 
@@ -42,4 +42,22 @@ con.close()
 # conn.commit()
 # cursor.close()
 # conn.close()
+
+import sqlite3 
+import io 
+conn = sqlite3.connect('pzz.db') 
+
+# Open() function 
+with io.open('backupdatabase_dumpp.sql', 'w') as p: 
+		
+	# iterdump() function 
+	for line in conn.iterdump(): 
+		
+		p.write('%s\n' % line) 
+	
+print(' Backup performed successfully!') 
+print(' Data Saved as backupdatabase_dump.sql') 
+
+conn.close() 
+
 
