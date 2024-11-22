@@ -25,7 +25,16 @@ c.execute('''CREATE TABLE IF NOT EXISTS paziresh
                 description varchar(200) NOT NULL)''')
 for row in c.execute('SELECT * FROM paziresh'):
     a=row
-
+try:
+    b = a[0]
+    b=int(b)
+    b+=1
+    print(b)
+except:
+    b = 0
+    b+=1
+con.commit()
+con.close()
 
 
 DARK_MODE = "dark"
@@ -78,6 +87,40 @@ def dashbord():
 def paziresh_():
     clear_frame()
     
+    def save_():
+        save = [(ent_date_of_arrival.get(),
+                 ent_departure_date.get(),
+                 ent_input_system.get(),
+                 combo_input_system_type.get(),
+                 ent_input_system_model.get(),
+                 ent_input_system_serial.get(),
+                 ent_input_name.get(),
+                 ent_input_name_tel.get(),
+                 ent_input_name_code_meli.get(),
+                 ent_input_name_tel_sabet.get(),
+                 ent_input_name_adress.get('0.0',END),
+                 ent_problem.get(),
+                 ent_cost.get(),
+                 ent_input_description.get('0.0',END))]
+        c.executemany('''INSERT INTO paziresh(
+        arrival,
+        departure,
+        system,
+        system_type,
+        system_model,
+        system_serial,
+        input_name,
+        tel,
+        code_meli,
+        tel_sabet,
+        adress,
+        problem,
+        cost,
+        description
+        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)''',save )
+        con.commit()
+        con.close()
+    
     def save_back():
         
         save = [(ent_date_of_arrival.get(),
@@ -123,19 +166,21 @@ def paziresh_():
     bt_back.grid(row=13, column=0, padx=20, pady=(10, 0),sticky=E)
     bt_back_save = customtkinter.CTkButton(far_2, text="بازگشت و ذخیره",font=font,fg_color="green",hover_color="#00ff00", command=save_back)
     bt_back_save.grid(row=13, column=2, padx=20, pady=(10, 0),sticky=W)
-    bt_save = customtkinter.CTkButton(far_2, text="ذخیره",font=font,fg_color="#00ff00",hover_color="green", command=dashbord)
+    bt_save = customtkinter.CTkButton(far_2, text="ذخیره",font=font,fg_color="#00ff00",hover_color="green", command=save_)
     bt_save.grid(row=13, column=1, padx=20, pady=(10, 0),)
     
     lbl_id = CTkLabel(far_2, font=font,text=": شماره پذریش ")
     lbl_id.grid(row=0, column=5,pady=5)
     lbl_1 = CTkLabel(far_2, text="مشخصات دستگاه",font=font,corner_radius=20)
     lbl_1.grid(row=1,column=5,sticky=E,padx=10,pady=5)
-    ent_input_id = CTkEntry(far_2,font=font_enry)
+    ent_input_id = CTkEntry(far_2,font=font_enry,justify=RIGHT)
     ent_input_id.grid(row=0, column=4)
+    ent_input_id.insert(0,b)
+    ent_input_id.configure(state=DISABLED)
     
     lbl_date_of_arrival = CTkLabel(far_2, font=font,text=" : تاریخ ورود")
     lbl_date_of_arrival.grid(row=0, column=3,pady=5)
-    ent_date_of_arrival = CTkEntry(far_2,font=font_enry)
+    ent_date_of_arrival = CTkEntry(far_2,font=font_enry,justify=RIGHT)
     ent_date_of_arrival.grid(row=0, column=2,pady=5)
     ent_date_of_arrival.insert(0,JalaliDate.today().strftime('%Y/%m/%d'))
     lbl_departure_date = CTkLabel(far_2, font=font,text=" : تاریخ خروج")
