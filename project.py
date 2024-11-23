@@ -5,6 +5,8 @@ from persiantools.jdatetime import JalaliDate
 import sqlite3
 from tkinter import messagebox
 import re
+from kavenegar import *
+
 ##################################################################################
 def create_database():
   conn = sqlite3.connect('pz.db')
@@ -66,7 +68,7 @@ root.grid_rowconfigure((0, 1, 2, 3), weight=0)
 root.grid_rowconfigure((4, 5, 6, 7), weight=1)
 root.overrideredirect(True)
 root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
-
+api = KavenegarAPI("3936466A51684633482B34396E5541532F66585A455958385036674E54796A52694530396A48766E6574413D")
 font = CTkFont(family="Vazir",size=25,weight='bold')
 font_enry=CTkFont(family="Vazir",size=20)
 #########################################################################################
@@ -164,9 +166,8 @@ def paziresh_():
     far_2.grid_rowconfigure((4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,), weight=1)
     bt_back = customtkinter.CTkButton(far_2, text="بازگشت",font=font, fg_color= '#EA0000', hover_color = '#B20000', command=dashbord)
     bt_back.grid(row=13, column=0, padx=20, pady=(10, 0),sticky=E)
-    bt_back_save = customtkinter.CTkButton(far_2, text="بازگشت و ذخیره",font=font,fg_color="green",hover_color="#00ff00", command=save_data)
-    bt_back_save.grid(row=13, column=2, padx=20, pady=(10, 0),sticky=W)
-    bt_save = customtkinter.CTkButton(far_2, text="ذخیره",font=font,fg_color="#00ff00",hover_color="green", command=save_data)
+
+    bt_save = customtkinter.CTkButton(far_2, text="بازگشت و ذخیره",font=font,fg_color="green",hover_color="#00ff00", command=save_data)
     bt_save.grid(row=13, column=1, padx=20, pady=(10, 0),)
     
     lbl_id = CTkLabel(far_2, font=font,text=": شماره پذریش ")
@@ -254,6 +255,7 @@ def paziresh_():
     lbl_cost.grid(row=0,column=1,)
     ent_cost = CTkEntry(frame_moshkel,font=font_enry,justify=RIGHT)
     ent_cost.grid(row=0,column=0)
+    ent_cost.insert(0,0)
     lbl_input_description = CTkLabel(frame_moshkel,text=" : توضیحات ",font=font)
     lbl_input_description.grid(row=1,column=3)
     ent_input_description = CTkTextbox(frame_moshkel,font=font,corner_radius=10,width=700,border_width=3)
@@ -280,13 +282,47 @@ def garanti():
     
 
 def send_sms():
+    def taki():
+        
+        try:
+            params = {
+                'receptor':f"{ent_sms_taki.get()}", #Recipient phone number
+                'sender': '2000500666',    # Your Kavenegar sender ID
+                'message': '''با سلام
+کالا های شما در 
+شرکت قادری تعمیر و 
+آماده تحویل است.''',
+            }
+            response = api.sms_send(params)
+            print(response) # Check the response from the API
+        except APIException as e:
+            print(f"Error: {e}")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+        dashbord()
+        
     far_3 = CTkFrame(root)
     far_3.grid(row=1, column=0,rowspan=7, sticky=NSEW)    
     far_3.grid_columnconfigure(0, weight=1)
-    far_3.grid_rowconfigure((0, 1, 2, 3), weight=0)
-    far_3.grid_rowconfigure((4, 5, 6, 7), weight=1)
+    far_3.grid_rowconfigure((0, 1, 2, 3,4, 5, 6, 7, 8, 9, 10), weight=1)
+    lbl_sms = CTkLabel(far_3,text='ارسال تکی',font=font)
+    lbl_sms.grid(row=0, column=0 ,padx=20,pady=10)
+    frame_send_taki = CTkFrame(far_3,width=300,height=300)
+    frame_send_taki.grid(row=1,column=0,rowspan=3,padx=20,)
+    lbl_sms_taki = CTkLabel(frame_send_taki,text=': شماره مورد نظر',font=font)
+    lbl_sms_taki.pack(pady=25,padx=25)
+    ent_sms_taki = CTkEntry(frame_send_taki,font=font_enry)
+    ent_sms_taki.pack(pady=25,padx=25)
+    but_sms_taki = CTkButton(frame_send_taki,text='ارسال',font=font,fg_color="green",hover_color="#009933", command=taki)
+    but_sms_taki.pack(pady=25,padx=25)
+    
+    ####################################################################################
+    lbl_sms_koli = CTkLabel(far_3,text='ارسال گروهی',font=font)
+    lbl_sms_koli.grid(row=4, column=0 ,padx=20,pady=10)
+    frame_send_koli = CTkFrame(far_3)
+    frame_send_koli.grid(row=5,column=0,rowspan=3,padx=20,pady=5)
     bt_from_frame3 = customtkinter.CTkButton(far_3, text="بازگشت",font=font, command=dashbord)
-    bt_from_frame3.grid(row=7, column=0, padx=20, pady=(10, 0))
+    bt_from_frame3.grid(row=9, column=0, padx=20, pady=(10, 0))
     
 
 def tarikh_():
