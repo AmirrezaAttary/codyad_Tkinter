@@ -11,25 +11,22 @@ from kavenegar import *
 def create_database():
   conn = sqlite3.connect('pz.db')
   cursor = conn.cursor()
-  cursor.execute('''
-    CREATE TABLE IF NOT EXISTS paziresh (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      arrival TEXT,
-      departure TEXT,
-      system TEXT,
-      system_type TEXT,
-      system_model TEXT,
-      system_serial INTEGER,
-      input_name TEXT,
-      tel TEXT, # Changed to TEXT to accommodate various phone number formats
-      code_meli TEXT, # Changed to TEXT to accommodate various national code formats
-      tel_sabet TEXT, # Changed to TEXT to accommodate various phone number formats
-      adress TEXT,
-      problem TEXT,
-      cost REAL, # Changed to REAL to allow for decimal values
-      description TEXT
-    )
-  ''')
+  cursor.execute('''CREATE TABLE IF NOT EXISTS paziresh
+                (id INTEGER PRIMARY KEY,
+                arrival varchar(20) NOT NULL,
+                departure varchar(20) ,
+                system varchar(20) NOT NULL,
+                system_type varchar(20) NOT NULL,
+                system_model varchar(20) NOT NULL,
+                system_serial INTEGER(20) NOT NULL,
+                input_name varchar(20) NOT NULL,
+                tel INTEGER(10) NOT NULL,
+                code_meli INTEGER(11) NOT NULL,
+                tel_sabet INTEGER(10) ,
+                adress varchar(200) NOT NULL,
+                problem varchar(20) NOT NULL,
+                cost INTEGER(100) ,
+                description varchar(200) NOT NULL)''')
   conn.commit()
   conn.close()
 
@@ -103,23 +100,35 @@ def dashbord():
     btn_quit.grid(row=5, column=0, padx=20, pady=0)
 
 
-
-try:
-    conn = sqlite3.connect('pz.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT MAX(id) FROM paziresh")
-    result = cursor.fetchone()
-    b = result[0] + 1 if result[0] is not None else 1
-    print(b)
-    conn.close()
-except Exception as e:
-    messagebox.showerror("Error", f"An error occurred while getting the next ID: {e}")
-    b = 1 #Default to 1 if there is an error
+# def save_():
+#     try:
+#         conn = sqlite3.connect('pz.db')
+#         cursor = conn.cursor()
+#         cursor.execute("SELECT MAX(id) FROM paziresh")
+#         result = cursor.fetchone()
+#         b = result[0] + 1 if result[0] is not None else 1
+#         print(b)
+#         conn.close()
+#     except Exception as e:
+#         messagebox.showerror("Error", f"An error occurred while getting the next ID: {e}")
+#     b = 1 #Default to 1 if there is an error
 
 def paziresh_():
     clear_frame()
+    try:
+        conn = sqlite3.connect('pz.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT MAX(id) FROM paziresh")
+        result = cursor.fetchone()
+        b = result[0] + 1 if result[0] is not None else 1
+        print(b)
+        conn.close()
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred while getting the next ID: {e}")
+    
     
     def save_data():
+        create_database()
         try:
             arrival = ent_date_of_arrival.get()
             departure = ent_departure_date.get()
