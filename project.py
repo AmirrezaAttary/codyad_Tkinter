@@ -116,7 +116,7 @@ def paziresh_():
     
     
     def save_data():
-        create_database()
+        
         try:
             arrival = ent_date_of_arrival.get()
             departure = ent_departure_date.get()
