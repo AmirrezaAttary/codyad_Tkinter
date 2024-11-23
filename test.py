@@ -21,23 +21,23 @@ c = con.cursor()
 #                   first_name varchar(20) NOT NULL,
 #                   last_name varchar(20) NOT NULL)''')
 # c.executemany('INSERT INTO q1_person_name(first_name, last_name) VALUES (?,?)', data_person_name)
-a= [59849,416513,4896451]
-for j in a:
-    c.execute(f'DELETE FROM paziresh WHERE tel = "{j}"')
+# a= [59849,416513,4896451]
+# for j in a:
+#     c.execute(f'DELETE FROM paziresh WHERE tel = "{j}"')
     
-list_person_name = []
-for row in c.execute('SELECT tel FROM paziresh '):
-    a = list(row)
-    list_person_name.append(a)
-# print(list_person_name)
-for i in list_person_name:
-    a= int(i[0])
-    print(a)
+# list_person_name = []
+# for row in c.execute('SELECT tel FROM paziresh '):
+#     a = list(row)
+#     list_person_name.append(a)
+# # print(list_person_name)
+# for i in list_person_name:
+#     a= int(i[0])
+#     print(a)
 # b = a[0]
 # b=int(b)
 # print(b)
-con.commit()
-con.close()
+# con.commit()
+# con.close()
 
 # import sqlite3
 
@@ -70,3 +70,8 @@ con.close()
 # conn.close() 
 
 
+for row in c.execute('SELECT * FROM paziresh '):
+    print(row)
+
+con.commit()
+con.close()
