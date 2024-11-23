@@ -63,7 +63,7 @@ root.iconbitmap('tv.ico')
 root.grid_columnconfigure(0, weight=1)
 root.grid_rowconfigure((0, 1, 2, 3), weight=0)
 root.grid_rowconfigure((4, 5, 6, 7), weight=1)
-root.overrideredirect(True)
+# root.overrideredirect(True)
 root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
 api = KavenegarAPI("3936466A51684633482B34396E5541532F66585A455958385036674E54796A52694530396A48766E6574413D")
 font = CTkFont(family="Vazir",size=25,weight='bold')
@@ -101,6 +101,7 @@ def dashbord():
 
 
 def paziresh_():
+    create_database()
     clear_frame()
     try:
         conn = sqlite3.connect('pz.db')
