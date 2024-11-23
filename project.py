@@ -100,19 +100,6 @@ def dashbord():
     btn_quit.grid(row=5, column=0, padx=20, pady=0)
 
 
-# def save_():
-#     try:
-#         conn = sqlite3.connect('pz.db')
-#         cursor = conn.cursor()
-#         cursor.execute("SELECT MAX(id) FROM paziresh")
-#         result = cursor.fetchone()
-#         b = result[0] + 1 if result[0] is not None else 1
-#         print(b)
-#         conn.close()
-#     except Exception as e:
-#         messagebox.showerror("Error", f"An error occurred while getting the next ID: {e}")
-#     b = 1 #Default to 1 if there is an error
-
 def paziresh_():
     clear_frame()
     try:
@@ -344,10 +331,11 @@ def send_sms():
     lbl_sms_koli.grid(row=4, column=0 ,padx=20,pady=10)
     frame_send_koli = CTkFrame(far_3,width=300,height=300)
     frame_send_koli.grid(row=5,column=0,rowspan=3,padx=20,pady=5)
-    box = CTkTextbox(frame_send_koli,corner_radius=10,border_width=3,width=180,height=180)
+    box = CTkTextbox(frame_send_koli,corner_radius=10,border_width=3,width=180,height=180,font=CTkFont('Vazir',24))
     box.pack(padx=20,pady=20)
     for j in list_person_name_2:
-        box.insert(END,f'{j}\n')
+        box.insert(END,f'0{j}\n')
+    box.configure(state=DISABLED)
     btn_sms_koli = CTkButton(frame_send_koli,text='ارسال',font=font,fg_color="green",hover_color="#009933")
     btn_sms_koli.pack(padx=20,pady=20)
     

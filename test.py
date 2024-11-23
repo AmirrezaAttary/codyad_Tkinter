@@ -21,7 +21,10 @@ c = con.cursor()
 #                   first_name varchar(20) NOT NULL,
 #                   last_name varchar(20) NOT NULL)''')
 # c.executemany('INSERT INTO q1_person_name(first_name, last_name) VALUES (?,?)', data_person_name)
-# c.execute('DELETE FROM paziresh WHERE tel = ""')
+a= [59849,416513,4896451]
+for j in a:
+    c.execute(f'DELETE FROM paziresh WHERE tel = "{j}"')
+    
 list_person_name = []
 for row in c.execute('SELECT tel FROM paziresh '):
     a = list(row)
