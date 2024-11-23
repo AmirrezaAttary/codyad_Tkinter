@@ -291,6 +291,18 @@ def garanti():
     
 
 def send_sms():
+    con = sqlite3.connect("pz.db")
+    c = con.cursor()
+    list_person_name = []
+    for row in c.execute('SELECT tel FROM paziresh '):
+        a = list(row)
+        list_person_name.append(a)
+    list_person_name_2 = []
+    for i in list_person_name:
+        a= int(i[0])
+        list_person_name_2.append(a)
+    con.commit()
+    con.close()
     def taki():
         
         try:
@@ -309,6 +321,8 @@ def send_sms():
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
         dashbord()
+    def koli():
+        pass
         
     far_3 = CTkFrame(root)
     far_3.grid(row=1, column=0,rowspan=7, sticky=NSEW)    
@@ -328,8 +342,15 @@ def send_sms():
     ####################################################################################
     lbl_sms_koli = CTkLabel(far_3,text='ارسال گروهی',font=font)
     lbl_sms_koli.grid(row=4, column=0 ,padx=20,pady=10)
-    frame_send_koli = CTkFrame(far_3)
+    frame_send_koli = CTkFrame(far_3,width=300,height=300)
     frame_send_koli.grid(row=5,column=0,rowspan=3,padx=20,pady=5)
+    box = CTkTextbox(frame_send_koli,corner_radius=10,border_width=3,width=180,height=180)
+    box.pack(padx=20,pady=20)
+    for j in list_person_name_2:
+        box.insert(END,f'{j}\n')
+    btn_sms_koli = CTkButton(frame_send_koli,text='ارسال',font=font,fg_color="green",hover_color="#009933")
+    btn_sms_koli.pack(padx=20,pady=20)
+    
     bt_from_frame3 = customtkinter.CTkButton(far_3, text="بازگشت",font=font, command=dashbord)
     bt_from_frame3.grid(row=9, column=0, padx=20, pady=(10, 0))
     
