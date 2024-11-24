@@ -82,7 +82,7 @@ def dashbord():
     far.grid(row=1, column=0,rowspan=7, sticky=NSEW)    
     far.grid_columnconfigure(0, weight=1)
     # far.grid_rowconfigure((0, 1, 2, 3, 4), weight=0)
-    far.grid_rowconfigure(( 0, 1, 2, 3, 4,5, 6,), weight=1)
+    far.grid_rowconfigure(( 0, 1, 2, 3, 4, 5, 6,), weight=1)
     bt_dashboard = customtkinter.CTkButton(far, text="پذیرش",font=font, command=paziresh_)
     bt_dashboard.grid(row=1 ,column=0, padx=20, pady=20)
 
@@ -277,6 +277,7 @@ def garanti():
     farame_garanti = CTkFrame(far_4,)
     farame_garanti.grid(row=0, column=0,rowspan=7, sticky=NSEW,padx=20,pady=20)
     
+    
 
 def send_sms():
     con = sqlite3.connect("pz.db")
@@ -345,6 +346,24 @@ def send_sms():
     
 
 def tarikh_():
+    
+    def sel():
+        con = sqlite3.connect("pz.db")
+        c = con.cursor()
+        for row in c.execute('SELECT * FROM paziresh '):
+            s = CTkFrame(sct,border_width=3,fg_color='blue')
+            s.pack(pady=3,anchor=E)
+            s.grid_columnconfigure([0,1],weight=1)
+            s.grid_rowconfigure([0],weight=1)
+            ent_id = CTkEntry(s,35,font=font_enry)
+            ent_id.insert(END,row[0])
+            ent_id.grid(row=0,column=1,sticky=E)
+            ent_sys = CTkEntry(s,font=font_enry,justify=RIGHT)
+            ent_sys.insert(END,row[3])
+            ent_sys.grid(row=0,column=0,sticky=E,)
+        con.commit()
+        con.close()
+    
     far_4 = CTkFrame(root)
     far_4.grid(row=1, column=0,rowspan=7, sticky=NSEW)    
     far_4.grid_columnconfigure(0, weight=1)
@@ -352,6 +371,23 @@ def tarikh_():
     far_4.grid_rowconfigure((4, 5, 6, 7), weight=1)
     bt_from_frame3 = customtkinter.CTkButton(far_4, text="بازگشت",font=font, command=dashbord)
     bt_from_frame3.grid(row=7, column=0, padx=20, pady=(10, 0))
+    farame_garanti = CTkFrame(far_4,)
+    farame_garanti.grid(row=0, column=0,rowspan=7, sticky=NSEW,padx=20,pady=20)
+    farame_garanti.grid_columnconfigure(0, weight=1)
+    farame_garanti.grid_rowconfigure((0, 1, 2, 3), weight=1)
+    tab_view = CTkTabview(farame_garanti,)
+    tab_view.grid(row=0,rowspan=4, column=0, padx=20, pady=20,sticky=NSEW)
+    tab_view.add("پردازش درحال")
+    tab_view.add("گارانتی")
+    tab_view.add("شده پردازش")
+    tab_view.tab("پردازش درحال").grid_rowconfigure((0, 1, 2, 3), weight=1)
+    tab_view.tab("پردازش درحال").grid_columnconfigure((0), weight=1)
+    sct = CTkScrollableFrame(tab_view.tab("پردازش درحال"),200,200,0,5)
+    sct.grid(row=0, column=0,rowspan=4,padx=20,sticky=NSEW)
+    
+    sel()
+    
+   
     
     
 def change_scaling_event(new_scaling: str):
