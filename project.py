@@ -408,28 +408,72 @@ def setting():
     scaling_optionemenu.grid(row=5, column=0, padx=20, pady=(10, 20))
 
 ###########################################################################################
-far = CTkFrame(root)
-far.grid(row=1, column=0,rowspan=7, sticky=NSEW)    
-far.grid_columnconfigure(0, weight=1)
-# far.grid_rowconfigure((0, 1, 2, 3, 4), weight=0)
-far.grid_rowconfigure(( 0, 1, 2, 3, 4, 5, 6, ), weight=1)
-
-bt_dashboard = customtkinter.CTkButton(far, text="پذیرش",font=font, command=paziresh_)
-bt_dashboard.grid(row=1 ,column=0, padx=20, pady=20)
-
-bt_sms = customtkinter.CTkButton(far, text="گارانتی",font=font, command=garanti)
-bt_sms.grid(row=2 ,column=0, padx=20, pady=20)
-
-bt_sms = customtkinter.CTkButton(far, text="ارسال پیامک",font=font, command=send_sms)
-bt_sms.grid(row=3 ,column=0, padx=20, pady=20)
-
-bt_tarikh = customtkinter.CTkButton(far, text="تاریخچه",font=font, command=tarikh_)
-bt_tarikh.grid(row=4 ,column=0, padx=20, pady=20)
 
 
+def login():
+    far = CTkFrame(root)
+    far.grid(row=1, column=0,rowspan=7, sticky=NSEW)    
+    far.grid_columnconfigure((0,1,2,), weight=1)
+    # far.grid_rowconfigure((0, 1, 2, 3, 4), weight=0)
+    far.grid_rowconfigure(( 0, 1, 2, 3, 4, 5, 6, ), weight=1)
+    btn_quit = customtkinter.CTkButton(far, text="خروج", fg_color= '#EA0000', hover_color = '#B20000',font=font, command= close_window)
+    btn_quit.grid(row=5, column=1, padx=20, pady=0)
+    
+    lbl_user = CTkLabel(far,0,28,text='ورود به سیستم',font=CTkFont(family="Vazir",size=50,weight='bold'))
+    lbl_user.grid(row=1,column=1,padx=20,sticky=S)
+    def create_table_admin():
+        conn = sqlite3.connect('pz.db')
+        cursor = conn.cursor()
+        conn.execute('''create table if not exists ADMIN
+                    (name_id INTEGER PRIMARY KEY,
+                    USER varchar(20) NOT NULL,
+                    PASSWORD varchar(20) NOT NULL)''')
+        admin = [('admin', 'admin')]
+        cursor.execute("SELECT MAX(name_id) FROM ADMIN")
+        result = cursor.fetchone()
+        if result[0] == 1:
+            pass
+        else:
+            conn.executemany('INSERT INTO ADMIN(USER, PASSWORD) VALUES (?,?)', admin)
+        conn.commit()
+        conn.close()
+    
+    def login_admin():
+        conn = sqlite3.connect('pz.db')
+        cursor = conn.cursor()
+        for i in conn.execute('SELECT * FROM ADMIN'):
+            user = i[1]
+            password = i[2]
+        conn.commit()
+        conn.close()
+        if user == ent_password_login.get() and password == ent_password_login.get():
+            dashbord()
+            return messagebox.showinfo("ورود به سیستم", ".با موفقیت وارد شدید")
+        else:
+            return messagebox.showerror("مشکل", ".نام کاربری/رمز عبور نادرست است")
+    create_table_admin()
+    
+        
+    
+    fram_login = CTkFrame(far,500,350,3,10,border_color='blue')
+    fram_login.grid(row=2,column=1,rowspan=2,ipady=50,ipadx=50)
+    fram_login.grid_columnconfigure((0,1,), weight=1)
+    fram_login.grid_rowconfigure(( 0, 1,), weight=1)
+    CTkLabel(fram_login,text=': نام کاربری',font=font).grid(row=0,column=1) 
+    ent_user_login = CTkEntry(fram_login,font=font_enry,justify=RIGHT,width=200,placeholder_text='نام کاربری')
+    ent_user_login.grid(row=0,column=0,columnspan=1,)
+    CTkLabel(fram_login,text=': رمز عبور',font=font).grid(row=1,column=1) 
+    ent_password_login = CTkEntry(fram_login,font=font_enry,justify=RIGHT,width=200,placeholder_text='رمز عبور')
+    ent_password_login.grid(row=1,column=0,columnspan=1,)
+    btn_login = customtkinter.CTkButton(far, text="ورود", fg_color="green", hover_color="#009933",font=font, command= login_admin)
+    btn_login.grid(row=4, column=1, padx=20, pady=0)
+    
+    
+login()
 
-btn_quit = customtkinter.CTkButton(far, text="خروج", fg_color= '#EA0000', hover_color = '#B20000',font=font, command= close_window)
-btn_quit.grid(row=5, column=0, padx=20, pady=0)
+
+
+
 
 
 root.mainloop()
