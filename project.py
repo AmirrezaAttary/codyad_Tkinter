@@ -82,22 +82,20 @@ def dashbord():
     far.grid(row=1, column=0,rowspan=7, sticky=NSEW)    
     far.grid_columnconfigure(0, weight=1)
     # far.grid_rowconfigure((0, 1, 2, 3, 4), weight=0)
-    far.grid_rowconfigure(( 0, 1, 2, 3, 4, 5, 6,), weight=1)
+    far.grid_rowconfigure(( 0, 1, 2, 3, 4, 5, ), weight=1)
     bt_dashboard = customtkinter.CTkButton(far, text="پذیرش",font=font, command=paziresh_)
     bt_dashboard.grid(row=1 ,column=0, padx=20, pady=20)
 
-    bt_sms = customtkinter.CTkButton(far, text="گارانتی",font=font, command=garanti)
-    bt_sms.grid(row=2 ,column=0, padx=20, pady=20)
 
     bt_sms = customtkinter.CTkButton(far, text="ارسال پیامک",font=font, command=send_sms)
-    bt_sms.grid(row=3 ,column=0, padx=20, pady=20)
+    bt_sms.grid(row=2 ,column=0, padx=20, pady=20)
 
     bt_tarikh = customtkinter.CTkButton(far, text="تاریخچه",font=font, command=tarikh_)
-    bt_tarikh.grid(row=4 ,column=0, padx=20, pady=20)
+    bt_tarikh.grid(row=3 ,column=0, padx=20, pady=20)
     
 
     btn_quit = customtkinter.CTkButton(far, text="خروج", fg_color= '#EA0000', hover_color = '#B20000',font=font, command= close_window)
-    btn_quit.grid(row=5, column=0, padx=20, pady=0)
+    btn_quit.grid(row=4, column=0, padx=20, pady=0)
 
 
 def paziresh_():
@@ -263,21 +261,6 @@ def paziresh_():
     ########################################################################################
     
     
-    
-    
-    
-def garanti():
-    far_4 = CTkFrame(root)
-    far_4.grid(row=1, column=0,rowspan=7, sticky=NSEW)    
-    far_4.grid_columnconfigure(0, weight=1)
-    far_4.grid_rowconfigure((0, 1, 2, 3), weight=1)
-    far_4.grid_rowconfigure((4, 5, 6, 7), weight=1)
-    bt_from_frame3 = customtkinter.CTkButton(far_4, text="بازگشت",font=font, command=dashbord)
-    bt_from_frame3.grid(row=7, column=0, padx=20, pady=(10, 0))
-    farame_garanti = CTkFrame(far_4,)
-    farame_garanti.grid(row=0, column=0,rowspan=7, sticky=NSEW,padx=20,pady=20)
-    
-    
 
 def send_sms():
     con = sqlite3.connect("pz.db")
@@ -350,8 +333,40 @@ def tarikh_():
     def sel():
         con = sqlite3.connect("pz.db")
         c = con.cursor()
-        for row in c.execute('SELECT * FROM paziresh '):
+        for row in c.execute('SELECT * FROM paziresh WHERE cost=0'):
             s = CTkFrame(sct,border_width=3,fg_color='blue')
+            s.pack(pady=3,anchor=E)
+            s.grid_columnconfigure([0,1],weight=1)
+            s.grid_rowconfigure([0],weight=1)
+            ent_id = CTkEntry(s,35,font=font_enry)
+            ent_id.insert(END,row[0])
+            ent_id.grid(row=0,column=1,sticky=E)
+            ent_sys = CTkEntry(s,font=font_enry,justify=RIGHT)
+            ent_sys.insert(END,row[3])
+            ent_sys.grid(row=0,column=0,sticky=E,)
+        con.commit()
+        con.close()
+    def sel_2():
+        con = sqlite3.connect("pz.db")
+        c = con.cursor()
+        for row in c.execute('SELECT * FROM paziresh'):
+            s = CTkFrame(sct_2,border_width=3,fg_color='blue')
+            s.pack(pady=3,anchor=E)
+            s.grid_columnconfigure([0,1],weight=1)
+            s.grid_rowconfigure([0],weight=1)
+            ent_id = CTkEntry(s,35,font=font_enry)
+            ent_id.insert(END,row[0])
+            ent_id.grid(row=0,column=1,sticky=E)
+            ent_sys = CTkEntry(s,font=font_enry,justify=RIGHT)
+            ent_sys.insert(END,row[3])
+            ent_sys.grid(row=0,column=0,sticky=E,)
+        con.commit()
+        con.close()
+    def sel_3():
+        con = sqlite3.connect("pz.db")
+        c = con.cursor()
+        for row in c.execute('SELECT * FROM paziresh WHERE cost!=0'):
+            s = CTkFrame(sct_3,border_width=3,fg_color='blue')
             s.pack(pady=3,anchor=E)
             s.grid_columnconfigure([0,1],weight=1)
             s.grid_rowconfigure([0],weight=1)
@@ -377,15 +392,22 @@ def tarikh_():
     farame_garanti.grid_rowconfigure((0, 1, 2, 3), weight=1)
     tab_view = CTkTabview(farame_garanti,)
     tab_view.grid(row=0,rowspan=4, column=0, padx=20, pady=20,sticky=NSEW)
-    tab_view.add("پردازش درحال")
-    tab_view.add("گارانتی")
-    tab_view.add("شده پردازش")
-    tab_view.tab("پردازش درحال").grid_rowconfigure((0, 1, 2, 3), weight=1)
-    tab_view.tab("پردازش درحال").grid_columnconfigure((0), weight=1)
-    sct = CTkScrollableFrame(tab_view.tab("پردازش درحال"),200,200,0,5)
+    tab_view.add("تعمیر درحال")
+    tab_view.add("سفارش همه")
+    tab_view.add("شده تعمیرش")
+    tab_view.tab("تعمیر درحال").grid_rowconfigure((0, 1, 2, 3), weight=1)
+    tab_view.tab("تعمیر درحال").grid_columnconfigure((0), weight=1)
+    tab_view.tab("سفارش همه").grid_rowconfigure((0, 1, 2, 3), weight=1)
+    tab_view.tab("سفارش همه").grid_columnconfigure((0), weight=1)
+    tab_view.tab("شده تعمیرش").grid_rowconfigure((0, 1, 2, 3), weight=1)
+    tab_view.tab("شده تعمیرش").grid_columnconfigure((0), weight=1)
+    sct = CTkScrollableFrame(tab_view.tab("تعمیر درحال"),200,200,0,5)
     sct.grid(row=0, column=0,rowspan=4,padx=20,sticky=NSEW)
-    
-    sel()
+    sct_2 = CTkScrollableFrame(tab_view.tab("سفارش همه"),200,200,0,5)
+    sct_2.grid(row=0, column=0,rowspan=4,padx=20,sticky=NSEW)
+    sct_3 = CTkScrollableFrame(tab_view.tab("شده تعمیرش"),200,200,0,5)
+    sct_3.grid(row=0, column=0,rowspan=4,padx=20,sticky=NSEW)
+    sel(),sel_2(),sel_3()
     
    
     
@@ -393,19 +415,7 @@ def tarikh_():
 def change_scaling_event(new_scaling: str):
         new_scaling_float = int(new_scaling.replace("%", "")) / 100
         customtkinter.set_widget_scaling(new_scaling_float)
-def setting():
-    far_5 = CTkFrame(root)
-    far_5.grid(row=1, column=0,rowspan=7, sticky=NSEW)    
-    far_5.grid_columnconfigure(0, weight=1)
-    far_5.grid_rowconfigure((0, 1, 2, 3), weight=1)
-    far_5.grid_rowconfigure((4, 5, 6, 7), weight=1)
-    bt_from_frame3 = customtkinter.CTkButton(far_5, text="بازگشت",font=font, command=dashbord)
-    bt_from_frame3.grid(row=7, column=0, padx=20, pady=(10, 0))
-    scaling_label = customtkinter.CTkLabel(far_5, text="UI Scaling:", anchor="w")
-    scaling_label.grid(row=4, column=0, padx=20, pady=(10, 0))
-    scaling_optionemenu = customtkinter.CTkOptionMenu(root, values=["80%", "90%", "100%", "110%", "120%"],
-                                                               command=change_scaling_event)
-    scaling_optionemenu.grid(row=5, column=0, padx=20, pady=(10, 20))
+
 
 ###########################################################################################
 
