@@ -165,7 +165,7 @@ def create_pdf_reportlab(filename, text):
     c.save()
 
 # Example usage
-create_pdf_reportlab("my_report.pdf", "Hello, this is a <P> PDF created with ReportLab!")
+create_pdf_reportlab("my_report.pdf", "Hello, this is a <H1> PDF created with ReportLab! </H1>")
 
 
 #More advanced example with formatting
@@ -180,7 +180,7 @@ def create_formatted_pdf(filename, text):
     doc.build([para])
 
 create_formatted_pdf("my_formatted_report.pdf", """This is  a <b>formatted</b> PDF.  
-                     It uses <font color='red'>colored</font> 
+                     It <>uses<> <font color='red'>colored</font> 
                      text.""")
 
 
