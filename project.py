@@ -26,7 +26,8 @@ def create_database():
                 adress varchar(200) NOT NULL,
                 problem varchar(20) NOT NULL,
                 cost INTEGER(100) ,
-                description varchar(200) NOT NULL)''')
+                description varchar(200) NOT NULL,
+                Warranty varchar(20) NOT NULL)''')
   conn.commit()
   conn.close()
 
@@ -34,7 +35,7 @@ def insert_data(data):
   try:
     conn = sqlite3.connect('pz.db')
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO paziresh (arrival, departure, system, system_type, system_model, system_serial, input_name, tel, code_meli, tel_sabet, adress, problem, cost, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", data)
+    cursor.execute("INSERT INTO paziresh (arrival, departure, system, system_type, system_model, system_serial, input_name, tel, code_meli, tel_sabet, adress, problem, cost, description, Warranty) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", data)
     conn.commit()
     conn.close()
     return True
@@ -73,6 +74,8 @@ font_enry=CTkFont(family="Vazir",size=20)
 def clear_frame():
   for widget in root.winfo_children():
     widget.destroy()
+    
+
 def close_window(): 
     root.destroy()
     
@@ -107,7 +110,7 @@ def paziresh_():
         cursor.execute("SELECT MAX(id) FROM paziresh")
         result = cursor.fetchone()
         b = result[0] + 1 if result[0] is not None else 1
-        print(b)
+        b+=1590
         conn.close()
     except Exception as e:
         messagebox.showerror("Error", f"An error occurred while getting the next ID: {e}")
@@ -136,7 +139,7 @@ def paziresh_():
             except ValueError:
                 return messagebox.showerror("Error", "Cost must be a number.")
             description = ent_input_description.get("1.0", tk.END).strip() #Get text from textbox
-
+            Warrantyy = chek.get() 
             if not all([system, system_type, system_model, input_name, tel, code_meli]):
                 return messagebox.showerror("Error", "Please fill in all required fields.")
             if not validate_phone(tel):
@@ -144,7 +147,7 @@ def paziresh_():
             if not validate_code_meli(code_meli):
                 return messagebox.showerror("Error","Invalid code meli.")
 
-            data_tuple = (arrival, departure, system, system_type, system_model, system_serial, input_name, tel, code_meli, tel_sabet, adress, problem, cost, description)
+            data_tuple = (arrival, departure, system, system_type, system_model, system_serial, input_name, tel, code_meli, tel_sabet, adress, problem, cost, description,Warrantyy)
             result = insert_data(data_tuple)
             if isinstance(result, bool) and result: #Check if insert_data returned True(success)
                 messagebox.showinfo("Success", "Data saved successfully!")
@@ -241,7 +244,7 @@ def paziresh_():
     frame_moshkel = CTkFrame(far_2)
     frame_moshkel.grid(row=10,column=0,columnspan=6,rowspan=3,sticky=NSEW) 
     frame_moshkel.grid_columnconfigure((0,1,2,3,),weight=1)
-    frame_moshkel.grid_rowconfigure((0,1),weight=1)
+    frame_moshkel.grid_rowconfigure((0,1,2),weight=1)
     lbl_problem = CTkLabel(frame_moshkel,text=' : ایراد ظاهری',font=font)
     lbl_problem.grid(row=0,column=3,)
     ent_problem = CTkEntry(frame_moshkel,font=font_enry,justify=RIGHT)
@@ -258,7 +261,10 @@ def paziresh_():
     ent_input_description.tag_add("rtl",0.0,END)
     ent_input_description.insert(0.0,'شکستگی\n','rtl')
     ent_input_description.grid(row=1,column=0,columnspan=3,)
-    ########################################################################################
+    lbl_chek = CTkLabel(frame_moshkel,0,28,font=font,text="آیا کالا دارای گارانتی است؟")
+    lbl_chek.grid(row=2,column=3)
+    chek = CTkCheckBox(frame_moshkel,text="",onvalue="بلی",offvalue="خیر")
+    chek.grid(row=2,column=2,sticky=E)
     
     
 
@@ -329,21 +335,170 @@ def send_sms():
     
 
 def tarikh_():
+    def clear_frame_sct():
+        for widget in sct.winfo_children():
+            widget.destroy()
+    def search():
+        con = sqlite3.connect("pz.db")
+        c = con.cursor()
+        if len(search_entry.get()) == 11:
+            print(search_entry.get())
+            clear_frame_sct()
+            for row in c.execute(f'SELECT * FROM paziresh WHERE tel={search_entry.get()} AND cost=0'):
+                a=row[0]+1590
+                s = CTkFrame(sct,border_width=3,fg_color='blue')
+                s.pack(pady=3,anchor=E)
+                s.grid_columnconfigure([0,1],weight=1)
+                s.grid_rowconfigure([0],weight=1)
+                ent_id = CTkEntry(s,63,font=font_enry)
+                ent_id.insert(END,a)
+                ent_id.grid(row=0,column=10,sticky=E)
+                ent_sys = CTkEntry(s,font=font_enry,justify=RIGHT)
+                ent_sys.insert(END,row[3])
+                ent_sys.grid(row=0,column=9,sticky=E,)
+                ent_sys_type = CTkEntry(s,font=font_enry,justify=RIGHT)
+                ent_sys_type.insert(END,row[4])
+                ent_sys_type.grid(row=0,column=8,sticky=E,)
+                ent_sys_model = CTkEntry(s,font=font_enry,justify=RIGHT)
+                ent_sys_model.insert(END,row[5])
+                ent_sys_model.grid(row=0,column=7,sticky=E,)
+                ent_sys_serial = CTkEntry(s,font=font_enry,justify=RIGHT)
+                ent_sys_serial.insert(END,row[6])
+                ent_sys_serial.grid(row=0,column=6,sticky=E,)
+                ent_sys_war = CTkEntry(s,font=font_enry,justify=RIGHT)
+                ent_sys_war.insert(END,row[15])
+                ent_sys_war.grid(row=0,column=5,sticky=E,)
+                ent_name = CTkEntry(s,font=font_enry,justify=RIGHT)
+                ent_name.insert(END,row[7])
+                ent_name.grid(row=0,column=4,sticky=E,)
+                ent_name_code = CTkEntry(s,font=font_enry,justify=RIGHT)
+                n = f"0{row[9]}"
+                ent_name_code.insert(END,n)
+                ent_name_code.grid(row=0,column=3,sticky=E,)
+                ent_name_tel = CTkEntry(s,font=font_enry,justify=RIGHT)
+                f = f"0{row[8]}"
+                ent_name_tel.insert(END,f)
+                ent_name_tel.grid(row=0,column=2,sticky=E,)
+                ent_name_tel_sabet = CTkEntry(s,font=font_enry,justify=RIGHT)
+                t = f"0{row[10]}"
+                ent_name_tel_sabet.insert(END,t)
+                ent_name_tel_sabet.grid(row=0,column=1,sticky=E,)
+                ent_sys_arrvial = CTkEntry(s,font=font_enry,justify=RIGHT)
+                ent_sys_arrvial.insert(END,row[1])
+                ent_sys_arrvial.grid(row=0,column=0,sticky=E,)
+                list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,ent_name,ent_name_code,ent_name_tel,ent_name_tel_sabet,ent_sys_arrvial]
+                for sell in list_sel:
+                    sell.configure(state=DISABLED)
+            con.commit()
+            con.close()
+        elif len(search_entry.get()) == 10:
+            print(search_entry.get())
+            clear_frame_sct()
+            for row in c.execute(f'SELECT * FROM paziresh WHERE code_meli={search_entry.get()} AND cost=0'):
+                a=row[0]+1590
+                s = CTkFrame(sct,border_width=3,fg_color='blue')
+                s.pack(pady=3,anchor=E)
+                s.grid_columnconfigure([0,1],weight=1)
+                s.grid_rowconfigure([0],weight=1)
+                ent_id = CTkEntry(s,63,font=font_enry)
+                ent_id.insert(END,a)
+                ent_id.grid(row=0,column=10,sticky=E)
+                ent_sys = CTkEntry(s,font=font_enry,justify=RIGHT)
+                ent_sys.insert(END,row[3])
+                ent_sys.grid(row=0,column=9,sticky=E,)
+                ent_sys_type = CTkEntry(s,font=font_enry,justify=RIGHT)
+                ent_sys_type.insert(END,row[4])
+                ent_sys_type.grid(row=0,column=8,sticky=E,)
+                ent_sys_model = CTkEntry(s,font=font_enry,justify=RIGHT)
+                ent_sys_model.insert(END,row[5])
+                ent_sys_model.grid(row=0,column=7,sticky=E,)
+                ent_sys_serial = CTkEntry(s,font=font_enry,justify=RIGHT)
+                ent_sys_serial.insert(END,row[6])
+                ent_sys_serial.grid(row=0,column=6,sticky=E,)
+                ent_sys_war = CTkEntry(s,font=font_enry,justify=RIGHT)
+                ent_sys_war.insert(END,row[15])
+                ent_sys_war.grid(row=0,column=5,sticky=E,)
+                ent_name = CTkEntry(s,font=font_enry,justify=RIGHT)
+                ent_name.insert(END,row[7])
+                ent_name.grid(row=0,column=4,sticky=E,)
+                ent_name_code = CTkEntry(s,font=font_enry,justify=RIGHT)
+                n = f"0{row[9]}"
+                ent_name_code.insert(END,n)
+                ent_name_code.grid(row=0,column=3,sticky=E,)
+                ent_name_tel = CTkEntry(s,font=font_enry,justify=RIGHT)
+                f = f"0{row[8]}"
+                ent_name_tel.insert(END,f)
+                ent_name_tel.grid(row=0,column=2,sticky=E,)
+                ent_name_tel_sabet = CTkEntry(s,font=font_enry,justify=RIGHT)
+                t = f"0{row[10]}"
+                ent_name_tel_sabet.insert(END,t)
+                ent_name_tel_sabet.grid(row=0,column=1,sticky=E,)
+                ent_sys_arrvial = CTkEntry(s,font=font_enry,justify=RIGHT)
+                ent_sys_arrvial.insert(END,row[1])
+                ent_sys_arrvial.grid(row=0,column=0,sticky=E,)
+                list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,ent_name,ent_name_code,ent_name_tel,ent_name_tel_sabet,ent_sys_arrvial]
+                for sell in list_sel:
+                    sell.configure(state=DISABLED)
+            con.commit()
+            con.close()
+        elif search_entry.get() == '':
+            print(search_entry.get())
+            clear_frame_sct()
+            sel()
+        else:
+            return messagebox.showerror("مشکل",".شماره موبایل/کدملی اشتباه است")
+            
     
     def sel():
+        
+            
         con = sqlite3.connect("pz.db")
         c = con.cursor()
         for row in c.execute('SELECT * FROM paziresh WHERE cost=0'):
+            a=row[0]+1590
             s = CTkFrame(sct,border_width=3,fg_color='blue')
             s.pack(pady=3,anchor=E)
             s.grid_columnconfigure([0,1],weight=1)
             s.grid_rowconfigure([0],weight=1)
-            ent_id = CTkEntry(s,35,font=font_enry)
-            ent_id.insert(END,row[0])
-            ent_id.grid(row=0,column=1,sticky=E)
+            ent_id = CTkEntry(s,63,font=font_enry)
+            ent_id.insert(END,a)
+            ent_id.grid(row=0,column=10,sticky=E)
             ent_sys = CTkEntry(s,font=font_enry,justify=RIGHT)
             ent_sys.insert(END,row[3])
-            ent_sys.grid(row=0,column=0,sticky=E,)
+            ent_sys.grid(row=0,column=9,sticky=E,)
+            ent_sys_type = CTkEntry(s,font=font_enry,justify=RIGHT)
+            ent_sys_type.insert(END,row[4])
+            ent_sys_type.grid(row=0,column=8,sticky=E,)
+            ent_sys_model = CTkEntry(s,font=font_enry,justify=RIGHT)
+            ent_sys_model.insert(END,row[5])
+            ent_sys_model.grid(row=0,column=7,sticky=E,)
+            ent_sys_serial = CTkEntry(s,font=font_enry,justify=RIGHT)
+            ent_sys_serial.insert(END,row[6])
+            ent_sys_serial.grid(row=0,column=6,sticky=E,)
+            ent_sys_war = CTkEntry(s,font=font_enry,justify=RIGHT)
+            ent_sys_war.insert(END,row[15])
+            ent_sys_war.grid(row=0,column=5,sticky=E,)
+            ent_name = CTkEntry(s,font=font_enry,justify=RIGHT)
+            ent_name.insert(END,row[7])
+            ent_name.grid(row=0,column=4,sticky=E,)
+            ent_name_code = CTkEntry(s,font=font_enry,justify=RIGHT)
+            n = f"0{row[9]}"
+            ent_name_code.insert(END,n)
+            ent_name_code.grid(row=0,column=3,sticky=E,)
+            ent_name_tel = CTkEntry(s,font=font_enry,justify=RIGHT)
+            f = f"0{row[8]}"
+            ent_name_tel.insert(END,f)
+            ent_name_tel.grid(row=0,column=2,sticky=E,)
+            ent_name_tel_sabet = CTkEntry(s,font=font_enry,justify=RIGHT)
+            t = f"0{row[10]}"
+            ent_name_tel_sabet.insert(END,t)
+            ent_name_tel_sabet.grid(row=0,column=1,sticky=E,)
+            ent_sys_arrvial = CTkEntry(s,font=font_enry,justify=RIGHT)
+            ent_sys_arrvial.insert(END,row[1])
+            ent_sys_arrvial.grid(row=0,column=0,sticky=E,)
+            list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,ent_name,ent_name_code,ent_name_tel,ent_name_tel_sabet,ent_sys_arrvial]
+            for sel in list_sel:
+                sel.configure(state=DISABLED)
         con.commit()
         con.close()
     def sel_2():
@@ -352,7 +507,7 @@ def tarikh_():
         for row in c.execute('SELECT * FROM paziresh'):
             s = CTkFrame(sct_2,border_width=3,fg_color='blue')
             s.pack(pady=3,anchor=E)
-            s.grid_columnconfigure([0,1],weight=1)
+            s.grid_columnconfigure([0,1,2,4,5,6,7,8,9,10],weight=1)
             s.grid_rowconfigure([0],weight=1)
             ent_id = CTkEntry(s,35,font=font_enry)
             ent_id.insert(END,row[0])
@@ -390,19 +545,31 @@ def tarikh_():
     farame_garanti.grid(row=0, column=0,rowspan=7, sticky=NSEW,padx=20,pady=20)
     farame_garanti.grid_columnconfigure(0, weight=1)
     farame_garanti.grid_rowconfigure((0, 1, 2, 3), weight=1)
+    
     tab_view = CTkTabview(farame_garanti,)
     tab_view.grid(row=0,rowspan=4, column=0, padx=20, pady=20,sticky=NSEW)
     tab_view.add("تعمیر درحال")
     tab_view.add("سفارش همه")
     tab_view.add("شده تعمیرش")
-    tab_view.tab("تعمیر درحال").grid_rowconfigure((0, 1, 2, 3), weight=1)
+    tab_view.tab("تعمیر درحال").grid_rowconfigure((0, 1, 2, 3, 4), weight=1)
     tab_view.tab("تعمیر درحال").grid_columnconfigure((0), weight=1)
     tab_view.tab("سفارش همه").grid_rowconfigure((0, 1, 2, 3), weight=1)
     tab_view.tab("سفارش همه").grid_columnconfigure((0), weight=1)
     tab_view.tab("شده تعمیرش").grid_rowconfigure((0, 1, 2, 3), weight=1)
     tab_view.tab("شده تعمیرش").grid_columnconfigure((0), weight=1)
+    search_frame = CTkFrame(tab_view.tab("تعمیر درحال"))
+    search_frame.grid(row=0, column=0,padx=20,sticky=E)
+    search_frame.grid_columnconfigure((0, 1, 2, 3), weight=1)
+    search_frame.grid_rowconfigure(0,weight=1)
+    search_lbl = CTkLabel(search_frame,font=font,text="براساس شماره موبایل/کدملی")
+    search_lbl.grid(row=0, column=3,padx=20,sticky=E)
+    search_entry = CTkEntry(search_frame,140,35,placeholder_text='شماره موبایل/کدملی',justify=RIGHT)
+    search_entry.grid(row=0, column=2,padx=20,sticky=E)
+    search_btn = CTkButton(search_frame,text="جستوجو",font=font,command=search)
+    search_btn.grid(row=0, column=1,padx=20,sticky=E)
+    
     sct = CTkScrollableFrame(tab_view.tab("تعمیر درحال"),200,200,0,5)
-    sct.grid(row=0, column=0,rowspan=4,padx=20,sticky=NSEW)
+    sct.grid(row=1, column=0,rowspan=4,padx=20,sticky=NSEW)
     sct_2 = CTkScrollableFrame(tab_view.tab("سفارش همه"),200,200,0,5)
     sct_2.grid(row=0, column=0,rowspan=4,padx=20,sticky=NSEW)
     sct_3 = CTkScrollableFrame(tab_view.tab("شده تعمیرش"),200,200,0,5)
@@ -473,13 +640,15 @@ def login():
     ent_user_login = CTkEntry(fram_login,font=font_enry,justify=RIGHT,width=200,placeholder_text='نام کاربری')
     ent_user_login.grid(row=0,column=0,columnspan=1,)
     CTkLabel(fram_login,text=': رمز عبور',font=font).grid(row=1,column=1) 
-    ent_password_login = CTkEntry(fram_login,font=font_enry,justify=RIGHT,width=200,placeholder_text='رمز عبور')
+    ent_password_login = CTkEntry(fram_login,font=font_enry,justify=RIGHT,width=200,placeholder_text='رمز عبور',show="*")
     ent_password_login.grid(row=1,column=0,columnspan=1,)
     btn_login = customtkinter.CTkButton(far, text="ورود", fg_color="green", hover_color="#009933",font=font, command= login_admin)
     btn_login.grid(row=4, column=1, padx=20, pady=0)
     
     
-login()
+# login()
+# paziresh_()
+tarikh_()
 
 
 
