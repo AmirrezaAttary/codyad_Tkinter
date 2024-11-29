@@ -863,7 +863,7 @@ def tarikh_():
     ################################################################################
     search_frame = CTkFrame(tab_view.tab("تعمیر درحال"))
     search_frame.grid(row=0, column=0,padx=20,sticky=E)
-    search_frame.grid_columnconfigure((0, 1, 2, 3), weight=1)
+    search_frame.grid_columnconfigure((0, 1, 2, 3 , 4), weight=1)
     search_frame.grid_rowconfigure(0,weight=1)
     search_lbl = CTkLabel(search_frame,font=font,text="براساس شماره موبایل/کدملی")
     search_lbl.grid(row=0, column=3,padx=20,sticky=E)
@@ -895,7 +895,8 @@ def tarikh_():
     search_btn_3.grid(row=0, column=1,padx=20,sticky=E)
     #############################################################################################
     sct = CTkScrollableFrame(tab_view.tab("تعمیر درحال"),200,200,0,5)
-    sct.grid(row=1, column=0,rowspan=4,padx=20,sticky=NSEW)
+    sct.grid(row=2, column=0,rowspan=4,padx=20,sticky=EW)
+    CTkFrame(tab_view.tab("تعمیر درحال"),fg_color="red",height=20).grid(row=1, column=0,columnspan=4,sticky=NSEW)
     sct_2 = CTkScrollableFrame(tab_view.tab("سفارش همه"),200,200,0,5)
     sct_2.grid(row=1, column=0,rowspan=4,padx=20,sticky=NSEW)
     sct_3 = CTkScrollableFrame(tab_view.tab("شده تعمیرش"),200,200,0,5)
