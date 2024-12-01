@@ -3,7 +3,7 @@ import pdfkit
 from datetime import datetime
 
 
-id = 1590
+id = 1593
 garanti = 'بلی'
 tarikh = "1402/05/16"
 date = "20:00:15"
@@ -42,4 +42,4 @@ config = pdfkit.configuration(wkhtmltopdf = "C:\\Program Files\\wkhtmltopdf\\bin
 
 
 
-pdfkit.from_string(output_text,f'sefaresh_{id}.pdf',options={"encoding":'UTF-8'},configuration=config,)
+pdfkit.from_string(output_text,f'./ex/sefaresh_{id}.pdf',options={"encoding":'UTF-8'},configuration=config,)
