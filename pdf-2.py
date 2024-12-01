@@ -38,8 +38,8 @@ temp = temp_env.get_template('atar.html')
 output_text = temp.render(context)
 
 # Replace with your path
-config = pdfkit.configuration(wkhtmltopdf = r"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
+config = pdfkit.configuration(wkhtmltopdf = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
 
-css = "div.css"
 
-pdfkit.from_string(output_text,f'sefaresh_{id}.pdf',options={"encoding":'UTF-8'},configuration=config,css=css)
+
+pdfkit.from_string(output_text,f'sefaresh_{id}.pdf',options={"encoding":'UTF-8'},configuration=config,)
