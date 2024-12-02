@@ -42,4 +42,4 @@ config = pdfkit.configuration(wkhtmltopdf = "C:\\Program Files\\wkhtmltopdf\\bin
 
 
 
-pdfkit.from_string(output_text,f'./ex/sefaresh_{id}.pdf',options={"encoding":'UTF-8'},configuration=config,)
+pdfkit.from_string(output_text,f'./ex/sefaresh_{id}.pdf',options={"encoding":'UTF-8','page-width': 210,'page-height': 180},configuration=config,)
