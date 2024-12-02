@@ -47,7 +47,7 @@ def insert_data(data):
 
 def validate_phone(phone_number):
   #Basic phone number validation (adjust regex as needed)
-  pattern = r"^\+?\d{10,15}$" #Example: Accepts numbers starting with optional +, min 10 digits
+  pattern = r"^\+?\d{11}$" #Example: Accepts numbers starting with optional +, min 10 digits
   return bool(re.match(pattern, phone_number))
 
 def validate_code_meli(code_meli):
@@ -66,7 +66,7 @@ root.iconbitmap('tv.ico')
 root.grid_columnconfigure(0, weight=1)
 root.grid_rowconfigure((0, 1, 2, 3), weight=0)
 root.grid_rowconfigure((4, 5, 6, 7), weight=1)
-root.overrideredirect(True)
+# root.overrideredirect(True)
 root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
 api = KavenegarAPI("3936466A51684633482B34396E5541532F66585A455958385036674E54796A52694530396A48766E6574413D")
 font = CTkFont(family="Vazir",size=25,weight='bold')
@@ -87,7 +87,7 @@ def dashbord():
     far.grid(row=1, column=0,rowspan=7, sticky=NSEW)    
     far.grid_columnconfigure(0, weight=1)
     # far.grid_rowconfigure((0, 1, 2, 3, 4), weight=0)
-    far.grid_rowconfigure(( 0, 1, 2, 3, 4, 5, 6), weight=1)
+    far.grid_rowconfigure(( 0, 1, 2, 3, 4, 5,), weight=1)
     bt_dashboard = customtkinter.CTkButton(far, text="پذیرش",font=font, command=paziresh_)
     bt_dashboard.grid(row=1 ,column=0, padx=20, pady=20)
 
@@ -95,15 +95,14 @@ def dashbord():
     bt_sms = customtkinter.CTkButton(far, text="ارسال پیامک",font=font, command=send_sms)
     bt_sms.grid(row=2 ,column=0, padx=20, pady=20)
 
-    bt_admin = customtkinter.CTkButton(far, text="مدیریت",font=font,)
-    bt_admin.grid(row=3 ,column=0, padx=20, pady=20)
+
 
     bt_tarikh = customtkinter.CTkButton(far, text="تاریخچه",font=font, command=tarikh_)
-    bt_tarikh.grid(row=4 ,column=0, padx=20, pady=20)
+    bt_tarikh.grid(row=3 ,column=0, padx=20, pady=20)
     
 
     btn_quit = customtkinter.CTkButton(far, text="خروج", fg_color= '#EA0000', hover_color = '#B20000',font=font, command= close_window)
-    btn_quit.grid(row=5, column=0, padx=20, pady=0)
+    btn_quit.grid(row=4, column=0, padx=20, pady=0)
 
 
 def paziresh_():
@@ -163,6 +162,7 @@ def paziresh_():
         dashbord()
         
     def save_data_print():
+        save_data()
         curr_time = time.strftime("%H:%M:%S", time.localtime())
         context = {
             'id':ent_input_id.get(),
@@ -186,7 +186,7 @@ def paziresh_():
         config = pdfkit.configuration(wkhtmltopdf = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
         pdfkit.from_string(output_text,f'./ex/sefaresh_{ent_input_id.get()}.pdf',options={"encoding":'UTF-8','page-width': 210,'page-height': 180},configuration=config,)
         messagebox.showinfo("چاپ",'رسید پرینت شد')
-        save_data()
+        
         
     far_2 = CTkFrame(root)
     far_2.grid(row=1, column=0,rowspan=7, sticky=NSEW)    
