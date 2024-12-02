@@ -1,4 +1,3 @@
-import tkinter as tk
 import customtkinter
 from customtkinter import *
 from persiantools.jdatetime import JalaliDate
@@ -6,6 +5,10 @@ import sqlite3
 from tkinter import messagebox
 import re
 from kavenegar import *
+import jinja2
+import pdfkit
+from datetime import datetime
+import time
 
 ##################################################################################
 def create_database():
@@ -135,13 +138,13 @@ def paziresh_():
             tel = ent_input_name_tel.get()
             code_meli = ent_input_name_code_meli.get()
             tel_sabet = ent_input_name_tel_sabet.get()
-            adress = ent_input_name_adress.get("1.0", tk.END).strip() #Get text from textbox
+            adress = ent_input_name_adress.get("1.0", END).strip() #Get text from textbox
             problem = ent_problem.get()
             try:
                 cost = float(ent_cost.get())
             except ValueError:
                 return messagebox.showerror("Error", "Cost must be a number.")
-            description = ent_input_description.get("1.0", tk.END).strip() #Get text from textbox
+            description = ent_input_description.get("1.0", END).strip() #Get text from textbox
             Warrantyy = chek.get() 
             if not all([system, system_type, system_model, input_name, tel, code_meli]):
                 return messagebox.showerror("Error", "Please fill in all required fields.")
@@ -160,6 +163,32 @@ def paziresh_():
             messagebox.showerror("Error", f"An unexpected error occurred: {e}")
         dashbord()
         
+    def save_data_print():
+        curr_time = time.strftime("%H:%M:%S", time.localtime())
+        context = {
+            'id':ent_input_id.get(),
+           'garanti':chek.get(),
+           'tarikh':ent_date_of_arrival.get(),
+           'date':curr_time,
+           'name_input':ent_input_name.get(),
+           'system_name':ent_input_system.get(),
+           'typee':combo_input_system_type.get(),
+           'model':ent_input_system_model.get(),
+           'seriyal':ent_input_system_serial.get(),
+           'tel':ent_input_name_tel.get(),
+           'addres':ent_input_name_adress.get("1.0", END),
+           'moshkel':ent_input_description.get("1.0", END)
+        }
+        temp_loder = jinja2.FileSystemLoader('./')
+        temp_env = jinja2.Environment(loader=temp_loder)
+        temp = temp_env.get_template('atar.html')
+        output_text = temp.render(context)
+        # Replace with your path
+        config = pdfkit.configuration(wkhtmltopdf = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
+        pdfkit.from_string(output_text,f'./ex/sefaresh_{ent_input_id.get()}.pdf',options={"encoding":'UTF-8'},configuration=config,)
+        messagebox.showinfo("چاپ",'رسید پرینت شد')
+        save_data()
+        
     far_2 = CTkFrame(root)
     far_2.grid(row=1, column=0,rowspan=7, sticky=NSEW)    
     far_2.grid_columnconfigure((0,1,2,3,4,5), weight=1)
@@ -168,8 +197,11 @@ def paziresh_():
     bt_back = customtkinter.CTkButton(far_2, text="بازگشت",font=font, fg_color= '#EA0000', hover_color = '#B20000', command=dashbord)
     bt_back.grid(row=13, column=0, padx=20, pady=(10, 0),sticky=E)
 
-    bt_save = customtkinter.CTkButton(far_2, text="بازگشت و ذخیره",font=font,fg_color="green",hover_color="#00ff00", command=save_data)
+    bt_save = customtkinter.CTkButton(far_2, text="ذخیره",font=font,fg_color="green",hover_color="#00ff00", command=save_data)
     bt_save.grid(row=13, column=1, padx=20, pady=(10, 0),)
+    
+    bt_save = customtkinter.CTkButton(far_2, text="ذخیره و پرینت",font=font,fg_color="green",hover_color="#00ff00", command=save_data_print)
+    bt_save.grid(row=13, column=2, padx=20, pady=(10, 0),sticky=W)
     
     lbl_id = CTkLabel(far_2, font=font,text=": شماره پذریش ")
     lbl_id.grid(row=0, column=5,pady=5)
@@ -1335,8 +1367,8 @@ def login():
     
     
 # login()
-# paziresh_()
+paziresh_()
 # tarikh_()
-dashbord()
+# dashbord()
 
 root.mainloop()
