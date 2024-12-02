@@ -7,7 +7,6 @@ import re
 from kavenegar import *
 import jinja2
 import pdfkit
-from datetime import datetime
 import time
 
 ##################################################################################
@@ -67,7 +66,7 @@ root.iconbitmap('tv.ico')
 root.grid_columnconfigure(0, weight=1)
 root.grid_rowconfigure((0, 1, 2, 3), weight=0)
 root.grid_rowconfigure((4, 5, 6, 7), weight=1)
-# root.overrideredirect(True)
+root.overrideredirect(True)
 root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
 api = KavenegarAPI("3936466A51684633482B34396E5541532F66585A455958385036674E54796A52694530396A48766E6574413D")
 font = CTkFont(family="Vazir",size=25,weight='bold')
@@ -296,10 +295,17 @@ def paziresh_():
     ent_input_description.tag_add("rtl",0.0,END)
     ent_input_description.insert(0.0,'شکستگی\n','rtl')
     ent_input_description.grid(row=1,column=0,columnspan=3,)
-    lbl_chek = CTkLabel(frame_moshkel,0,28,font=font,text="آیا کالا دارای گارانتی است؟")
+    lbl_chek = CTkLabel(frame_moshkel,0,28,font=font,text="آیاگارانتی دارد؟")
     lbl_chek.grid(row=2,column=3)
-    chek = CTkCheckBox(frame_moshkel,text="",onvalue="بلی",offvalue="خیر")
-    chek.grid(row=2,column=2,sticky=E)
+    
+    
+    abbbb = 'بلی'
+    str_ = StringVar(value=abbbb)
+    chek = CTkCheckBox(frame_moshkel,70,text="بلی",font=font,onvalue="بلی",offvalue="خیر",variable=str_,)
+    chek.grid(row=2,column=3,sticky=W)
+    chek_2 = CTkCheckBox(frame_moshkel,text="خیر",font=font,onvalue="خیر",offvalue="بلی",variable=str_,)
+    chek_2.grid(row=2,column=2,sticky=E)
+    
     
     
 
