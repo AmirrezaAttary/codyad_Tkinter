@@ -299,7 +299,7 @@ def paziresh_():
     lbl_chek.grid(row=2,column=3)
     
     
-    abbbb = 'بلی'
+    abbbb = ''
     str_ = StringVar(value=abbbb)
     chek = CTkCheckBox(frame_moshkel,70,text="بلی",font=font,onvalue="بلی",offvalue="خیر",variable=str_,)
     chek.grid(row=2,column=3,sticky=W)
