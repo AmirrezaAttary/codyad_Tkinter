@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 id = 1593
-garanti = 'بلی'
+garanti = 'لی'
 tarikh = "1402/05/16"
 date = "20:00:15"
 name_input = "امیررضا"

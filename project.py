@@ -162,30 +162,70 @@ def paziresh_():
         dashbord()
         
     def save_data_print():
-        save_data()
-        curr_time = time.strftime("%H:%M:%S", time.localtime())
-        context = {
-            'id':ent_input_id.get(),
-           'garanti':chek.get(),
-           'tarikh':ent_date_of_arrival.get(),
-           'date':curr_time,
-           'name_input':ent_input_name.get(),
-           'system_name':ent_input_system.get(),
-           'typee':combo_input_system_type.get(),
-           'model':ent_input_system_model.get(),
-           'seriyal':ent_input_system_serial.get(),
-           'tel':ent_input_name_tel.get(),
-           'addres':ent_input_name_adress.get("1.0", END),
-           'moshkel':ent_input_description.get("1.0", END)
-        }
-        temp_loder = jinja2.FileSystemLoader('./')
-        temp_env = jinja2.Environment(loader=temp_loder)
-        temp = temp_env.get_template('atar.html')
-        output_text = temp.render(context)
-        # Replace with your path
-        config = pdfkit.configuration(wkhtmltopdf = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
-        pdfkit.from_string(output_text,f'./ex/sefaresh_{ent_input_id.get()}.pdf',options={"encoding":'UTF-8','page-width': 210,'page-height': 180},configuration=config,)
-        messagebox.showinfo("چاپ",'رسید پرینت شد')
+        
+        try:
+            arrival = ent_date_of_arrival.get()
+            departure = ent_departure_date.get()
+            system = ent_input_system.get()
+            system_type = combo_input_system_type.get()
+            system_model = ent_input_system_model.get()
+            try:
+                system_serial = int(ent_input_system_serial.get())
+            except ValueError:
+                return messagebox.showerror("Error", "Serial number must be an integer.")
+            input_name = ent_input_name.get()
+            tel = ent_input_name_tel.get()
+            code_meli = ent_input_name_code_meli.get()
+            tel_sabet = ent_input_name_tel_sabet.get()
+            adress = ent_input_name_adress.get("1.0", END).strip() #Get text from textbox
+            problem = ent_problem.get()
+            try:
+                cost = float(ent_cost.get())
+            except ValueError:
+                return messagebox.showerror("Error", "Cost must be a number.")
+            description = ent_input_description.get("1.0", END).strip() #Get text from textbox
+            Warrantyy = chek.get() 
+            if not all([system, system_type, system_model, input_name, tel, code_meli]):
+                return messagebox.showerror("Error", "Please fill in all required fields.")
+            if not validate_phone(tel):
+                return messagebox.showerror("Error","Invalid phone number.")
+            if not validate_code_meli(code_meli):
+                return messagebox.showerror("Error","Invalid code meli.")
+
+            data_tuple = (arrival, departure, system, system_type, system_model, system_serial, input_name, tel, code_meli, tel_sabet, adress, problem, cost, description,Warrantyy)
+            result = insert_data(data_tuple)
+            if isinstance(result, bool) and result: #Check if insert_data returned True(success)
+                messagebox.showinfo("Success", "Data saved successfully!")
+                curr_time = time.strftime("%H:%M:%S", time.localtime())
+                context = {
+                    'id':ent_input_id.get(),
+                'garanti':chek.get(),
+                'tarikh':ent_date_of_arrival.get(),
+                'date':curr_time,
+                'name_input':ent_input_name.get(),
+                'system_name':ent_input_system.get(),
+                'typee':combo_input_system_type.get(),
+                'model':ent_input_system_model.get(),
+                'seriyal':ent_input_system_serial.get(),
+                'tel':ent_input_name_tel.get(),
+                'addres':ent_input_name_adress.get("1.0", END),
+                'moshkel':ent_input_description.get("1.0", END)
+                }
+                temp_loder = jinja2.FileSystemLoader('./')
+                temp_env = jinja2.Environment(loader=temp_loder)
+                temp = temp_env.get_template('atar.html')
+                output_text = temp.render(context)
+                # Replace with your path
+                config = pdfkit.configuration(wkhtmltopdf = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
+                pdfkit.from_string(output_text,f'./ex/sefaresh_{ent_input_id.get()}.pdf',options={"encoding":'UTF-8','page-width': 210,'page-height': 180},configuration=config,)
+                messagebox.showinfo("چاپ",'رسید پرینت شد')
+            else:
+                messagebox.showerror("Error", result) #Show specific error message
+        except Exception as e:
+            messagebox.showerror("Error", f"An unexpected error occurred: {e}")
+        dashbord()
+        
+            
         
         
     far_2 = CTkFrame(root)
