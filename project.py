@@ -29,7 +29,10 @@ def create_database():
                 problem varchar(20) NOT NULL,
                 cost INTEGER(100) ,
                 description varchar(200) NOT NULL,
-                Warranty varchar(20) NOT NULL)''')
+                Warranty varchar(20) NOT NULL,
+                Warranty_modat INTEGER(3),
+                Technician_opinion varchar(200) NOT NULL,
+                status INTEGER(1) NOT NULL)''')
   conn.commit()
   conn.close()
 
@@ -37,7 +40,7 @@ def insert_data(data):
   try:
     conn = sqlite3.connect('pz.db')
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO paziresh (arrival, departure, system, system_type, system_model, system_serial, input_name, tel, code_meli, tel_sabet, adress, problem, cost, description, Warranty) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", data)
+    cursor.execute("INSERT INTO paziresh (arrival, departure, system, system_type, system_model, system_serial, input_name, tel, code_meli, tel_sabet, adress, problem, cost, description, Warranty, Warranty_modat, Technician_opinion, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", data)
     conn.commit()
     conn.close()
     return True
@@ -66,7 +69,7 @@ root.iconbitmap('tv.ico')
 root.grid_columnconfigure(0, weight=1)
 root.grid_rowconfigure((0, 1, 2, 3), weight=0)
 root.grid_rowconfigure((4, 5, 6, 7), weight=1)
-# root.overrideredirect(True)
+root.overrideredirect(True)
 root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
 api = KavenegarAPI("3936466A51684633482B34396E5541532F66585A455958385036674E54796A52694530396A48766E6574413D")
 font = CTkFont(family="Vazir",size=25,weight='bold')
@@ -137,13 +140,16 @@ def paziresh_():
             code_meli = ent_input_name_code_meli.get()
             tel_sabet = ent_input_name_tel_sabet.get()
             adress = ent_input_name_adress.get("1.0", END).strip() #Get text from textbox
-            problem = ent_problem.get()
+            problem = ent_problem.get("1.0", END).strip()
             try:
                 cost = float(ent_cost.get())
             except ValueError:
                 return messagebox.showerror("Error", "Cost must be a number.")
             description = ent_input_description.get("1.0", END).strip() #Get text from textbox
             Warrantyy = chek.get() 
+            Warrantyy_mod = ent_modat_garanti.get()
+            op_tek = ent_tak.get(0.0,END)
+            status = chek_exit.get()
             if not all([system, system_type, system_model, input_name, tel, code_meli]):
                 return messagebox.showerror("Error", "Please fill in all required fields.")
             if not validate_phone(tel):
@@ -151,7 +157,7 @@ def paziresh_():
             if not validate_code_meli(code_meli):
                 return messagebox.showerror("Error","Invalid code meli.")
 
-            data_tuple = (arrival, departure, system, system_type, system_model, system_serial, input_name, tel, code_meli, tel_sabet, adress, problem, cost, description,Warrantyy)
+            data_tuple = (arrival, departure, system, system_type, system_model, system_serial, input_name, tel, code_meli, tel_sabet, adress, problem, cost, description,Warrantyy,Warrantyy_mod,op_tek,status)
             result = insert_data(data_tuple)
             if isinstance(result, bool) and result: #Check if insert_data returned True(success)
                 messagebox.showinfo("Success", "Data saved successfully!")
@@ -178,13 +184,16 @@ def paziresh_():
             code_meli = ent_input_name_code_meli.get()
             tel_sabet = ent_input_name_tel_sabet.get()
             adress = ent_input_name_adress.get("1.0", END).strip() #Get text from textbox
-            problem = ent_problem.get()
+            problem = ent_problem.get("1.0", END).strip()
             try:
                 cost = float(ent_cost.get())
             except ValueError:
                 return messagebox.showerror("Error", "Cost must be a number.")
             description = ent_input_description.get("1.0", END).strip() #Get text from textbox
             Warrantyy = chek.get() 
+            Warrantyy_mod = ent_modat_garanti.get()
+            op_tek = ent_tak.get(0.0,END)
+            status = chek_exit.get()
             if not all([system, system_type, system_model, input_name, tel, code_meli]):
                 return messagebox.showerror("Error", "Please fill in all required fields.")
             if not validate_phone(tel):
@@ -192,7 +201,7 @@ def paziresh_():
             if not validate_code_meli(code_meli):
                 return messagebox.showerror("Error","Invalid code meli.")
 
-            data_tuple = (arrival, departure, system, system_type, system_model, system_serial, input_name, tel, code_meli, tel_sabet, adress, problem, cost, description,Warrantyy)
+            data_tuple = (arrival, departure, system, system_type, system_model, system_serial, input_name, tel, code_meli, tel_sabet, adress, problem, cost, description,Warrantyy,Warrantyy_mod,op_tek,status)
             result = insert_data(data_tuple)
             if isinstance(result, bool) and result: #Check if insert_data returned True(success)
                 messagebox.showinfo("Success", "Data saved successfully!")
@@ -209,7 +218,8 @@ def paziresh_():
                 'seriyal':ent_input_system_serial.get(),
                 'tel':ent_input_name_tel.get(),
                 'addres':ent_input_name_adress.get("1.0", END),
-                'moshkel':ent_input_description.get("1.0", END)
+                'moshkel':ent_input_description.get("1.0", END),
+                'modat' : ent_modat_garanti.get()
                 }
                 temp_loder = jinja2.FileSystemLoader('./')
                 temp_env = jinja2.Environment(loader=temp_loder)
@@ -217,7 +227,7 @@ def paziresh_():
                 output_text = temp.render(context)
                 # Replace with your path
                 config = pdfkit.configuration(wkhtmltopdf = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
-                pdfkit.from_string(output_text,f'./ex/sefaresh_{ent_input_id.get()}.pdf',options={"encoding":'UTF-8','page-width': 210,'page-height': 180},configuration=config,)
+                pdfkit.from_string(output_text,f'./ex/sefaresh_{ent_input_id.get()}.pdf',options={"encoding":'UTF-8','page-width': 210,'page-height': 151},configuration=config,)
                 messagebox.showinfo("چاپ",'رسید پرینت شد')
             else:
                 messagebox.showerror("Error", result) #Show specific error message
@@ -317,34 +327,55 @@ def paziresh_():
     lbl_3.grid(row=9,column=5,sticky=E,padx=10)
     frame_moshkel = CTkFrame(far_2)
     frame_moshkel.grid(row=10,column=0,columnspan=6,rowspan=3,sticky=NSEW) 
-    frame_moshkel.grid_columnconfigure((0,1,2,3,),weight=1)
+    frame_moshkel.grid_columnconfigure((0,1,2,3,4),weight=1)
     frame_moshkel.grid_rowconfigure((0,1,2),weight=1)
     lbl_problem = CTkLabel(frame_moshkel,text=' : ایراد ظاهری',font=font)
     lbl_problem.grid(row=0,column=3,)
-    ent_problem = CTkEntry(frame_moshkel,font=font_enry,justify=RIGHT)
-    ent_problem.grid(row=0,column=2)
+    ent_problem = CTkTextbox(frame_moshkel,font=font_enry,corner_radius=10,width=500,height=120,border_width=3)
+    ent_problem.grid(row=0,column=2,sticky=E)
+    ent_problem.tag_config('rtl',justify=RIGHT)
+    ent_problem.tag_add('rtl',0.0,END)
+    ent_problem.insert(0.0,'شکستگی\n','rtl')
     lbl_cost = CTkLabel(frame_moshkel,text=' : هزینه ',font=font)
-    lbl_cost.grid(row=0,column=1,)
+    lbl_cost.grid(row=0,column=1,sticky=E)
     ent_cost = CTkEntry(frame_moshkel,font=font_enry,justify=RIGHT)
-    ent_cost.grid(row=0,column=0)
+    ent_cost.grid(row=0,column=0,sticky=E)
     ent_cost.insert(0,0)
     lbl_input_description = CTkLabel(frame_moshkel,text=" : توضیحات ",font=font)
     lbl_input_description.grid(row=1,column=3)
-    ent_input_description = CTkTextbox(frame_moshkel,font=font,corner_radius=10,width=700,border_width=3)
+    ent_input_description = CTkTextbox(frame_moshkel,font=font_enry,corner_radius=10,width=500,height=120,border_width=3)
     ent_input_description.tag_config("rtl",justify=RIGHT)
     ent_input_description.tag_add("rtl",0.0,END)
     ent_input_description.insert(0.0,'شکستگی\n','rtl')
-    ent_input_description.grid(row=1,column=0,columnspan=3,)
+    ent_input_description.grid(row=1,column=2,sticky=E)
+    lbl_tak = CTkLabel(frame_moshkel,text=": نظر تکنسین",font=font)
+    lbl_tak.grid(row=2,column=3)
+    ent_tak = CTkTextbox(frame_moshkel,font=font_enry,corner_radius=10,width=500,height=120,border_width=3)
+    ent_tak.tag_config("rtl",justify=RIGHT)
+    ent_tak.tag_add("rtl",0.0,END)
+    ent_tak.insert(0.0,'شکستگی\n','rtl')
+    ent_tak.grid(row=2,column=2,sticky=E,)
     lbl_chek = CTkLabel(frame_moshkel,0,28,font=font,text="آیاگارانتی دارد؟")
-    lbl_chek.grid(row=2,column=3)
+    lbl_chek.grid(row=1,column=1,sticky=E)
+    lbl_modat_garanti =CTkLabel(frame_moshkel,font=font,text="مدت گارنتی",)
+    lbl_modat_garanti.grid(row=2,column=1,sticky=NE,)
+    ent_modat_garanti =CTkEntry(frame_moshkel,placeholder_text="مدت گارانتی",font=font_enry,justify=CENTER,state=DISABLED)
+    ent_modat_garanti.grid(row=2,column=1,sticky=E,)
+    def modat():
+        if chek.get() == "بلی":
+            ent_modat_garanti.configure(placeholder_text="مدت گارانتی",state=NORMAL)
+        elif chek.get() == "خیر":
+            ent_modat_garanti.configure(placeholder_text="مدت گارانتی",state=DISABLED)
     
+    chek_exit = CTkCheckBox(frame_moshkel,text="خروجی از سامانه",font=font,onvalue=1,offvalue=0)
+    chek_exit.grid(row=2,column=0,sticky=E)
     
     abbbb = ''
     str_ = StringVar(value=abbbb)
-    chek = CTkCheckBox(frame_moshkel,70,text="بلی",font=font,onvalue="بلی",offvalue="خیر",variable=str_,)
-    chek.grid(row=2,column=3,sticky=W)
-    chek_2 = CTkCheckBox(frame_moshkel,text="خیر",font=font,onvalue="خیر",offvalue="بلی",variable=str_,)
-    chek_2.grid(row=2,column=2,sticky=E)
+    chek = CTkCheckBox(frame_moshkel,70,text="بلی",font=font,onvalue="بلی",offvalue="خیر",variable=str_,command=modat)
+    chek.grid(row=1,column=1,sticky=W)
+    chek_2 = CTkCheckBox(frame_moshkel,text="خیر",font=font,onvalue="خیر",offvalue="بلی",variable=str_,command=modat)
+    chek_2.grid(row=1,column=0,sticky=E)
     
 
 def send_sms():
@@ -455,7 +486,7 @@ def tarikh_():
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sell in list_sel:
                 sell.configure(state=DISABLED) 
-            for row in c.execute(f'SELECT * FROM paziresh WHERE tel={search_entry.get()} AND cost=0'):
+            for row in c.execute(f'SELECT * FROM paziresh WHERE tel={search_entry.get()} AND status=0'):
                 a=row[0]+1590
                 s = CTkFrame(sct,border_width=3,fg_color='blue')
                 s.pack(pady=3,anchor=E)
@@ -514,7 +545,7 @@ def tarikh_():
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sell in list_sel:
                 sell.configure(state=DISABLED) 
-            for row in c.execute(f'SELECT * FROM paziresh WHERE code_meli={search_entry.get()} AND cost=0'):
+            for row in c.execute(f'SELECT * FROM paziresh WHERE code_meli={search_entry.get()} AND status=0'):
                 a=row[0]+1590
                 s = CTkFrame(sct,border_width=3,fg_color='blue')
                 s.pack(pady=3,anchor=E)
@@ -587,7 +618,7 @@ def tarikh_():
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sell in list_sel:
                 sell.configure(state=DISABLED) 
-            for row in c.execute(f'SELECT * FROM paziresh WHERE tel={search_entry.get()} AND cost=0'):
+            for row in c.execute(f'SELECT * FROM paziresh WHERE tel={search_entry_2.get()}'):
                 a=row[0]+1590
                 s = CTkFrame(sct_2,border_width=3,fg_color='blue')
                 s.pack(pady=3,anchor=E)
@@ -645,7 +676,7 @@ def tarikh_():
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sell in list_sel:
                 sell.configure(state=DISABLED) 
-            for row in c.execute(f'SELECT * FROM paziresh WHERE code_meli={search_entry.get()} AND cost=0'):
+            for row in c.execute(f'SELECT * FROM paziresh WHERE code_meli={search_entry_2.get()}'):
                 a=row[0]+1590
                 s = CTkFrame(sct_2,border_width=3,fg_color='blue')
                 s.pack(pady=3,anchor=E)
@@ -716,7 +747,7 @@ def tarikh_():
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sell in list_sel:
                 sell.configure(state=DISABLED) 
-            for row in c.execute(f'SELECT * FROM paziresh WHERE tel={search_entry.get()} AND cost=0'):
+            for row in c.execute(f'SELECT * FROM paziresh WHERE tel={search_entry_3.get()} AND status=1'):
                 a=row[0]+1590
                 s = CTkFrame(sct_3,border_width=3,fg_color='blue')
                 s.pack(pady=3,anchor=E)
@@ -775,7 +806,7 @@ def tarikh_():
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sell in list_sel:
                 sell.configure(state=DISABLED) 
-            for row in c.execute(f'SELECT * FROM paziresh WHERE code_meli={search_entry_3.get()} AND cost!=0'):
+            for row in c.execute(f'SELECT * FROM paziresh WHERE code_meli={search_entry_3.get()} AND status=1'):
                 a=row[0]+1590
                 s = CTkFrame(sct_3,border_width=3,fg_color='blue')
                 s.pack(pady=3,anchor=E)
@@ -845,7 +876,7 @@ def tarikh_():
             sell.configure(state=DISABLED)  
         con = sqlite3.connect("pz.db")
         c = con.cursor()
-        for row in c.execute('SELECT * FROM paziresh WHERE cost=0'):
+        for row in c.execute('SELECT * FROM paziresh WHERE status=0'):
             a=row[0]+1590
             s = CTkFrame(sct,border_width=3,fg_color='blue')
             s.pack(pady=3,anchor=E)
@@ -966,7 +997,7 @@ def tarikh_():
             sell.configure(state=DISABLED)  
         con = sqlite3.connect("pz.db")
         c = con.cursor()
-        for row in c.execute('SELECT * FROM paziresh WHERE cost!=0'):
+        for row in c.execute('SELECT * FROM paziresh WHERE status=1'):
             a=row[0]+1590
             s = CTkFrame(sct_3,border_width=3,fg_color='blue')
             s.pack(pady=3,anchor=E)
