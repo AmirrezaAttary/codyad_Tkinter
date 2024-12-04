@@ -1157,8 +1157,8 @@ def login():
     btn_login.grid(row=4, column=1, padx=20, pady=0)
     
     
-# login()
-paziresh_()
+login()
+# paziresh_()
 # tarikh_()
 # dashbord()
 
