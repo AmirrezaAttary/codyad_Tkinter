@@ -483,8 +483,6 @@ def tarikh_():
             ent_sys_war = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
             ent_sys_war.insert(END,"موبایل")
             ent_sys_war.grid(row=0,column=5,sticky=E,)
-            btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
-            btn_show.grid(row=0,column=4,sticky=E,)
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sell in list_sel:
                 sell.configure(state=DISABLED) 
@@ -514,6 +512,8 @@ def tarikh_():
                 f = f"0{row[8]}"
                 ent_sys_war.insert(END,f)
                 ent_sys_war.grid(row=0,column=5,sticky=E,)
+                btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+                btn_show.grid(row=0,column=4,sticky=E,)
                 list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
                 for sel in list_sel:
                     sel.configure(state=DISABLED)
@@ -544,8 +544,7 @@ def tarikh_():
             ent_sys_war = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
             ent_sys_war.insert(END,"موبایل")
             ent_sys_war.grid(row=0,column=5,sticky=E,)
-            btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
-            btn_show.grid(row=0,column=4,sticky=E,)
+            
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sell in list_sel:
                 sell.configure(state=DISABLED) 
@@ -575,6 +574,8 @@ def tarikh_():
                 f = f"0{row[8]}"
                 ent_sys_war.insert(END,f)
                 ent_sys_war.grid(row=0,column=5,sticky=E,)
+                btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+                btn_show.grid(row=0,column=4,sticky=E,)
                 
                 list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
                 for sel in list_sel:
@@ -619,8 +620,6 @@ def tarikh_():
             ent_sys_war = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
             ent_sys_war.insert(END,"موبایل")
             ent_sys_war.grid(row=0,column=5,sticky=E,)
-            btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
-            btn_show.grid(row=0,column=4,sticky=E,)
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sell in list_sel:
                 sell.configure(state=DISABLED) 
@@ -650,6 +649,8 @@ def tarikh_():
                 f = f"0{row[8]}"
                 ent_sys_war.insert(END,f)
                 ent_sys_war.grid(row=0,column=5,sticky=E,)
+                btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+                btn_show.grid(row=0,column=4,sticky=E,)
                 list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
                 for sel in list_sel:
                     sel.configure(state=DISABLED)
@@ -679,8 +680,6 @@ def tarikh_():
             ent_sys_war = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
             ent_sys_war.insert(END,"موبایل")
             ent_sys_war.grid(row=0,column=5,sticky=E,)
-            btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
-            btn_show.grid(row=0,column=4,sticky=E,)
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sell in list_sel:
                 sell.configure(state=DISABLED) 
@@ -710,6 +709,8 @@ def tarikh_():
                 f = f"0{row[8]}"
                 ent_sys_war.insert(END,f)
                 ent_sys_war.grid(row=0,column=5,sticky=E,)
+                btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+                btn_show.grid(row=0,column=4,sticky=E,)
                 
                 list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
                 for sel in list_sel:
@@ -752,8 +753,7 @@ def tarikh_():
             ent_sys_war = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
             ent_sys_war.insert(END,"موبایل")
             ent_sys_war.grid(row=0,column=5,sticky=E,)
-            btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
-            btn_show.grid(row=0,column=4,sticky=E,)
+            
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sell in list_sel:
                 sell.configure(state=DISABLED) 
@@ -783,6 +783,8 @@ def tarikh_():
                 f = f"0{row[8]}"
                 ent_sys_war.insert(END,f)
                 ent_sys_war.grid(row=0,column=5,sticky=E,)
+                btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+                btn_show.grid(row=0,column=4,sticky=E,)
                 list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
                 for sel in list_sel:
                     sel.configure(state=DISABLED)
@@ -813,8 +815,7 @@ def tarikh_():
             ent_sys_war = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
             ent_sys_war.insert(END,"موبایل")
             ent_sys_war.grid(row=0,column=5,sticky=E,)
-            btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
-            btn_show.grid(row=0,column=4,sticky=E,)
+            
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sell in list_sel:
                 sell.configure(state=DISABLED) 
@@ -844,7 +845,8 @@ def tarikh_():
                 f = f"0{row[8]}"
                 ent_sys_war.insert(END,f)
                 ent_sys_war.grid(row=0,column=5,sticky=E,)
-                
+                btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+                btn_show.grid(row=0,column=4,sticky=E,)
                 list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
                 for sel in list_sel:
                     sel.configure(state=DISABLED)
