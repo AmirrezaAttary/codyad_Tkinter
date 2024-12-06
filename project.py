@@ -69,7 +69,7 @@ root.iconbitmap('tv.ico')
 root.grid_columnconfigure(0, weight=1)
 root.grid_rowconfigure((0, 1, 2, 3), weight=0)
 root.grid_rowconfigure((4, 5, 6, 7), weight=1)
-root.overrideredirect(True)
+# root.overrideredirect(True)
 root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
 api = KavenegarAPI("3936466A51684633482B34396E5541532F66585A455958385036674E54796A52694530396A48766E6574413D")
 font = CTkFont(family="Vazir",size=25,weight='bold')
@@ -483,6 +483,8 @@ def tarikh_():
             ent_sys_war = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
             ent_sys_war.insert(END,"موبایل")
             ent_sys_war.grid(row=0,column=5,sticky=E,)
+            btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+            btn_show.grid(row=0,column=4,sticky=E,)
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sell in list_sel:
                 sell.configure(state=DISABLED) 
@@ -542,6 +544,8 @@ def tarikh_():
             ent_sys_war = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
             ent_sys_war.insert(END,"موبایل")
             ent_sys_war.grid(row=0,column=5,sticky=E,)
+            btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+            btn_show.grid(row=0,column=4,sticky=E,)
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sell in list_sel:
                 sell.configure(state=DISABLED) 
@@ -615,6 +619,8 @@ def tarikh_():
             ent_sys_war = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
             ent_sys_war.insert(END,"موبایل")
             ent_sys_war.grid(row=0,column=5,sticky=E,)
+            btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+            btn_show.grid(row=0,column=4,sticky=E,)
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sell in list_sel:
                 sell.configure(state=DISABLED) 
@@ -673,6 +679,8 @@ def tarikh_():
             ent_sys_war = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
             ent_sys_war.insert(END,"موبایل")
             ent_sys_war.grid(row=0,column=5,sticky=E,)
+            btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+            btn_show.grid(row=0,column=4,sticky=E,)
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sell in list_sel:
                 sell.configure(state=DISABLED) 
@@ -744,6 +752,8 @@ def tarikh_():
             ent_sys_war = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
             ent_sys_war.insert(END,"موبایل")
             ent_sys_war.grid(row=0,column=5,sticky=E,)
+            btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+            btn_show.grid(row=0,column=4,sticky=E,)
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sell in list_sel:
                 sell.configure(state=DISABLED) 
@@ -803,6 +813,8 @@ def tarikh_():
             ent_sys_war = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
             ent_sys_war.insert(END,"موبایل")
             ent_sys_war.grid(row=0,column=5,sticky=E,)
+            btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+            btn_show.grid(row=0,column=4,sticky=E,)
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sell in list_sel:
                 sell.configure(state=DISABLED) 
@@ -906,6 +918,8 @@ def tarikh_():
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sel in list_sel:
                 sel.configure(state=DISABLED)
+            btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+            btn_show.grid(row=0,column=4,sticky=E,)
         con.commit()
         con.close()
     def sel_2():
@@ -934,6 +948,7 @@ def tarikh_():
         list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
         for sell in list_sel:
             sell.configure(state=DISABLED)  
+        
         con = sqlite3.connect("pz.db")
         c = con.cursor()
         for row in c.execute('SELECT * FROM paziresh'):
@@ -966,6 +981,8 @@ def tarikh_():
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sel in list_sel:
                 sel.configure(state=DISABLED)
+            btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+            btn_show.grid(row=0,column=4,sticky=E,)
         con.commit()
         con.close()
         
@@ -1027,6 +1044,8 @@ def tarikh_():
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sel in list_sel:
                 sel.configure(state=DISABLED)
+            btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+            btn_show.grid(row=0,column=4,sticky=E,)
         con.commit()
         con.close()
     
@@ -1322,8 +1341,8 @@ def login():
     
 # login()
 # paziresh_()
-# tarikh_()
+tarikh_()
 # dashbord()
-show(1)
+# show(1)
 
 root.mainloop()
