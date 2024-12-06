@@ -729,7 +729,6 @@ def tarikh_():
         con = sqlite3.connect("pz.db")
         c = con.cursor()
         if len(search_entry_3.get()) == 11:
-            print(search_entry_3.get())
             clear_frame_sct_3()
             s = CTkFrame(sct_3,border_width=3)
             s.pack(pady=3,anchor=E)
@@ -853,10 +852,10 @@ def tarikh_():
             con.commit()
             con.close()
         elif search_entry_3.get() == '':
-            clear_frame_sct()
+            clear_frame_sct_3()
             sel_3()
         else:
-            clear_frame_sct()
+            clear_frame_sct_3()
             sel_3()
             return messagebox.showerror("مشکل",".شماره موبایل/کدملی اشتباه است")
             
