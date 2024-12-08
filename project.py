@@ -1187,7 +1187,7 @@ def show(data):
                 messagebox.showerror("Error", result) #Show specific error message
         except Exception as e:
             messagebox.showerror("Error", f"An unexpected error occurred: {e}")
-        dashbord()
+        tarikh_()
         
     def save_data_print():
         
@@ -1255,7 +1255,7 @@ def show(data):
                 messagebox.showerror("Error", result) #Show specific error message
         except Exception as e:
             messagebox.showerror("Error", f"An unexpected error occurred: {e}")
-        dashbord()
+        tarikh_()
         
     
     
@@ -1311,7 +1311,13 @@ def show(data):
         lbl_input_system_type = CTkLabel(frame_top,text=" : نوع دستگاه",font=font)
         lbl_input_system_type.grid(row=0,column=3)
         tv_list = [i[4]]
-        combo_input_system_type = CTkComboBox(frame_top,font=font_enry,values=tv_list)
+        if "LCD" in tv_list:
+            tvs_list = ["LCD","LED","PLOSMA"]
+        elif "LED" in tv_list:
+            tvs_list = ["LED","LCD","PLOSMA"]
+        else:
+            tvs_list = ["PLOSMA","LED","LCD",]
+        combo_input_system_type = CTkComboBox(frame_top,font=font_enry,values=tvs_list)
         combo_input_system_type.grid(row=0,column=2)
         lbl_input_system_model = CTkLabel(frame_top,text=" : مدل دستگاه",font=font)
         lbl_input_system_model.grid(row=0,column=1)
