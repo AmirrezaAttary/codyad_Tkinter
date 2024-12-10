@@ -68,11 +68,54 @@ def update_data(id_,data):
         return False
 
 
+def taki(number):
+        
+        try:
+            params = {
+                'receptor':f"{number}", #Recipient phone number
+                'sender': '2000500666',    # Your Kavenegar sender ID
+                'message': '''با سلام
+کالا های شما در 
+شرکت قادری تعمیر و 
+آماده تحویل است.''',
+            }
+            response = api.sms_send(params)
+            print(response) # Check the response from the API
+        except APIException as e:
+            print(f"Error: {e}")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+        dashbord()
+
 def validate_code_meli(code_meli):
   #Basic code meli validation (Adjust if needed)
   pattern = r"^\d{10}$" # Example: 10 digits
   return bool(re.match(pattern, code_meli))
 
+def db_tel():
+    conn = sqlite3.connect('pz.db')
+    cursor = conn.cursor()
+    cursor.execute('''CREATE TABLE IF NOT EXISTS PHONE
+                    (id INTEGER PRIMARY KEY,
+                    tel INTEGER(11) NOT NULL)''')
+    conn.commit()
+    conn.close()
+
+def insert_tel(numb):  # numb is now a list of phone numbers
+    db_tel()
+    try:
+        conn = sqlite3.connect('pz.db')
+        cursor = conn.cursor()
+        cursor.executemany("INSERT INTO PHONE (tel) VALUES (?)", [(num,) for num in numb]) #Create tuples for each number
+        conn.commit()
+        conn.close()
+        return True
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+        return False
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        return False
 
 DARK_MODE = "dark"
 customtkinter.set_appearance_mode(DARK_MODE)
@@ -392,13 +435,15 @@ def paziresh_():
     chek_2 = CTkCheckBox(frame_moshkel,text="خیر",font=font,onvalue="خیر",offvalue="بلی",variable=str_,command=modat)
     chek_2.grid(row=1,column=0,sticky=E)
     
+    
+
 
 def send_sms():
     con = sqlite3.connect("pz.db")
     c = con.cursor()
     list_person_name = []
-    for row in c.execute('SELECT tel FROM paziresh '):
-        a = list(row)
+    for p in c.execute('SELECT tel FROM paziresh '):
+        a = list(p)
         list_person_name.append(a)
     list_person_name_2 = []
     for i in list_person_name:
@@ -406,58 +451,83 @@ def send_sms():
         list_person_name_2.append(a)
     con.commit()
     con.close()
-    def taki():
-        
-        try:
-            params = {
-                'receptor':f"{ent_sms_taki.get()}", #Recipient phone number
-                'sender': '2000500666',    # Your Kavenegar sender ID
-                'message': '''با سلام
-کالا های شما در 
-شرکت قادری تعمیر و 
-آماده تحویل است.''',
-            }
-            response = api.sms_send(params)
-            print(response) # Check the response from the API
-        except APIException as e:
-            print(f"Error: {e}")
-        except Exception as e:
-            print(f"An unexpected error occurred: {e}")
-        dashbord()
+    
+    
     def koli():
         pass
+    def sel_taki():
+        lbl_sms = CTkLabel(far_3,text='ارسال تکی',font=font)
+        lbl_sms.grid(row=0, column=0 ,padx=20,pady=10)
+        frame_send_taki = CTkFrame(far_3,width=300,height=300)
+        frame_send_taki.grid(row=1,column=0,rowspan=3,padx=20,)
+        lbl_sms_taki = CTkLabel(frame_send_taki,text=': شماره مورد نظر',font=font)
+        lbl_sms_taki.pack(pady=25,padx=25)
+        ent_sms_taki = CTkEntry(frame_send_taki,font=font_enry)
+        ent_sms_taki.pack(pady=25,padx=25)
+        but_sms_taki = CTkButton(frame_send_taki,text='ارسال',font=font,fg_color="green",hover_color="#009933", command=lambda numb=ent_sms_taki.get(): taki(numb))
+        but_sms_taki.pack(pady=25,padx=25)
+   
+    ####################################################################################
+    def sel_koli():
+        def clear_kol():
+            for widget in sc_3.winfo_children():
+                widget.destroy()
         
+        frame_send_koli = CTkFrame(far_3,width=300,height=300)
+        frame_send_koli.grid(row=5,column=0,rowspan=3,padx=600,pady=5,sticky=NSEW)
+        frame_send_koli.grid_columnconfigure((0),weight=1)
+        frame_send_koli.grid_rowconfigure((0,1),weight=1)
+        tab_w = CTkTabview(frame_send_koli)
+        tab_w.add('دستگاه داخل')
+        tab_w.add('افزودن')
+        tab_w.add('شماره همه')
+        tab_w.grid(row=0,column=0,)
+        lbl_sms_koli = CTkLabel(far_3,text='ارسال گروهی',font=font)
+        lbl_sms_koli.grid(row=4, column=0 ,padx=20,pady=10)
+        list_numb = []
+        def upload_file_1():
+            def ins():
+                insert_tel(list_numb)
+                dashbord()
+                return messagebox.showinfo('Upload','اطلاعات با موفقیت ذخیره شد')
+            clear_kol()
+            file_path = filedialog.askopenfilename()
+            with open(file_path,'r') as f:
+                for line in f:
+                    numbb = CTkEntry(sc_3,font=font_enry)
+                    numbb.insert(END,f'{line}')
+                    numbb.pack()
+                    list_numb.append(int(numbb.get()))
+                CTkButton(sc_3,font=font,text="ثبت",command=ins).pack()
+            
+            
+        bn = CTkButton(tab_w.tab('افزودن'),text='بارگذاری',font=font,command=upload_file_1)
+        bn.pack()
+        
+        
+        sc = CTkScrollableFrame(tab_w.tab('دستگاه داخل'),300,300)
+        sc.pack()
+        sc_2 = CTkScrollableFrame(tab_w.tab('شماره همه'),300,300)
+        sc_2.pack()
+        sc_3 = CTkScrollableFrame(tab_w.tab('افزودن'),300,300)
+        sc_3.pack()
+        
+        for j in list_person_name_2:
+            numb = CTkEntry(sc,font=font_enry)
+            numb.insert(END,f'0{j}')
+            numb.pack()
+        numb.configure(state=DISABLED)
+        btn_sms_koli = CTkButton(frame_send_koli,text='ارسال',font=font,fg_color="green",hover_color="#009933")
+        btn_sms_koli.grid(row=1,column=0,padx=20,pady=20)
+    
     far_3 = CTkFrame(root)
     far_3.grid(row=1, column=0,rowspan=7, sticky=NSEW)    
     far_3.grid_columnconfigure(0, weight=1)
     far_3.grid_rowconfigure((0, 1, 2, 3,4, 5, 6, 7, 8, 9, 10), weight=1)
-    lbl_sms = CTkLabel(far_3,text='ارسال تکی',font=font)
-    lbl_sms.grid(row=0, column=0 ,padx=20,pady=10)
-    frame_send_taki = CTkFrame(far_3,width=300,height=300)
-    frame_send_taki.grid(row=1,column=0,rowspan=3,padx=20,)
-    lbl_sms_taki = CTkLabel(frame_send_taki,text=': شماره مورد نظر',font=font)
-    lbl_sms_taki.pack(pady=25,padx=25)
-    ent_sms_taki = CTkEntry(frame_send_taki,font=font_enry)
-    ent_sms_taki.pack(pady=25,padx=25)
-    but_sms_taki = CTkButton(frame_send_taki,text='ارسال',font=font,fg_color="green",hover_color="#009933", command=taki)
-    but_sms_taki.pack(pady=25,padx=25)
-    
-    ####################################################################################
-    lbl_sms_koli = CTkLabel(far_3,text='ارسال گروهی',font=font)
-    lbl_sms_koli.grid(row=4, column=0 ,padx=20,pady=10)
-    frame_send_koli = CTkFrame(far_3,width=300,height=300)
-    frame_send_koli.grid(row=5,column=0,rowspan=3,padx=20,pady=5)
-    box = CTkTextbox(frame_send_koli,corner_radius=10,border_width=3,width=180,height=180,font=CTkFont('Vazir',24))
-    box.pack(padx=20,pady=20)
-    for j in list_person_name_2:
-        box.insert(END,f'0{j}\n')
-    box.configure(state=DISABLED)
-    btn_sms_koli = CTkButton(frame_send_koli,text='ارسال',font=font,fg_color="green",hover_color="#009933")
-    btn_sms_koli.pack(padx=20,pady=20)
-    
     bt_from_frame3 = customtkinter.CTkButton(far_3, text="بازگشت",font=font, command=dashbord)
     bt_from_frame3.grid(row=9, column=0, padx=20, pady=(10, 0))
-    
+    sel_taki()
+    sel_koli()
 
 def tarikh_():
     def clear_frame_sct():
@@ -1492,7 +1562,8 @@ def login():
 # login()
 # paziresh_()
 # tarikh_()
-dashbord()
+# dashbord()
 # show(1)
+send_sms()
 
 root.mainloop()
