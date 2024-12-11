@@ -87,6 +87,25 @@ def taki(number):
             print(f"An unexpected error occurred: {e}")
         dashbord()
 
+def koli(numbers):
+        print(numbers)
+        try:
+            params = {
+                'receptor': numbers, #Recipient phone number
+                'sender': '2000500666',    # Your Kavenegar sender ID
+                'message': '''با سلام
+کالا های شما در 
+شرکت قادری تعمیر و 
+آماده تحویل است.''',
+            }
+            response = api.sms_send(params)
+            print(response) # Check the response from the API
+        except APIException as e:
+            return messagebox.showerror("error",f"Error: {e}")
+        except Exception as e:
+            return messagebox.showinfo('yes',f"An unexpected error occurred: {e}")
+        dashbord()
+
 def validate_code_meli(code_meli):
   #Basic code meli validation (Adjust if needed)
   pattern = r"^\d{10}$" # Example: 10 digits
@@ -435,7 +454,7 @@ def paziresh_():
     chek_2 = CTkCheckBox(frame_moshkel,text="خیر",font=font,onvalue="خیر",offvalue="بلی",variable=str_,command=modat)
     chek_2.grid(row=1,column=0,sticky=E)
     
-    
+
 
 
 def send_sms():
@@ -446,26 +465,36 @@ def send_sms():
         a = list(p)
         list_person_name.append(a)
     list_person_name_2 = []
+    list_person_name_2_str = []
     for i in list_person_name:
         a= int(i[0])
         list_person_name_2.append(a)
+        list_person_name_2_str.append(f'0{a}')
+        
+    list_afzode = []
+    list_afzode_str = []
+    for l in c.execute('SELECT tel FROM PHONE '):
+        n = int(l[0])
+        list_afzode.append(n)
+        list_afzode_str.append(f'0{n}')
     con.commit()
     con.close()
     
     
-    def koli():
-        pass
+    
     def sel_taki():
         lbl_sms = CTkLabel(far_3,text='ارسال تکی',font=font)
         lbl_sms.grid(row=0, column=0 ,padx=20,pady=10)
         frame_send_taki = CTkFrame(far_3,width=300,height=300)
         frame_send_taki.grid(row=1,column=0,rowspan=3,padx=20,)
+        frame_send_taki.grid_columnconfigure(0,weight=1)
+        frame_send_taki.grid_rowconfigure((0,1,2),weight=1)
         lbl_sms_taki = CTkLabel(frame_send_taki,text=': شماره مورد نظر',font=font)
-        lbl_sms_taki.pack(pady=25,padx=25)
+        lbl_sms_taki.grid(row=0,column=0,pady=25,padx=25)
         ent_sms_taki = CTkEntry(frame_send_taki,font=font_enry)
-        ent_sms_taki.pack(pady=25,padx=25)
+        ent_sms_taki.grid(row=1,column=0,pady=25,padx=25)
         but_sms_taki = CTkButton(frame_send_taki,text='ارسال',font=font,fg_color="green",hover_color="#009933", command=lambda numb=ent_sms_taki.get(): taki(numb))
-        but_sms_taki.pack(pady=25,padx=25)
+        but_sms_taki.grid(row=2,column=0,pady=25,padx=25)
    
     ####################################################################################
     def sel_koli():
@@ -474,7 +503,7 @@ def send_sms():
                 widget.destroy()
         
         frame_send_koli = CTkFrame(far_3,width=300,height=300)
-        frame_send_koli.grid(row=5,column=0,rowspan=3,padx=600,pady=5,sticky=NSEW)
+        frame_send_koli.grid(row=5,column=0,rowspan=3,padx=300,pady=5,sticky=NSEW)
         frame_send_koli.grid_columnconfigure((0),weight=1)
         frame_send_koli.grid_rowconfigure((0,1),weight=1)
         tab_w = CTkTabview(frame_send_koli)
@@ -485,10 +514,12 @@ def send_sms():
         lbl_sms_koli = CTkLabel(far_3,text='ارسال گروهی',font=font)
         lbl_sms_koli.grid(row=4, column=0 ,padx=20,pady=10)
         list_numb = []
+        list_numb_str = []
         def upload_file_1():
             def ins():
+                print(list_numb_str)
                 insert_tel(list_numb)
-                dashbord()
+                send_sms()
                 return messagebox.showinfo('Upload','اطلاعات با موفقیت ذخیره شد')
             clear_kol()
             file_path = filedialog.askopenfilename()
@@ -497,7 +528,9 @@ def send_sms():
                     numbb = CTkEntry(sc_3,font=font_enry)
                     numbb.insert(END,f'{line}')
                     numbb.pack()
-                    list_numb.append(int(numbb.get()))
+                    a = int(numbb.get())
+                    list_numb.append(a)
+                    list_numb_str.append(f'0{a}')
                 CTkButton(sc_3,font=font,text="ثبت",command=ins).pack()
             
             
@@ -505,9 +538,9 @@ def send_sms():
         bn.pack()
         
         
-        sc = CTkScrollableFrame(tab_w.tab('دستگاه داخل'),300,300)
+        sc = CTkScrollableFrame(tab_w.tab('دستگاه داخل'),300,300,3,3)
         sc.pack()
-        sc_2 = CTkScrollableFrame(tab_w.tab('شماره همه'),300,300)
+        sc_2 = CTkScrollableFrame(tab_w.tab('شماره همه'),300,300,3,3)
         sc_2.pack()
         sc_3 = CTkScrollableFrame(tab_w.tab('افزودن'),300,300)
         sc_3.pack()
@@ -516,9 +549,21 @@ def send_sms():
             numb = CTkEntry(sc,font=font_enry)
             numb.insert(END,f'0{j}')
             numb.pack()
+        for j in list_person_name_2:
+            numb = CTkEntry(sc_2,font=font_enry)
+            numb.insert(END,f'0{j}')
+            numb.pack()
+        for o in list_afzode:
+            numb = CTkEntry(sc_2,font=font_enry)
+            numb.insert(END,f'0{o}')
+            numb.pack()
         numb.configure(state=DISABLED)
-        btn_sms_koli = CTkButton(frame_send_koli,text='ارسال',font=font,fg_color="green",hover_color="#009933")
-        btn_sms_koli.grid(row=1,column=0,padx=20,pady=20)
+        btn_sms_koli = CTkButton(tab_w.tab('دستگاه داخل'),text='ارسال',font=font,fg_color="green",hover_color="#009933",command=lambda numb=list_person_name_2_str: koli(numb))
+        btn_sms_koli.pack(padx=20,pady=20)
+        btn_sms_koli_2 = CTkButton(tab_w.tab('شماره همه'),text='ارسال',font=font,fg_color="green",hover_color="#009933",command=lambda numb=list_afzode_str: koli(numb))
+        btn_sms_koli_2.pack(padx=20,pady=20)
+    
+    
     
     far_3 = CTkFrame(root)
     far_3.grid(row=1, column=0,rowspan=7, sticky=NSEW)    
