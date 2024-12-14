@@ -112,7 +112,7 @@ root.grid_columnconfigure(0, weight=1)
 root.grid_rowconfigure((0, 1, 2, 3), weight=0)
 root.grid_rowconfigure((4, 5, 6, 7), weight=1)
 # root.overrideredirect(True)
-
+root.title('Behroz Electronic')
 root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
 api = KavenegarAPI("742F364166354D7762516C617272357A545936513567685A5064344851557141504D726D65645A337132493D")
 font = CTkFont(family="Vazir",size=25,weight='bold')
@@ -451,7 +451,7 @@ def paziresh_():
         elif chek.get() == "خیر":
             ent_modat_garanti.configure(placeholder_text="مدت گارانتی",state=DISABLED)
     
-    chek_exit = CTkCheckBox(frame_moshkel,text="خروجی از سامانه",font=font,onvalue=1,offvalue=0)
+    chek_exit = CTkCheckBox(frame_moshkel,text="آماده تحویل",font=font,onvalue=1,offvalue=0)
     chek_exit.grid(row=2,column=0,sticky=E)
     
     abbbb = ''
@@ -524,15 +524,15 @@ def send_sms():
         frame_send_koli.grid_rowconfigure((0,1),weight=1)
         tab_w = CTkTabview(frame_send_koli)
         tab_w.add('دستگاه داخل')
-        tab_w.add('افزودن')
-        tab_w.add('شماره همه')
+        tab_w.add('+افزودن')
         tab_w.add('شده افزوده')
+        tab_w.add('شماره همه')
         tab_w.tab('دستگاه داخل').grid_rowconfigure((0,1,2),weight=1)
-        tab_w.tab('افزودن').grid_rowconfigure((0,1,2),weight=1)
+        tab_w.tab('+افزودن').grid_rowconfigure((0,1,2),weight=1)
         tab_w.tab('شماره همه').grid_rowconfigure((0,1,2),weight=1)
         tab_w.tab('شده افزوده').grid_rowconfigure((0,1,2),weight=1)
         tab_w.tab('دستگاه داخل').grid_columnconfigure(0,weight=1)
-        tab_w.tab('افزودن').grid_columnconfigure(0,weight=1)
+        tab_w.tab('+افزودن').grid_columnconfigure(0,weight=1)
         tab_w.tab('شماره همه').grid_columnconfigure(0,weight=1)
         tab_w.tab('شده افزوده').grid_columnconfigure(0,weight=1)
         
@@ -560,7 +560,7 @@ def send_sms():
                 CTkButton(sc_3,font=font,text="ثبت",command=ins).pack()
             
             
-        bn = CTkButton(tab_w.tab('افزودن'),text='بارگذاری',font=font,command=upload_file_1)
+        bn = CTkButton(tab_w.tab('+افزودن'),text='بارگذاری',font=font,command=upload_file_1)
         bn.grid(row=2,column=0)
         
         
@@ -568,7 +568,7 @@ def send_sms():
         sc.grid(row=0,rowspan=1,column=0)
         sc_2 = CTkScrollableFrame(tab_w.tab('شماره همه'),300,250,3,3)
         sc_2.grid(row=0,rowspan=1,column=0)
-        sc_3 = CTkScrollableFrame(tab_w.tab('افزودن'),300,250,3,3)
+        sc_3 = CTkScrollableFrame(tab_w.tab('+افزودن'),300,250,3,3)
         sc_3.grid(row=0,rowspan=1,column=0)
         sc_4 = CTkScrollableFrame(tab_w.tab('شده افزوده'),300,250,3,3)
         sc_4.grid(row=0,rowspan=1,column=0)
@@ -1235,13 +1235,13 @@ def tarikh_():
     tab_view.grid(row=0,rowspan=4, column=0, padx=20, pady=20,sticky=NSEW)
     tab_view.add("تعمیر درحال")
     tab_view.add("سفارش همه")
-    tab_view.add("شده تعمیرش")
+    tab_view.add("تحویل آماده")
     tab_view.tab("تعمیر درحال").grid_rowconfigure((0, 1, 2, 3, 4), weight=1)
     tab_view.tab("تعمیر درحال").grid_columnconfigure((0), weight=1)
     tab_view.tab("سفارش همه").grid_rowconfigure((0, 1, 2, 3, 4), weight=1)
     tab_view.tab("سفارش همه").grid_columnconfigure((0), weight=1)
-    tab_view.tab("شده تعمیرش").grid_rowconfigure((0, 1, 2, 3, 4), weight=1)
-    tab_view.tab("شده تعمیرش").grid_columnconfigure((0), weight=1)
+    tab_view.tab("تحویل آماده").grid_rowconfigure((0, 1, 2, 3, 4), weight=1)
+    tab_view.tab("تحویل آماده").grid_columnconfigure((0), weight=1)
     ################################################################################
     search_frame = CTkFrame(tab_view.tab("تعمیر درحال"))
     search_frame.grid(row=0, column=0,padx=20,sticky=E)
@@ -1265,7 +1265,7 @@ def tarikh_():
     search_btn_2 = CTkButton(search_frame_2,text="جستوجو",font=font,command=search_2)
     search_btn_2.grid(row=0, column=1,padx=20,sticky=E)
     ################################################################################
-    search_frame_3 = CTkFrame(tab_view.tab("شده تعمیرش"))
+    search_frame_3 = CTkFrame(tab_view.tab("تحویل آماده"))
     search_frame_3.grid(row=0, column=0,padx=20,sticky=E)
     search_frame_3.grid_columnconfigure((0, 1, 2, 3), weight=1)
     search_frame_3.grid_rowconfigure(0,weight=1)
@@ -1280,7 +1280,7 @@ def tarikh_():
     sct.grid(row=1, column=0,rowspan=4,padx=20,sticky=NSEW)
     sct_2 = CTkScrollableFrame(tab_view.tab("سفارش همه"),200,200,0,5)
     sct_2.grid(row=1, column=0,rowspan=4,padx=20,sticky=NSEW)
-    sct_3 = CTkScrollableFrame(tab_view.tab("شده تعمیرش"),200,200,0,5)
+    sct_3 = CTkScrollableFrame(tab_view.tab("تحویل آماده"),200,200,0,5)
     sct_3.grid(row=1, column=0,rowspan=4,padx=20,sticky=NSEW)
     sel_(),sel_2(),sel_3()
 
@@ -1569,7 +1569,7 @@ def show(data):
                 ent_departure_date.configure(state=DISABLED)
         b = int(i[18])
         val = IntVar(value=b)
-        chek_exit = CTkCheckBox(frame_moshkel,text="خروجی از سامانه",font=font,onvalue=1,variable=val,offvalue=0,command=exittt)
+        chek_exit = CTkCheckBox(frame_moshkel,text="آماده تحویل",font=font,onvalue=1,variable=val,offvalue=0,command=exittt)
         chek_exit.grid(row=2,column=0,sticky=E)
         
         abbbb = f'{i[15]}'
@@ -1602,7 +1602,7 @@ def login():
                     (name_id INTEGER PRIMARY KEY,
                     USER varchar(20) NOT NULL,
                     PASSWORD varchar(20) NOT NULL)''')
-        admin = [('admin', 'admin')]
+        admin = [('admin', '7070816')]
         cursor.execute("SELECT MAX(name_id) FROM ADMIN")
         result = cursor.fetchone()
         if result[0] == 1:
@@ -1620,7 +1620,7 @@ def login():
             password = i[2]
         conn.commit()
         conn.close()
-        if user == ent_password_login.get() and password == ent_password_login.get():
+        if user == ent_user_login.get() and password == ent_password_login.get():
             dashbord()
             return messagebox.showinfo("ورود به سیستم", ".با موفقیت وارد شدید")
         else:
@@ -1646,8 +1646,8 @@ def login():
 # login()
 # paziresh_()
 # tarikh_()
-# dashbord()
+dashbord()
 # show(1)
-send_sms()
+# send_sms()
 
 root.mainloop()
