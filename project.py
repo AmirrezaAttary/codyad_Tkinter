@@ -20,7 +20,7 @@ def create_database():
                 system varchar(20) NOT NULL,
                 system_type varchar(20) NOT NULL,
                 system_model varchar(20) NOT NULL,
-                system_serial INTEGER(20) NOT NULL,
+                system_serial varchar(20) NOT NULL,
                 input_name varchar(20) NOT NULL,
                 tel INTEGER(10) NOT NULL,
                 code_meli INTEGER(11) NOT NULL,
@@ -35,6 +35,8 @@ def create_database():
                 status INTEGER(1) NOT NULL)''')
   conn.commit()
   conn.close()
+
+create_database()
 
 def insert_data(data):
   try:
@@ -68,43 +70,6 @@ def update_data(id_,data):
         return False
 
 
-def taki(number):
-        
-        try:
-            params = {
-                'receptor':f"{number}", #Recipient phone number
-                'sender': '2000500666',    # Your Kavenegar sender ID
-                'message': '''با سلام
-کالا های شما در 
-شرکت قادری تعمیر و 
-آماده تحویل است.''',
-            }
-            response = api.sms_send(params)
-            print(response) # Check the response from the API
-        except APIException as e:
-            print(f"Error: {e}")
-        except Exception as e:
-            print(f"An unexpected error occurred: {e}")
-        dashbord()
-
-def koli(numbers):
-        print(numbers)
-        try:
-            params = {
-                'receptor': numbers, #Recipient phone number
-                'sender': '2000500666',    # Your Kavenegar sender ID
-                'message': '''با سلام
-کالا های شما در 
-شرکت قادری تعمیر و 
-آماده تحویل است.''',
-            }
-            response = api.sms_send(params)
-            print(response) # Check the response from the API
-        except APIException as e:
-            return messagebox.showerror("error",f"Error: {e}")
-        except Exception as e:
-            return messagebox.showinfo('yes',f"An unexpected error occurred: {e}")
-        dashbord()
 
 def validate_code_meli(code_meli):
   #Basic code meli validation (Adjust if needed)
@@ -147,11 +112,53 @@ root.grid_columnconfigure(0, weight=1)
 root.grid_rowconfigure((0, 1, 2, 3), weight=0)
 root.grid_rowconfigure((4, 5, 6, 7), weight=1)
 # root.overrideredirect(True)
+
 root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
-api = KavenegarAPI("3936466A51684633482B34396E5541532F66585A455958385036674E54796A52694530396A48766E6574413D")
+api = KavenegarAPI("742F364166354D7762516C617272357A545936513567685A5064344851557141504D726D65645A337132493D")
 font = CTkFont(family="Vazir",size=25,weight='bold')
 font_enry=CTkFont(family="Vazir",size=20)
 #########################################################################################
+
+
+def taki(number):
+        print(number)
+        try:
+            params = {
+                'receptor':f"{number}", #Recipient phone number
+                'sender': '200060006069',    # Your Kavenegar sender ID
+                'message': '''با سلام
+کالا های شما در 
+شرکت قادری تعمیر و 
+آماده تحویل است.''',
+            }
+            response = api.sms_send(params)
+            print(response) # Check the response from the API
+        except APIException as e:
+            return messagebox.showerror("error",f"Error: {e}")
+        except Exception as e:
+            dashbord()
+            return messagebox.showinfo('yes',f"An unexpected error occurred: {e}")
+        
+
+def koli(numbers):
+        print(numbers)
+        try:
+            params = {
+                'receptor': numbers, #Recipient phone number
+                'sender': '200060006069',    # Your Kavenegar sender ID
+                'message': '''با سلام
+کالا های شما در 
+شرکت قادری تعمیر و 
+آماده تحویل است.''',
+            }
+            response = api.sms_send(params)
+            print(response) # Check the response from the API
+        except APIException as e:
+            return messagebox.showerror("error",f"Error: {e}")
+        except Exception as e:
+            dashbord()
+            return messagebox.showinfo('yes',f"An unexpected error occurred: {e}")
+        
 
 def clear_frame():
   for widget in root.winfo_children():
@@ -209,7 +216,7 @@ def paziresh_():
             system_type = combo_input_system_type.get()
             system_model = ent_input_system_model.get()
             try:
-                system_serial = int(ent_input_system_serial.get())
+                system_serial = str(ent_input_system_serial.get())
             except ValueError:
                 return messagebox.showerror("Error", "Serial number must be an integer.")
             input_name = ent_input_name.get()
@@ -253,7 +260,7 @@ def paziresh_():
             system_type = combo_input_system_type.get()
             system_model = ent_input_system_model.get()
             try:
-                system_serial = int(ent_input_system_serial.get())
+                system_serial = str(ent_input_system_serial.get())
             except ValueError:
                 return messagebox.showerror("Error", "Serial number must be an integer.")
             input_name = ent_input_name.get()
@@ -298,13 +305,13 @@ def paziresh_():
                 'moshkel':ent_input_description.get("1.0", END),
                 'modat' : ent_modat_garanti.get()
                 }
-                temp_loder = jinja2.FileSystemLoader('./')
+                temp_loder = jinja2.FileSystemLoader('./template/')
                 temp_env = jinja2.Environment(loader=temp_loder)
                 temp = temp_env.get_template('atar.html')
                 output_text = temp.render(context)
                 # Replace with your path
                 config = pdfkit.configuration(wkhtmltopdf = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
-                pdfkit.from_string(output_text,f'./ex/sefaresh_{ent_input_id.get()}.pdf',options={"encoding":'UTF-8','page-width': 210,'page-height': 151},configuration=config,)
+                pdfkit.from_string(output_text,f'./print/sefaresh_{ent_input_id.get()}.pdf',options={"encoding":'UTF-8','page-width': 210,'page-height': 151},configuration=config,)
                 messagebox.showinfo("چاپ",'رسید پرینت شد')
             else:
                 messagebox.showerror("Error", result) #Show specific error message
@@ -385,20 +392,20 @@ def paziresh_():
     ent_input_name_tel = CTkEntry(frame_down,font=font_enry,justify=LEFT)
     ent_input_name_tel.grid(row=0,column=2)
     lbl_input_name_code_meli = CTkLabel(frame_down,text=" : کد ملی ",font=font)
-    lbl_input_name_code_meli.grid(row=0,column=1)
+    lbl_input_name_code_meli.grid(row=0,column=1,sticky=W)
     ent_input_name_code_meli = CTkEntry(frame_down,font=font_enry,justify=LEFT)
-    ent_input_name_code_meli.grid(row=0,column=0)
+    ent_input_name_code_meli.grid(row=0,column=0,sticky=E)
     lbl_input_name_tel_sabet = CTkLabel(frame_down,text=" : تلفن ثابت",font=font)
     lbl_input_name_tel_sabet.grid(row=1,column=5)
     ent_input_name_tel_sabet = CTkEntry(frame_down,font=font_enry,justify=RIGHT)
     ent_input_name_tel_sabet.grid(row=1,column=4)
     lbl_input_name_adress = CTkLabel(frame_down,text=" : آدرس ",font=font)
-    lbl_input_name_adress.grid(row=1,column=3)
-    ent_input_name_adress = CTkTextbox(frame_down,font=font,corner_radius=10,width=600,border_width=3)
+    lbl_input_name_adress.grid(row=1,column=2,sticky=W)
+    ent_input_name_adress = CTkTextbox(frame_down,font=font,corner_radius=10,width=400,height=100,border_width=3)
     ent_input_name_adress.tag_config("rtl",justify=RIGHT)
     ent_input_name_adress.tag_add("rtl",0.0,END)
     ent_input_name_adress.insert(0.0,'استان\n','rtl')
-    ent_input_name_adress.grid(row=1,column=0,columnspan=2,)
+    ent_input_name_adress.grid(row=1,column=0,columnspan=2)
     #############################################################################
     lbl_3 = CTkLabel(far_2, text="مشخصات مشکل",font=font)
     lbl_3.grid(row=9,column=5,sticky=E,padx=10)
@@ -408,7 +415,7 @@ def paziresh_():
     frame_moshkel.grid_rowconfigure((0,1,2),weight=1)
     lbl_problem = CTkLabel(frame_moshkel,text=' : ایراد ظاهری',font=font)
     lbl_problem.grid(row=0,column=3,)
-    ent_problem = CTkTextbox(frame_moshkel,font=font_enry,corner_radius=10,width=500,height=120,border_width=3)
+    ent_problem = CTkTextbox(frame_moshkel,font=font_enry,corner_radius=10,width=400,height=100,border_width=3)
     ent_problem.grid(row=0,column=2,sticky=E)
     ent_problem.tag_config('rtl',justify=RIGHT)
     ent_problem.tag_add('rtl',0.0,END)
@@ -420,14 +427,14 @@ def paziresh_():
     ent_cost.insert(0,0)
     lbl_input_description = CTkLabel(frame_moshkel,text=" : توضیحات ",font=font)
     lbl_input_description.grid(row=1,column=3)
-    ent_input_description = CTkTextbox(frame_moshkel,font=font_enry,corner_radius=10,width=500,height=120,border_width=3)
+    ent_input_description = CTkTextbox(frame_moshkel,font=font_enry,corner_radius=10,width=400,height=100,border_width=3)
     ent_input_description.tag_config("rtl",justify=RIGHT)
     ent_input_description.tag_add("rtl",0.0,END)
     ent_input_description.insert(0.0,'شکستگی\n','rtl')
     ent_input_description.grid(row=1,column=2,sticky=E)
     lbl_tak = CTkLabel(frame_moshkel,text=": نظر تکنسین",font=font)
     lbl_tak.grid(row=2,column=3)
-    ent_tak = CTkTextbox(frame_moshkel,font=font_enry,corner_radius=10,width=500,height=120,border_width=3)
+    ent_tak = CTkTextbox(frame_moshkel,font=font_enry,corner_radius=10,width=400,height=100,border_width=3)
     ent_tak.tag_config("rtl",justify=RIGHT)
     ent_tak.tag_add("rtl",0.0,END)
     ent_tak.insert(0.0,'شکستگی\n','rtl')
@@ -449,17 +456,19 @@ def paziresh_():
     
     abbbb = ''
     str_ = StringVar(value=abbbb)
-    chek = CTkCheckBox(frame_moshkel,70,text="بلی",font=font,onvalue="بلی",offvalue="خیر",variable=str_,command=modat)
-    chek.grid(row=1,column=1,sticky=W)
+    chek = CTkCheckBox(frame_moshkel,30,text="بلی",font=font,onvalue="بلی",offvalue="خیر",variable=str_,command=modat)
+    chek.grid(row=1,column=0,sticky=E)
     chek_2 = CTkCheckBox(frame_moshkel,text="خیر",font=font,onvalue="خیر",offvalue="بلی",variable=str_,command=modat)
-    chek_2.grid(row=1,column=0,sticky=E)
+    chek_2.grid(row=1,column=0,)
     
 
 
 
 def send_sms():
+    db_tel()
     con = sqlite3.connect("pz.db")
     c = con.cursor()
+    list_jam = []
     list_person_name = []
     for p in c.execute('SELECT tel FROM paziresh '):
         a = list(p)
@@ -470,6 +479,7 @@ def send_sms():
         a= int(i[0])
         list_person_name_2.append(a)
         list_person_name_2_str.append(f'0{a}')
+        list_jam.append(f'0{a}')
         
     list_afzode = []
     list_afzode_str = []
@@ -477,24 +487,30 @@ def send_sms():
         n = int(l[0])
         list_afzode.append(n)
         list_afzode_str.append(f'0{n}')
+        list_jam.append(f'0{n}')
     con.commit()
     con.close()
     
     
     
     def sel_taki():
-        lbl_sms = CTkLabel(far_3,text='ارسال تکی',font=font)
+        
+        def get__():
+            print(ent_sms_taki.get())
+            numb=ent_sms_taki.get() 
+            taki(numb)
+        lbl_sms = CTkLabel(far_3,height=10,text='ارسال تکی',font=font)
         lbl_sms.grid(row=0, column=0 ,padx=20,pady=10)
-        frame_send_taki = CTkFrame(far_3,width=300,height=300)
+        frame_send_taki = CTkFrame(far_3,width=300,height=200)
         frame_send_taki.grid(row=1,column=0,rowspan=3,padx=20,)
         frame_send_taki.grid_columnconfigure(0,weight=1)
         frame_send_taki.grid_rowconfigure((0,1,2),weight=1)
         lbl_sms_taki = CTkLabel(frame_send_taki,text=': شماره مورد نظر',font=font)
-        lbl_sms_taki.grid(row=0,column=0,pady=25,padx=25)
+        lbl_sms_taki.grid(row=0,column=0,padx=25)
         ent_sms_taki = CTkEntry(frame_send_taki,font=font_enry)
         ent_sms_taki.grid(row=1,column=0,pady=25,padx=25)
-        but_sms_taki = CTkButton(frame_send_taki,text='ارسال',font=font,fg_color="green",hover_color="#009933", command=lambda numb=ent_sms_taki.get(): taki(numb))
-        but_sms_taki.grid(row=2,column=0,pady=25,padx=25)
+        but_sms_taki = CTkButton(frame_send_taki,text='ارسال',font=font,fg_color="green",hover_color="#009933", command=get__)
+        but_sms_taki.grid(row=2,column=0,padx=25)
    
     ####################################################################################
     def sel_koli():
@@ -502,7 +518,7 @@ def send_sms():
             for widget in sc_3.winfo_children():
                 widget.destroy()
         
-        frame_send_koli = CTkFrame(far_3,width=300,height=300)
+        frame_send_koli = CTkFrame(far_3,width=300,height=200)
         frame_send_koli.grid(row=5,column=0,rowspan=3,padx=300,pady=5,sticky=NSEW)
         frame_send_koli.grid_columnconfigure((0),weight=1)
         frame_send_koli.grid_rowconfigure((0,1),weight=1)
@@ -510,6 +526,16 @@ def send_sms():
         tab_w.add('دستگاه داخل')
         tab_w.add('افزودن')
         tab_w.add('شماره همه')
+        tab_w.add('شده افزوده')
+        tab_w.tab('دستگاه داخل').grid_rowconfigure((0,1,2),weight=1)
+        tab_w.tab('افزودن').grid_rowconfigure((0,1,2),weight=1)
+        tab_w.tab('شماره همه').grid_rowconfigure((0,1,2),weight=1)
+        tab_w.tab('شده افزوده').grid_rowconfigure((0,1,2),weight=1)
+        tab_w.tab('دستگاه داخل').grid_columnconfigure(0,weight=1)
+        tab_w.tab('افزودن').grid_columnconfigure(0,weight=1)
+        tab_w.tab('شماره همه').grid_columnconfigure(0,weight=1)
+        tab_w.tab('شده افزوده').grid_columnconfigure(0,weight=1)
+        
         tab_w.grid(row=0,column=0,)
         lbl_sms_koli = CTkLabel(far_3,text='ارسال گروهی',font=font)
         lbl_sms_koli.grid(row=4, column=0 ,padx=20,pady=10)
@@ -535,40 +561,53 @@ def send_sms():
             
             
         bn = CTkButton(tab_w.tab('افزودن'),text='بارگذاری',font=font,command=upload_file_1)
-        bn.pack()
+        bn.grid(row=2,column=0)
         
         
-        sc = CTkScrollableFrame(tab_w.tab('دستگاه داخل'),300,300,3,3)
-        sc.pack()
-        sc_2 = CTkScrollableFrame(tab_w.tab('شماره همه'),300,300,3,3)
-        sc_2.pack()
-        sc_3 = CTkScrollableFrame(tab_w.tab('افزودن'),300,300)
-        sc_3.pack()
+        sc = CTkScrollableFrame(tab_w.tab('دستگاه داخل'),300,250,3,3)
+        sc.grid(row=0,rowspan=1,column=0)
+        sc_2 = CTkScrollableFrame(tab_w.tab('شماره همه'),300,250,3,3)
+        sc_2.grid(row=0,rowspan=1,column=0)
+        sc_3 = CTkScrollableFrame(tab_w.tab('افزودن'),300,250,3,3)
+        sc_3.grid(row=0,rowspan=1,column=0)
+        sc_4 = CTkScrollableFrame(tab_w.tab('شده افزوده'),300,250,3,3)
+        sc_4.grid(row=0,rowspan=1,column=0)
         
         for j in list_person_name_2:
             numb = CTkEntry(sc,font=font_enry)
             numb.insert(END,f'0{j}')
             numb.pack()
+            numb.configure(state=DISABLED)
         for j in list_person_name_2:
             numb = CTkEntry(sc_2,font=font_enry)
             numb.insert(END,f'0{j}')
             numb.pack()
+            numb.configure(state=DISABLED)
         for o in list_afzode:
             numb = CTkEntry(sc_2,font=font_enry)
             numb.insert(END,f'0{o}')
             numb.pack()
-        numb.configure(state=DISABLED)
+            numb.configure(state=DISABLED)
+        for x in list_afzode:
+            numb = CTkEntry(sc_4,font=font_enry)
+            numb.insert(END,f'0{x}')
+            numb.pack()
+            numb.configure(state=DISABLED)
+       
+        
         btn_sms_koli = CTkButton(tab_w.tab('دستگاه داخل'),text='ارسال',font=font,fg_color="green",hover_color="#009933",command=lambda numb=list_person_name_2_str: koli(numb))
-        btn_sms_koli.pack(padx=20,pady=20)
-        btn_sms_koli_2 = CTkButton(tab_w.tab('شماره همه'),text='ارسال',font=font,fg_color="green",hover_color="#009933",command=lambda numb=list_afzode_str: koli(numb))
-        btn_sms_koli_2.pack(padx=20,pady=20)
+        btn_sms_koli.grid(row=2,column=0,padx=20,pady=20)
+        btn_sms_koli_2 = CTkButton(tab_w.tab('شماره همه'),text='ارسال',font=font,fg_color="green",hover_color="#009933",command=lambda numb=list_jam: koli(numb))
+        btn_sms_koli_2.grid(row=2,column=0,padx=20,pady=20)
+        btn_sms_koli_3 = CTkButton(tab_w.tab('شده افزوده'),text='ارسال',font=font,fg_color="green",hover_color="#009933",command=lambda numb=list_afzode_str: koli(numb))
+        btn_sms_koli_3.grid(row=2,column=0,padx=20,pady=20)
     
     
     
     far_3 = CTkFrame(root)
     far_3.grid(row=1, column=0,rowspan=7, sticky=NSEW)    
-    far_3.grid_columnconfigure(0, weight=1)
-    far_3.grid_rowconfigure((0, 1, 2, 3,4, 5, 6, 7, 8, 9, 10), weight=1)
+    far_3.grid_columnconfigure((0), weight=1)
+    far_3.grid_rowconfigure((0, 1, 2, 3,4, 5, 6, 7, 8, 9, 10,11), weight=1)
     bt_from_frame3 = customtkinter.CTkButton(far_3, text="بازگشت",font=font, command=dashbord)
     bt_from_frame3.grid(row=9, column=0, padx=20, pady=(10, 0))
     sel_taki()
@@ -642,7 +681,7 @@ def tarikh_():
                 f = f"0{row[8]}"
                 ent_sys_war.insert(END,f)
                 ent_sys_war.grid(row=0,column=5,sticky=E,)
-                btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+                btn_show = CTkButton(s,100,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
                 btn_show.grid(row=0,column=4,sticky=E,)
                 list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
                 for sel in list_sel:
@@ -704,7 +743,7 @@ def tarikh_():
                 f = f"0{row[8]}"
                 ent_sys_war.insert(END,f)
                 ent_sys_war.grid(row=0,column=5,sticky=E,)
-                btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+                btn_show = CTkButton(s,100,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
                 btn_show.grid(row=0,column=4,sticky=E,)
                 
                 list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
@@ -779,7 +818,7 @@ def tarikh_():
                 f = f"0{row[8]}"
                 ent_sys_war.insert(END,f)
                 ent_sys_war.grid(row=0,column=5,sticky=E,)
-                btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+                btn_show = CTkButton(s,100,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
                 btn_show.grid(row=0,column=4,sticky=E,)
                 list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
                 for sel in list_sel:
@@ -839,7 +878,7 @@ def tarikh_():
                 f = f"0{row[8]}"
                 ent_sys_war.insert(END,f)
                 ent_sys_war.grid(row=0,column=5,sticky=E,)
-                btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+                btn_show = CTkButton(s,100,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
                 btn_show.grid(row=0,column=4,sticky=E,)
                 
                 list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
@@ -912,7 +951,7 @@ def tarikh_():
                 f = f"0{row[8]}"
                 ent_sys_war.insert(END,f)
                 ent_sys_war.grid(row=0,column=5,sticky=E,)
-                btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+                btn_show = CTkButton(s,100,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
                 btn_show.grid(row=0,column=4,sticky=E,)
                 list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
                 for sel in list_sel:
@@ -974,7 +1013,7 @@ def tarikh_():
                 f = f"0{row[8]}"
                 ent_sys_war.insert(END,f)
                 ent_sys_war.grid(row=0,column=5,sticky=E,)
-                btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+                btn_show = CTkButton(s,100,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
                 btn_show.grid(row=0,column=4,sticky=E,)
                 list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
                 for sel in list_sel:
@@ -1049,7 +1088,7 @@ def tarikh_():
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sel in list_sel:
                 sel.configure(state=DISABLED)
-            btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+            btn_show = CTkButton(s,100,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
             btn_show.grid(row=0,column=4,sticky=E,)
         con.commit()
         con.close()
@@ -1112,7 +1151,7 @@ def tarikh_():
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sel in list_sel:
                 sel.configure(state=DISABLED)
-            btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+            btn_show = CTkButton(s,100,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
             btn_show.grid(row=0,column=4,sticky=E,)
         con.commit()
         con.close()
@@ -1175,7 +1214,7 @@ def tarikh_():
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sel in list_sel:
                 sel.configure(state=DISABLED)
-            btn_show = CTkButton(s,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+            btn_show = CTkButton(s,100,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
             btn_show.grid(row=0,column=4,sticky=E,)
         con.commit()
         con.close()
@@ -1269,7 +1308,7 @@ def show(data):
             system_type = combo_input_system_type.get()
             system_model = ent_input_system_model.get()
             try:
-                system_serial = int(ent_input_system_serial.get())
+                system_serial = str(ent_input_system_serial.get())
             except ValueError:
                 return messagebox.showerror("Error", "Serial number must be an integer.")
             input_name = ent_input_name.get()
@@ -1313,7 +1352,7 @@ def show(data):
             system_type = combo_input_system_type.get()
             system_model = ent_input_system_model.get()
             try:
-                system_serial = int(ent_input_system_serial.get())
+                system_serial = str(ent_input_system_serial.get())
             except ValueError:
                 return messagebox.showerror("Error", "Serial number must be an integer.")
             input_name = ent_input_name.get()
@@ -1358,13 +1397,13 @@ def show(data):
                 'moshkel':ent_input_description.get("1.0", END),
                 'modat' : ent_modat_garanti.get()
                 }
-                temp_loder = jinja2.FileSystemLoader('./')
+                temp_loder = jinja2.FileSystemLoader('./template/')
                 temp_env = jinja2.Environment(loader=temp_loder)
                 temp = temp_env.get_template('atar.html')
                 output_text = temp.render(context)
                 # Replace with your path
                 config = pdfkit.configuration(wkhtmltopdf = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
-                pdfkit.from_string(output_text,f'./ex/sefaresh_{ent_input_id.get()}_mojadad.pdf',options={"encoding":'UTF-8','page-width': 210,'page-height': 151},configuration=config,)
+                pdfkit.from_string(output_text,f'./print_agin/sefaresh_{ent_input_id.get()}_mojadad.pdf',options={"encoding":'UTF-8','page-width': 210,'page-height': 151},configuration=config,)
                 messagebox.showinfo("چاپ",'رسید پرینت شد')
             else:
                 messagebox.showerror("Error", result) #Show specific error message
@@ -1462,18 +1501,18 @@ def show(data):
         ent_input_name_tel.insert(0,f"0{i[8]}")
         ent_input_name_tel.grid(row=0,column=2)
         lbl_input_name_code_meli = CTkLabel(frame_down,text=" : کد ملی ",font=font)
-        lbl_input_name_code_meli.grid(row=0,column=1)
+        lbl_input_name_code_meli.grid(row=0,column=1,sticky=W)
         ent_input_name_code_meli = CTkEntry(frame_down,font=font_enry,justify=LEFT)
         ent_input_name_code_meli.insert(0,f"0{i[9]}")
-        ent_input_name_code_meli.grid(row=0,column=0)
+        ent_input_name_code_meli.grid(row=0,column=0,sticky=E)
         lbl_input_name_tel_sabet = CTkLabel(frame_down,text=" : تلفن ثابت",font=font)
         lbl_input_name_tel_sabet.grid(row=1,column=5)
         ent_input_name_tel_sabet = CTkEntry(frame_down,font=font_enry,justify=RIGHT)
         ent_input_name_tel_sabet.insert(0,i[10])
         ent_input_name_tel_sabet.grid(row=1,column=4)
         lbl_input_name_adress = CTkLabel(frame_down,text=" : آدرس ",font=font)
-        lbl_input_name_adress.grid(row=1,column=3)
-        ent_input_name_adress = CTkTextbox(frame_down,font=font,corner_radius=10,width=600,border_width=3)
+        lbl_input_name_adress.grid(row=1,column=2,sticky=W)
+        ent_input_name_adress = CTkTextbox(frame_down,height=100,font=font,corner_radius=10,width=400,border_width=3)
         ent_input_name_adress.tag_config("rtl",justify=RIGHT)
         ent_input_name_adress.tag_add("rtl",0.0,END)
         ent_input_name_adress.insert(0.0,i[11],'rtl')
@@ -1487,7 +1526,7 @@ def show(data):
         frame_moshkel.grid_rowconfigure((0,1,2),weight=1)
         lbl_problem = CTkLabel(frame_moshkel,text=' : ایراد ظاهری',font=font)
         lbl_problem.grid(row=0,column=3,)
-        ent_problem = CTkTextbox(frame_moshkel,font=font_enry,corner_radius=10,width=500,height=120,border_width=3)
+        ent_problem = CTkTextbox(frame_moshkel,font=font_enry,corner_radius=10,width=400,height=100,border_width=3)
         ent_problem.grid(row=0,column=2,sticky=E)
         ent_problem.tag_config('rtl',justify=RIGHT)
         ent_problem.tag_add('rtl',0.0,END)
@@ -1499,14 +1538,14 @@ def show(data):
         ent_cost.insert(0,i[13])
         lbl_input_description = CTkLabel(frame_moshkel,text=" : توضیحات ",font=font)
         lbl_input_description.grid(row=1,column=3)
-        ent_input_description = CTkTextbox(frame_moshkel,font=font_enry,corner_radius=10,width=500,height=120,border_width=3)
+        ent_input_description = CTkTextbox(frame_moshkel,font=font_enry,corner_radius=10,width=400,height=100,border_width=3)
         ent_input_description.tag_config("rtl",justify=RIGHT)
         ent_input_description.tag_add("rtl",0.0,END)
         ent_input_description.insert(0.0,i[14],'rtl')
         ent_input_description.grid(row=1,column=2,sticky=E)
         lbl_tak = CTkLabel(frame_moshkel,text=": نظر تکنسین",font=font)
         lbl_tak.grid(row=2,column=3)
-        ent_tak = CTkTextbox(frame_moshkel,font=font_enry,corner_radius=10,width=500,height=120,border_width=3)
+        ent_tak = CTkTextbox(frame_moshkel,font=font_enry,corner_radius=10,width=400,height=100,border_width=3)
         ent_tak.tag_config("rtl",justify=RIGHT)
         ent_tak.tag_add("rtl",0.0,END)
         ent_tak.insert(0.0,i[17],'rtl')
@@ -1535,10 +1574,10 @@ def show(data):
         
         abbbb = f'{i[15]}'
         str_ = StringVar(value=abbbb)
-        chek = CTkCheckBox(frame_moshkel,70,text="بلی",font=font,onvalue="بلی",offvalue="خیر",variable=str_,command=modat)
-        chek.grid(row=1,column=1,sticky=W)
+        chek = CTkCheckBox(frame_moshkel,30,text="بلی",font=font,onvalue="بلی",offvalue="خیر",variable=str_,command=modat)
+        chek.grid(row=1,column=0,sticky=E)
         chek_2 = CTkCheckBox(frame_moshkel,text="خیر",font=font,onvalue="خیر",offvalue="بلی",variable=str_,command=modat)
-        chek_2.grid(row=1,column=0,sticky=E)
+        chek_2.grid(row=1,column=0,)
         def exitt():
             if chek_exit.get() == 1:
                 ent_departure_date.insert(0,JalaliDate.today().strftime('%Y/%m/%d'))
