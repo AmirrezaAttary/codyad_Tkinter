@@ -311,7 +311,7 @@ def paziresh_():
                 output_text = temp.render(context)
                 # Replace with your path
                 config = pdfkit.configuration(wkhtmltopdf = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
-                pdfkit.from_string(output_text,f'./print/sefaresh_{ent_input_id.get()}.pdf',options={"encoding":'UTF-8','page-width': 210,'page-height': 151},configuration=config,)
+                pdfkit.from_string(output_text,f'./print/paziresh_{ent_input_id.get()}.pdf',options={"encoding":'UTF-8','page-width': 210,'page-height': 151},configuration=config,)
                 messagebox.showinfo("چاپ",'رسید پرینت شد')
             else:
                 messagebox.showerror("Error", result) #Show specific error message
@@ -1403,7 +1403,7 @@ def show(data):
                 output_text = temp.render(context)
                 # Replace with your path
                 config = pdfkit.configuration(wkhtmltopdf = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
-                pdfkit.from_string(output_text,f'./print_agin/sefaresh_{ent_input_id.get()}_mojadad.pdf',options={"encoding":'UTF-8','page-width': 210,'page-height': 151},configuration=config,)
+                pdfkit.from_string(output_text,f'./print_agin/paziresh_{ent_input_id.get()}_mojadad.pdf',options={"encoding":'UTF-8','page-width': 210,'page-height': 151},configuration=config,)
                 messagebox.showinfo("چاپ",'رسید پرینت شد')
             else:
                 messagebox.showerror("Error", result) #Show specific error message
@@ -1643,10 +1643,10 @@ def login():
     btn_login.grid(row=4, column=1, padx=20, pady=0)
     
     
-# login()
+login()
 # paziresh_()
 # tarikh_()
-dashbord()
+# dashbord()
 # show(1)
 # send_sms()
 
