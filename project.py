@@ -1489,6 +1489,7 @@ def show(data):
         
         
         ent_departure_date = CTkEntry(f_show,font=font_enry)
+        ent_departure_date.insert(0,i[2])
         ent_departure_date.grid(row=0, column=0,pady=5)
         #########################################################################################
         frame_top = CTkFrame(f_show)
