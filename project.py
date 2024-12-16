@@ -69,7 +69,25 @@ def update_data(id_,data):
         print(f"Database error: {e}") # More informative error message
         return False
 
-
+def del_data(id_):
+    a = messagebox.askquestion('سوال','آیا از حذف مطمعن هستید')
+    print(a)
+    if a == 'yes' :
+        print(id_)
+        try:
+            conn = sqlite3.connect('pz.db')
+            cursor = conn.cursor()
+            cursor.execute(f"DELETE FROM paziresh WHERE id={id_}")
+            conn.commit()
+            conn.close()
+            tarikh_()
+            return True
+        except sqlite3.Error as e:
+            print(f"Database error: {e}") # More informative error message
+            tarikh_()
+            return False
+    else:
+        tarikh_()
 
 def validate_code_meli(code_meli):
   #Basic code meli validation (Adjust if needed)
@@ -302,7 +320,7 @@ def paziresh_():
                 'seriyal':ent_input_system_serial.get(),
                 'tel':ent_input_name_tel.get(),
                 'addres':ent_input_name_adress.get("1.0", END),
-                'moshkel':ent_input_description.get("1.0", END),
+                'moshkel':ent_problem.get("1.0", END),
                 'modat' : ent_modat_garanti.get()
                 }
                 temp_loder = jinja2.FileSystemLoader('./template/')
@@ -458,7 +476,7 @@ def paziresh_():
     str_ = StringVar(value=abbbb)
     chek = CTkCheckBox(frame_moshkel,30,text="بلی",font=font,onvalue="بلی",offvalue="خیر",variable=str_,command=modat)
     chek.grid(row=1,column=0,sticky=E)
-    chek_2 = CTkCheckBox(frame_moshkel,text="خیر",font=font,onvalue="خیر",offvalue="بلی",variable=str_,command=modat)
+    chek_2 = CTkCheckBox(frame_moshkel,30,text="خیر",font=font,onvalue="خیر",offvalue="بلی",variable=str_,command=modat)
     chek_2.grid(row=1,column=0,)
     
 
@@ -681,8 +699,10 @@ def tarikh_():
                 f = f"0{row[8]}"
                 ent_sys_war.insert(END,f)
                 ent_sys_war.grid(row=0,column=5,sticky=E,)
-                btn_show = CTkButton(s,100,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+                btn_show = CTkButton(s,50,font=CTkFont(family="Vazir",size=20,weight='bold'),text='نمایش',command=lambda id_num=row[0]: show(id_num))
                 btn_show.grid(row=0,column=4,sticky=E,)
+                btn_del = CTkButton(s,50,font = CTkFont(family="Vazir",size=20,weight='bold'),text='حذف',fg_color='red',command=lambda id_num=row[0]: del_data(id_num))
+                btn_del.grid(row=0,column=3,sticky=E,)
                 list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
                 for sel in list_sel:
                     sel.configure(state=DISABLED)
@@ -743,8 +763,11 @@ def tarikh_():
                 f = f"0{row[8]}"
                 ent_sys_war.insert(END,f)
                 ent_sys_war.grid(row=0,column=5,sticky=E,)
-                btn_show = CTkButton(s,100,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+                btn_show = CTkButton(s,50,font=CTkFont(family="Vazir",size=20,weight='bold'),text='نمایش',command=lambda id_num=row[0]: show(id_num))
                 btn_show.grid(row=0,column=4,sticky=E,)
+                btn_del = CTkButton(s,50,font = CTkFont(family="Vazir",size=20,weight='bold'),text='حذف',fg_color='red',command=lambda id_num=row[0]: del_data(id_num))
+                btn_del.grid(row=0,column=3,sticky=E,)
+                
                 
                 list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
                 for sel in list_sel:
@@ -818,8 +841,10 @@ def tarikh_():
                 f = f"0{row[8]}"
                 ent_sys_war.insert(END,f)
                 ent_sys_war.grid(row=0,column=5,sticky=E,)
-                btn_show = CTkButton(s,100,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+                btn_show = CTkButton(s,50,font=CTkFont(family="Vazir",size=20,weight='bold'),text='نمایش',command=lambda id_num=row[0]: show(id_num))
                 btn_show.grid(row=0,column=4,sticky=E,)
+                btn_del = CTkButton(s,50,font = CTkFont(family="Vazir",size=20,weight='bold'),text='حذف',fg_color='red',command=lambda id_num=row[0]: del_data(id_num))
+                btn_del.grid(row=0,column=3,sticky=E,)
                 list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
                 for sel in list_sel:
                     sel.configure(state=DISABLED)
@@ -878,8 +903,10 @@ def tarikh_():
                 f = f"0{row[8]}"
                 ent_sys_war.insert(END,f)
                 ent_sys_war.grid(row=0,column=5,sticky=E,)
-                btn_show = CTkButton(s,100,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+                btn_show = CTkButton(s,50,font=CTkFont(family="Vazir",size=20,weight='bold'),text='نمایش',command=lambda id_num=row[0]: show(id_num))
                 btn_show.grid(row=0,column=4,sticky=E,)
+                btn_del = CTkButton(s,50,font = CTkFont(family="Vazir",size=20,weight='bold'),text='حذف',fg_color='red',command=lambda id_num=row[0]: del_data(id_num))
+                btn_del.grid(row=0,column=3,sticky=E,)
                 
                 list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
                 for sel in list_sel:
@@ -951,8 +978,11 @@ def tarikh_():
                 f = f"0{row[8]}"
                 ent_sys_war.insert(END,f)
                 ent_sys_war.grid(row=0,column=5,sticky=E,)
-                btn_show = CTkButton(s,100,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+                btn_show = CTkButton(s,50,font=CTkFont(family="Vazir",size=20,weight='bold'),text='نمایش',command=lambda id_num=row[0]: show(id_num))
                 btn_show.grid(row=0,column=4,sticky=E,)
+                btn_del = CTkButton(s,50,font = CTkFont(family="Vazir",size=20,weight='bold'),text='حذف',fg_color='red',command=lambda id_num=row[0]: del_data(id_num))
+                btn_del.grid(row=0,column=3,sticky=E,)
+                
                 list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
                 for sel in list_sel:
                     sel.configure(state=DISABLED)
@@ -1013,8 +1043,10 @@ def tarikh_():
                 f = f"0{row[8]}"
                 ent_sys_war.insert(END,f)
                 ent_sys_war.grid(row=0,column=5,sticky=E,)
-                btn_show = CTkButton(s,100,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+                btn_show = CTkButton(s,50,font=CTkFont(family="Vazir",size=20,weight='bold'),text='نمایش',command=lambda id_num=row[0]: show(id_num))
                 btn_show.grid(row=0,column=4,sticky=E,)
+                btn_del = CTkButton(s,50,font = CTkFont(family="Vazir",size=20,weight='bold'),text='حذف',fg_color='red',command=lambda id_num=row[0]: del_data(id_num))
+                btn_del.grid(row=0,column=3,sticky=E,)
                 list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
                 for sel in list_sel:
                     sel.configure(state=DISABLED)
@@ -1088,8 +1120,10 @@ def tarikh_():
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sel in list_sel:
                 sel.configure(state=DISABLED)
-            btn_show = CTkButton(s,100,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+            btn_show = CTkButton(s,50,font=CTkFont(family="Vazir",size=20,weight='bold'),text='نمایش',command=lambda id_num=row[0]: show(id_num))
             btn_show.grid(row=0,column=4,sticky=E,)
+            btn_del = CTkButton(s,50,font = CTkFont(family="Vazir",size=20,weight='bold'),text='حذف',fg_color='red',command=lambda id_num=row[0]: del_data(id_num))
+            btn_del.grid(row=0,column=3,sticky=E,)
         con.commit()
         con.close()
     def sel_2():
@@ -1151,8 +1185,10 @@ def tarikh_():
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sel in list_sel:
                 sel.configure(state=DISABLED)
-            btn_show = CTkButton(s,100,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+            btn_show = CTkButton(s,50,font=CTkFont(family="Vazir",size=20,weight='bold'),text='نمایش',command=lambda id_num=row[0]: show(id_num))
             btn_show.grid(row=0,column=4,sticky=E,)
+            btn_del = CTkButton(s,50,font = CTkFont(family="Vazir",size=20,weight='bold'),text='حذف',fg_color='red',command=lambda id_num=row[0]: del_data(id_num))
+            btn_del.grid(row=0,column=3,sticky=E,)
         con.commit()
         con.close()
         
@@ -1214,8 +1250,10 @@ def tarikh_():
             list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
             for sel in list_sel:
                 sel.configure(state=DISABLED)
-            btn_show = CTkButton(s,100,font=font,text='نمایش',command=lambda id_num=row[0]: show(id_num))
+            btn_show = CTkButton(s,50,font=CTkFont(family="Vazir",size=20,weight='bold'),text='نمایش',command=lambda id_num=row[0]: show(id_num))
             btn_show.grid(row=0,column=4,sticky=E,)
+            btn_del = CTkButton(s,50,font = CTkFont(family="Vazir",size=20,weight='bold'),text='حذف',fg_color='red',command=lambda id_num=row[0]: del_data(id_num))
+            btn_del.grid(row=0,column=3,sticky=E,)
         con.commit()
         con.close()
     
@@ -1383,7 +1421,7 @@ def show(data):
                 messagebox.showinfo("Success", "Data saved successfully!")
                 curr_time = time.strftime("%H:%M:%S", time.localtime())
                 context = {
-                    'id':ent_input_id.get(),
+                'id':ent_input_id.get(),
                 'garanti':chek.get(),
                 'tarikh':ent_date_of_arrival.get(),
                 'date':curr_time,
@@ -1394,7 +1432,7 @@ def show(data):
                 'seriyal':ent_input_system_serial.get(),
                 'tel':ent_input_name_tel.get(),
                 'addres':ent_input_name_adress.get("1.0", END),
-                'moshkel':ent_input_description.get("1.0", END),
+                'moshkel':ent_problem.get("1.0", END),
                 'modat' : ent_modat_garanti.get()
                 }
                 temp_loder = jinja2.FileSystemLoader('./template/')
@@ -1546,9 +1584,7 @@ def show(data):
         lbl_tak = CTkLabel(frame_moshkel,text=": نظر تکنسین",font=font)
         lbl_tak.grid(row=2,column=3)
         ent_tak = CTkTextbox(frame_moshkel,font=font_enry,corner_radius=10,width=400,height=100,border_width=3)
-        ent_tak.tag_config("rtl",justify=RIGHT)
-        ent_tak.tag_add("rtl",0.0,END)
-        ent_tak.insert(0.0,i[17],'rtl')
+        ent_tak.insert(END,i[17],)
         ent_tak.grid(row=2,column=2,sticky=E,)
         lbl_chek = CTkLabel(frame_moshkel,0,28,font=font,text="آیاگارانتی دارد؟")
         lbl_chek.grid(row=1,column=1,sticky=E)
@@ -1563,26 +1599,19 @@ def show(data):
                 ent_modat_garanti.configure(state=NORMAL)
             elif chek.get() == "خیر":
                 ent_modat_garanti.configure(state=DISABLED)
-        def exittt():
-            if chek_exit.get() == 1:
-                ent_departure_date.insert(0,JalaliDate.today().strftime('%Y/%m/%d'))
-                ent_departure_date.configure(state=DISABLED)
+
         b = int(i[18])
         val = IntVar(value=b)
-        chek_exit = CTkCheckBox(frame_moshkel,text="آماده تحویل",font=font,onvalue=1,variable=val,offvalue=0,command=exittt)
+        chek_exit = CTkCheckBox(frame_moshkel,text="آماده تحویل",font=font,onvalue=1,variable=val,offvalue=0,)
         chek_exit.grid(row=2,column=0,sticky=E)
         
         abbbb = f'{i[15]}'
         str_ = StringVar(value=abbbb)
         chek = CTkCheckBox(frame_moshkel,30,text="بلی",font=font,onvalue="بلی",offvalue="خیر",variable=str_,command=modat)
         chek.grid(row=1,column=0,sticky=E)
-        chek_2 = CTkCheckBox(frame_moshkel,text="خیر",font=font,onvalue="خیر",offvalue="بلی",variable=str_,command=modat)
+        chek_2 = CTkCheckBox(frame_moshkel,30,text="خیر",font=font,onvalue="خیر",offvalue="بلی",variable=str_,command=modat)
         chek_2.grid(row=1,column=0,)
-        def exitt():
-            if chek_exit.get() == 1:
-                ent_departure_date.insert(0,JalaliDate.today().strftime('%Y/%m/%d'))
-                ent_departure_date.configure(state=DISABLED)
-        exitt()
+
 
 def login():
     far = CTkFrame(root)
@@ -1643,11 +1672,11 @@ def login():
     btn_login.grid(row=4, column=1, padx=20, pady=0)
     
     
-login()
+# login()
 # paziresh_()
 # tarikh_()
 # dashbord()
-# show(1)
+show(1)
 # send_sms()
 
 root.mainloop()
