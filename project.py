@@ -1673,11 +1673,11 @@ def login():
     btn_login.grid(row=4, column=1, padx=20, pady=0)
     
     
-# login()
+login()
 # paziresh_()
 # tarikh_()
 # dashbord()
-show(1)
+# show(1)
 # send_sms()
 
 root.mainloop()
