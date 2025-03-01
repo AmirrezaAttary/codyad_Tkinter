@@ -1,73 +1,17 @@
-import customtkinter
-from customtkinter import *
-from persiantools.jdatetime import JalaliDate
-import sqlite3
-from tkinter import messagebox
-import re
-from kavenegar import *
-import jinja2
-import pdfkit
-import time
+from project23 import *
+from db_pz import create_database,db_tel
+from ines_data import insert_data,update_data,insert_tel
 
-##################################################################################
-def create_database():
-  conn = sqlite3.connect('pz.db')
-  cursor = conn.cursor()
-  cursor.execute('''CREATE TABLE IF NOT EXISTS paziresh
-                (id INTEGER PRIMARY KEY,
-                arrival varchar(20) NOT NULL,
-                departure varchar(20) ,
-                system varchar(20) NOT NULL,
-                system_type varchar(20) NOT NULL,
-                system_model varchar(20) NOT NULL,
-                system_serial varchar(20) NOT NULL,
-                input_name varchar(20) NOT NULL,
-                tel INTEGER(10) NOT NULL,
-                code_meli INTEGER(11) NOT NULL,
-                tel_sabet INTEGER(10) ,
-                adress varchar(200) NOT NULL,
-                problem varchar(20) NOT NULL,
-                cost INTEGER(100) ,
-                description varchar(200) NOT NULL,
-                Warranty varchar(20) NOT NULL,
-                Warranty_modat INTEGER(3),
-                Technician_opinion varchar(200) NOT NULL,
-                status INTEGER(1) NOT NULL)''')
-  conn.commit()
-  conn.close()
 
 create_database()
 
-def insert_data(data):
-  try:
-    conn = sqlite3.connect('pz.db')
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO paziresh (arrival, departure, system, system_type, system_model, system_serial, input_name, tel, code_meli, tel_sabet, adress, problem, cost, description, Warranty, Warranty_modat, Technician_opinion, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", data)
-    conn.commit()
-    conn.close()
-    return True
-  except sqlite3.Error as e:
-    print(f"Database error: {e}") # More informative error message
-    return False
+
 
 def validate_phone(phone_number):
   #Basic phone number validation (adjust regex as needed)
   pattern = r"^\+?\d{11}$" #Example: Accepts numbers starting with optional +, min 10 digits
   return bool(re.match(pattern, phone_number))
 
-def update_data(id_,data):
-    print(id_)
-    print(data)
-    try:
-        conn = sqlite3.connect('pz.db')
-        cursor = conn.cursor()
-        cursor.execute(f"UPDATE paziresh SET (arrival, departure, system, system_type, system_model, system_serial, input_name, tel, code_meli, tel_sabet, adress, problem, cost, description, Warranty, Warranty_modat, Technician_opinion, status) = ({data}) WHERE id={id_}")
-        conn.commit()
-        conn.close()
-        return True
-    except sqlite3.Error as e:
-        print(f"Database error: {e}") # More informative error message
-        return False
 
 def del_data(id_):
     a = messagebox.askquestion('سوال','آیا از حذف مطمعن هستید')
@@ -94,36 +38,15 @@ def validate_code_meli(code_meli):
   pattern = r"^\d{10}$" # Example: 10 digits
   return bool(re.match(pattern, code_meli))
 
-def db_tel():
-    conn = sqlite3.connect('pz.db')
-    cursor = conn.cursor()
-    cursor.execute('''CREATE TABLE IF NOT EXISTS PHONE
-                    (id INTEGER PRIMARY KEY,
-                    tel INTEGER(11) NOT NULL)''')
-    conn.commit()
-    conn.close()
 
-def insert_tel(numb):  # numb is now a list of phone numbers
-    db_tel()
-    try:
-        conn = sqlite3.connect('pz.db')
-        cursor = conn.cursor()
-        cursor.executemany("INSERT INTO PHONE (tel) VALUES (?)", [(num,) for num in numb]) #Create tuples for each number
-        conn.commit()
-        conn.close()
-        return True
-    except sqlite3.Error as e:
-        print(f"Database error: {e}")
-        return False
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
-        return False
+
+
 
 DARK_MODE = "dark"
 customtkinter.set_appearance_mode(DARK_MODE)
 customtkinter.set_default_color_theme("dark-blue")
 
-##########################################################################################
+
 root = CTk()
 root.iconbitmap('tv.ico')
 root.grid_columnconfigure(0, weight=1)
@@ -135,7 +58,7 @@ root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenhe
 api = KavenegarAPI("742F364166354D7762516C617272357A545936513567685A5064344851557141504D726D65645A337132493D")
 font = CTkFont(family="Vazir",size=25,weight='bold')
 font_enry=CTkFont(family="Vazir",size=20)
-#########################################################################################
+
 
 
 def taki(number):
