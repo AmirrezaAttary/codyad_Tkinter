@@ -1,8 +1,9 @@
 from project23 import *
 from db_pz import create_database,db_tel
 from ines_data import insert_data,update_data,insert_tel
+from create_dictory import create_dictory
 
-
+create_dictory()
 create_database()
 
 
@@ -15,9 +16,7 @@ def validate_phone(phone_number):
 
 def del_data(id_):
     a = messagebox.askquestion('سوال','آیا از حذف مطمعن هستید')
-    print(a)
     if a == 'yes' :
-        print(id_)
         try:
             conn = sqlite3.connect('pz.db')
             cursor = conn.cursor()
@@ -1013,7 +1012,7 @@ def tarikh_():
             sell.configure(state=DISABLED)  
         con = sqlite3.connect("pz.db")
         c = con.cursor()
-        for row in c.execute('SELECT * FROM paziresh WHERE status=0'):
+        for row in c.execute('SELECT * FROM paziresh WHERE status=0 ORDER BY id DESC LIMIT 20'):
             a=row[0]+1590
             s = CTkFrame(sct,border_width=3,fg_color='blue')
             s.pack(pady=3,anchor=E)
@@ -1049,6 +1048,7 @@ def tarikh_():
             btn_del.grid(row=0,column=3,sticky=E,)
         con.commit()
         con.close()
+    
     def sel_2():
         s = CTkFrame(sct_2,border_width=3)
         s.pack(pady=3,anchor=E)
@@ -1078,7 +1078,7 @@ def tarikh_():
         
         con = sqlite3.connect("pz.db")
         c = con.cursor()
-        for row in c.execute('SELECT * FROM paziresh'):
+        for row in c.execute('SELECT * FROM paziresh ORDER BY id DESC LIMIT 20'):
             a=row[0]+1590
             s = CTkFrame(sct_2,border_width=3,fg_color='blue')
             s.pack(pady=3,anchor=E)
@@ -1143,7 +1143,7 @@ def tarikh_():
             sell.configure(state=DISABLED)  
         con = sqlite3.connect("pz.db")
         c = con.cursor()
-        for row in c.execute('SELECT * FROM paziresh WHERE status=1'):
+        for row in c.execute('SELECT * FROM paziresh WHERE status=1 ORDER BY id DESC LIMIT 20'):
             a=row[0]+1590
             s = CTkFrame(sct_3,border_width=3,fg_color='blue')
             s.pack(pady=3,anchor=E)
