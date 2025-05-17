@@ -25,8 +25,7 @@ def del_data(id_):
             conn.close()
             tarikh_()
             return True
-        except sqlite3.Error as e:
-            print(f"Database error: {e}") # More informative error message
+        except sqlite3.Error as e: # More informative error message
             tarikh_()
             return False
     else:
@@ -61,7 +60,7 @@ font_enry=CTkFont(family="Vazir",size=20)
 
 
 def taki(number):
-        print(number)
+        
         try:
             params = {
                 'receptor':f"{number}", #Recipient phone number
@@ -72,7 +71,7 @@ def taki(number):
 آماده تحویل است.''',
             }
             response = api.sms_send(params)
-            print(response) # Check the response from the API
+             # Check the response from the API
         except APIException as e:
             return messagebox.showerror("error",f"Error: {e}")
         except Exception as e:
@@ -81,7 +80,6 @@ def taki(number):
         
 
 def koli(numbers):
-        print(numbers)
         try:
             params = {
                 'receptor': numbers, #Recipient phone number
@@ -92,7 +90,7 @@ def koli(numbers):
 آماده تحویل است.''',
             }
             response = api.sms_send(params)
-            print(response) # Check the response from the API
+             # Check the response from the API
         except APIException as e:
             return messagebox.showerror("error",f"Error: {e}")
         except Exception as e:
@@ -250,7 +248,7 @@ def paziresh_():
                 temp = temp_env.get_template('atar.html')
                 output_text = temp.render(context)
                 # Replace with your path
-                config = pdfkit.configuration(wkhtmltopdf = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
+                config = pdfkit.configuration(wkhtmltopdf = "./wkhtmltopdf/bin/wkhtmltopdf.exe")
                 pdfkit.from_string(output_text,f'./print/paziresh_{ent_input_id.get()}.pdf',options={"encoding":'UTF-8','page-width': 210,'page-height': 151},configuration=config,)
                 messagebox.showinfo("چاپ",'رسید پرینت شد')
             else:
@@ -436,7 +434,7 @@ def send_sms():
     def sel_taki():
         
         def get__():
-            print(ent_sms_taki.get())
+            
             numb=ent_sms_taki.get() 
             taki(numb)
         lbl_sms = CTkLabel(far_3,height=10,text='ارسال تکی',font=font)
@@ -483,7 +481,7 @@ def send_sms():
         list_numb_str = []
         def upload_file_1():
             def ins():
-                print(list_numb_str)
+                
                 insert_tel(list_numb)
                 send_sms()
                 return messagebox.showinfo('Upload','اطلاعات با موفقیت ذخیره شد')
@@ -568,7 +566,7 @@ def tarikh_():
         con = sqlite3.connect("pz.db")
         c = con.cursor()
         if len(search_entry.get()) == 11:
-            print(search_entry.get())
+            
             clear_frame_sct()
             s = CTkFrame(sct,border_width=3)
             s.pack(pady=3,anchor=E)
@@ -631,7 +629,7 @@ def tarikh_():
             con.commit()
             con.close()
         elif len(search_entry.get()) == 10:
-            print(search_entry.get())
+            
             clear_frame_sct()
             s = CTkFrame(sct,border_width=3)
             s.pack(pady=3,anchor=E)
@@ -697,7 +695,7 @@ def tarikh_():
             con.commit()
             con.close()
         elif search_entry.get() == '':
-            print(search_entry.get())
+            
             clear_frame_sct()
             sel_()
         else:
@@ -710,7 +708,7 @@ def tarikh_():
         con = sqlite3.connect("pz.db")
         c = con.cursor()
         if len(search_entry_2.get()) == 11:
-            print(search_entry_2.get())
+            
             clear_frame_sct_2()
             s = CTkFrame(sct_2,border_width=3)
             s.pack(pady=3,anchor=E)
@@ -911,7 +909,7 @@ def tarikh_():
             con.commit()
             con.close()
         elif len(search_entry_3.get()) == 10:
-            print(search_entry_3.get())
+            
             clear_frame_sct_3()
             s = CTkFrame(sct_3,border_width=3)
             s.pack(pady=3,anchor=E)
@@ -1363,7 +1361,7 @@ def show(data):
                 temp = temp_env.get_template('atar.html')
                 output_text = temp.render(context)
                 # Replace with your path
-                config = pdfkit.configuration(wkhtmltopdf = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
+                config = pdfkit.configuration(wkhtmltopdf = "./wkhtmltopdf/bin/wkhtmltopdf.exe")
                 pdfkit.from_string(output_text,f'./print_agin/paziresh_{ent_input_id.get()}_mojadad.pdf',options={"encoding":'UTF-8','page-width': 210,'page-height': 151},configuration=config,)
                 messagebox.showinfo("چاپ",'رسید پرینت شد')
             else:

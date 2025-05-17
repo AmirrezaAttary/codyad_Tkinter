@@ -7,6 +7,4 @@ def create_dictory():
     for directory in directories:
         if not os.path.exists(directory):
             os.makedirs(directory)
-            print(f"دایرکتوری '{directory}' ساخته شد.")
-        else:
-            print(f"دایرکتوری '{directory}' از قبل وجود دارد.")
+
