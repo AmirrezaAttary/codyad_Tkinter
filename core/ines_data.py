@@ -2,7 +2,7 @@ import sqlite3
 from db_pz import db_tel
 def insert_data(data):
   try:
-    conn = sqlite3.connect('pz.db')
+    conn = sqlite3.connect('database/pz.db')
     cursor = conn.cursor()
     cursor.execute("INSERT INTO paziresh (arrival, departure, system, system_type, system_model, system_serial, input_name, tel, code_meli, tel_sabet, adress, problem, cost, description, Warranty, Warranty_modat, Technician_opinion, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", data)
     conn.commit()
@@ -17,7 +17,7 @@ def update_data(id_,data):
     print(id_)
     print(data)
     try:
-        conn = sqlite3.connect('pz.db')
+        conn = sqlite3.connect('database/pz.db')
         cursor = conn.cursor()
         cursor.execute(f"UPDATE paziresh SET (arrival, departure, system, system_type, system_model, system_serial, input_name, tel, code_meli, tel_sabet, adress, problem, cost, description, Warranty, Warranty_modat, Technician_opinion, status) = ({data}) WHERE id={id_}")
         conn.commit()
@@ -30,7 +30,7 @@ def update_data(id_,data):
 def insert_tel(numb):  # numb is now a list of phone numbers
     db_tel()
     try:
-        conn = sqlite3.connect('pz.db')
+        conn = sqlite3.connect('database/pz.db')
         cursor = conn.cursor()
         cursor.executemany("INSERT INTO PHONE (tel) VALUES (?)", [(num,) for num in numb]) #Create tuples for each number
         conn.commit()

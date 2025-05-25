@@ -2,6 +2,7 @@ from project23 import *
 from db_pz import create_database,db_tel
 from ines_data import insert_data,update_data,insert_tel
 from create_dictory import create_dictory
+import tarikheh as Tarikh 
 
 create_dictory()
 create_database()
@@ -18,7 +19,7 @@ def del_data(id_):
     a = messagebox.askquestion('سوال','آیا از حذف مطمعن هستید')
     if a == 'yes' :
         try:
-            conn = sqlite3.connect('pz.db')
+            conn = sqlite3.connect('database/pz.db')
             cursor = conn.cursor()
             cursor.execute(f"DELETE FROM paziresh WHERE id={id_}")
             conn.commit()
@@ -40,7 +41,7 @@ def validate_code_meli(code_meli):
 
 
 
-DARK_MODE = "dark"
+DARK_MODE = "light"
 customtkinter.set_appearance_mode(DARK_MODE)
 customtkinter.set_default_color_theme("dark-blue")
 
@@ -108,25 +109,25 @@ def close_window():
     
 def dashbord():
     clear_frame()
-    far = CTkFrame(root)
+    far = CTkFrame(root,fg_color='#ffffff')
     far.grid(row=1, column=0,rowspan=7, sticky=NSEW)    
     far.grid_columnconfigure(0, weight=1)
     # far.grid_rowconfigure((0, 1, 2, 3, 4), weight=0)
     far.grid_rowconfigure(( 0, 1, 2, 3, 4, 5,), weight=1)
-    bt_dashboard = customtkinter.CTkButton(far, text="پذیرش",font=font, command=paziresh_)
+    bt_dashboard = customtkinter.CTkButton(far, text="پذیرش",height=60,font=font,fg_color="#d48afa",hover_color="#9d3ecc", command=paziresh_)
     bt_dashboard.grid(row=1 ,column=0, padx=20, pady=20)
 
 
-    bt_sms = customtkinter.CTkButton(far, text="ارسال پیامک",font=font, command=send_sms)
+    bt_sms = customtkinter.CTkButton(far, text="ارسال پیامک",height=60,font=font,fg_color="#d48afa",hover_color="#9d3ecc", command=send_sms)
     bt_sms.grid(row=2 ,column=0, padx=20, pady=20)
 
 
 
-    bt_tarikh = customtkinter.CTkButton(far, text="تاریخچه",font=font, command=tarikh_)
+    bt_tarikh = customtkinter.CTkButton(far, text="تاریخچه",height=60,font=font,fg_color="#d48afa",hover_color="#9d3ecc", command=tarikh_)
     bt_tarikh.grid(row=3 ,column=0, padx=20, pady=20)
     
 
-    btn_quit = customtkinter.CTkButton(far, text="خروج", fg_color= '#EA0000', hover_color = '#B20000',font=font, command= close_window)
+    btn_quit = customtkinter.CTkButton(far, text="خروج",height=60, fg_color= "#C74949", hover_color = '#B20000',font=font, command= close_window)
     btn_quit.grid(row=4, column=0, padx=20, pady=0)
 
 
@@ -134,7 +135,7 @@ def paziresh_():
     create_database()
     clear_frame()
     try:
-        conn = sqlite3.connect('pz.db')
+        conn = sqlite3.connect('database/pz.db')
         cursor = conn.cursor()
         cursor.execute("SELECT MAX(id) FROM paziresh")
         result = cursor.fetchone()
@@ -260,7 +261,7 @@ def paziresh_():
             
         
         
-    far_2 = CTkFrame(root)
+    far_2 = CTkFrame(root,fg_color="#edcbff",)
     far_2.grid(row=1, column=0,rowspan=7, sticky=NSEW)    
     far_2.grid_columnconfigure((0,1,2,3,4,5), weight=1)
     far_2.grid_rowconfigure((0, 1, 2, 3), weight=1)
@@ -293,7 +294,7 @@ def paziresh_():
     ent_departure_date = CTkEntry(far_2,font=font_enry)
     ent_departure_date.grid(row=0, column=0,pady=5)
     #########################################################################################
-    frame_top = CTkFrame(far_2)
+    frame_top = CTkFrame(far_2,fg_color="#e0a7ff")
     frame_top.grid(row=2,column=0,columnspan=6,rowspan=3,sticky=NSEW) 
     frame_top.grid_columnconfigure((0,1,2,3,4,5),weight=1)
     frame_top.grid_rowconfigure((0,1),weight=1)
@@ -303,7 +304,7 @@ def paziresh_():
     ent_input_system.grid(row=0,column=4)
     lbl_input_system_type = CTkLabel(frame_top,text=" : نوع دستگاه",font=font)
     lbl_input_system_type.grid(row=0,column=3)
-    tv_list = ['LCD','LED','PLOSMA']
+    tv_list = ['LED','LCD','PLOSMA']
     combo_input_system_type = CTkComboBox(frame_top,font=font_enry,values=tv_list)
     combo_input_system_type.grid(row=0,column=2)
     lbl_input_system_model = CTkLabel(frame_top,text=" : مدل دستگاه",font=font)
@@ -317,7 +318,7 @@ def paziresh_():
     #########################################################################
     lbl_2 = CTkLabel(far_2, text="مشخصات مالک",font=font)
     lbl_2.grid(row=5,column=5,sticky=E,padx=10)
-    frame_down = CTkFrame(far_2,)
+    frame_down = CTkFrame(far_2,fg_color="#e0a7ff")
     frame_down.grid(row=6,column=0,columnspan=6,rowspan=3,sticky=NSEW) 
     frame_down.grid_columnconfigure((0,1,2,3,4,5),weight=1)
     frame_down.grid_rowconfigure((0,1),weight=1)
@@ -340,14 +341,12 @@ def paziresh_():
     lbl_input_name_adress = CTkLabel(frame_down,text=" : آدرس ",font=font)
     lbl_input_name_adress.grid(row=1,column=2,sticky=W)
     ent_input_name_adress = CTkTextbox(frame_down,font=font,corner_radius=10,width=400,height=100,border_width=3)
-    ent_input_name_adress.tag_config("rtl",justify=RIGHT)
-    ent_input_name_adress.tag_add("rtl",0.0,END)
-    ent_input_name_adress.insert(0.0,'استان\n','rtl')
+
     ent_input_name_adress.grid(row=1,column=0,columnspan=2)
     #############################################################################
     lbl_3 = CTkLabel(far_2, text="مشخصات مشکل",font=font)
     lbl_3.grid(row=9,column=5,sticky=E,padx=10)
-    frame_moshkel = CTkFrame(far_2)
+    frame_moshkel = CTkFrame(far_2,fg_color="#e0a7ff")
     frame_moshkel.grid(row=10,column=0,columnspan=6,rowspan=3,sticky=NSEW) 
     frame_moshkel.grid_columnconfigure((0,1,2,3,4),weight=1)
     frame_moshkel.grid_rowconfigure((0,1,2),weight=1)
@@ -355,9 +354,6 @@ def paziresh_():
     lbl_problem.grid(row=0,column=3,)
     ent_problem = CTkTextbox(frame_moshkel,font=font_enry,corner_radius=10,width=400,height=100,border_width=3)
     ent_problem.grid(row=0,column=2,sticky=E)
-    ent_problem.tag_config('rtl',justify=RIGHT)
-    ent_problem.tag_add('rtl',0.0,END)
-    ent_problem.insert(0.0,'شکستگی\n','rtl')
     lbl_cost = CTkLabel(frame_moshkel,text=' : هزینه ',font=font)
     lbl_cost.grid(row=0,column=1,sticky=E)
     ent_cost = CTkEntry(frame_moshkel,font=font_enry,justify=RIGHT)
@@ -366,16 +362,13 @@ def paziresh_():
     lbl_input_description = CTkLabel(frame_moshkel,text=" : توضیحات ",font=font)
     lbl_input_description.grid(row=1,column=3)
     ent_input_description = CTkTextbox(frame_moshkel,font=font_enry,corner_radius=10,width=400,height=100,border_width=3)
-    ent_input_description.tag_config("rtl",justify=RIGHT)
-    ent_input_description.tag_add("rtl",0.0,END)
-    ent_input_description.insert(0.0,'شکستگی\n','rtl')
+
     ent_input_description.grid(row=1,column=2,sticky=E)
     lbl_tak = CTkLabel(frame_moshkel,text=": نظر تکنسین",font=font)
     lbl_tak.grid(row=2,column=3)
     ent_tak = CTkTextbox(frame_moshkel,font=font_enry,corner_radius=10,width=400,height=100,border_width=3)
-    ent_tak.tag_config("rtl",justify=RIGHT)
-    ent_tak.tag_add("rtl",0.0,END)
-    ent_tak.insert(0.0,'شکستگی\n','rtl')
+
+
     ent_tak.grid(row=2,column=2,sticky=E,)
     lbl_chek = CTkLabel(frame_moshkel,0,28,font=font,text="آیاگارانتی دارد؟")
     lbl_chek.grid(row=1,column=1,sticky=E)
@@ -404,7 +397,7 @@ def paziresh_():
 
 def send_sms():
     db_tel()
-    con = sqlite3.connect("pz.db")
+    con = sqlite3.connect("database/pz.db")
     c = con.cursor()
     list_jam = []
     list_person_name = []
@@ -551,435 +544,74 @@ def send_sms():
     sel_taki()
     sel_koli()
 
+
+
 def tarikh_():
-    def clear_frame_sct():
-        for widget in sct.winfo_children():
-            widget.destroy()
-    def clear_frame_sct_2():
-        for widget in sct_2.winfo_children():
-            widget.destroy() 
-    def clear_frame_sct_3():
-        for widget in sct_3.winfo_children():
-            widget.destroy() 
-            
-    def search():
-        con = sqlite3.connect("pz.db")
+    
+    def run_search(entry_value, sct_frame, status=None):
+        con = sqlite3.connect("database/pz.db")
         c = con.cursor()
-        if len(search_entry.get()) == 11:
-            
-            clear_frame_sct()
-            s = CTkFrame(sct,border_width=3)
-            s.pack(pady=3,anchor=E)
-            s.grid_columnconfigure([0,1],weight=1)
-            s.grid_rowconfigure([0],weight=1)
-            ent_id = CTkEntry(s,63,28,0,font=CTkFont('Vazir',11))
-            ent_id.insert(END,'شماره پذیرش')
-            ent_id.grid(row=0,column=10,sticky=E)
-            ent_sys = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys.insert(END,"مالک دستگاه")
-            ent_sys.grid(row=0,column=9,sticky=E,)
-            ent_sys_type = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys_type.insert(END,"نام دستگاه")
-            ent_sys_type.grid(row=0,column=8,sticky=E,)
-            ent_sys_model = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys_model.insert(END,"مدل دستگاه")
-            ent_sys_model.grid(row=0,column=7,sticky=E,)
-            ent_sys_serial = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys_serial.insert(END,"کدملی")
-            ent_sys_serial.grid(row=0,column=6,sticky=E,)
-            ent_sys_war = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys_war.insert(END,"موبایل")
-            ent_sys_war.grid(row=0,column=5,sticky=E,)
-            list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
-            for sell in list_sel:
-                sell.configure(state=DISABLED) 
-            for row in c.execute(f'SELECT * FROM paziresh WHERE tel={search_entry.get()} AND status=0'):
-                a=row[0]+1590
-                s = CTkFrame(sct,border_width=3,fg_color='blue')
-                s.pack(pady=3,anchor=E)
-                s.grid_columnconfigure([0,1],weight=1)
-                s.grid_rowconfigure([0],weight=1)
-                ent_id = CTkEntry(s,63,font=font_enry)
-                ent_id.insert(END,a)
-                ent_id.grid(row=0,column=10,sticky=E)
-                ent_sys = CTkEntry(s,font=font_enry,justify=RIGHT)
-                ent_sys.insert(END,row[7])
-                ent_sys.grid(row=0,column=9,sticky=E,)
-                ent_sys_type = CTkEntry(s,font=font_enry,justify=RIGHT)
-                ent_sys_type.insert(END,row[3])
-                ent_sys_type.grid(row=0,column=8,sticky=E,)
-                ent_sys_model = CTkEntry(s,font=font_enry,justify=RIGHT)
-                ent_sys_model.insert(END,row[5])
-                ent_sys_model.grid(row=0,column=7,sticky=E,)
-                ent_sys_serial = CTkEntry(s,font=font_enry,justify=RIGHT)
-                n = f"0{row[9]}"
-                ent_sys_serial.insert(END,n)
-                ent_sys_serial.grid(row=0,column=6,sticky=E,)
-                ent_sys_war = CTkEntry(s,font=font_enry,justify=RIGHT)
-                f = f"0{row[8]}"
-                ent_sys_war.insert(END,f)
-                ent_sys_war.grid(row=0,column=5,sticky=E,)
-                btn_show = CTkButton(s,50,font=CTkFont(family="Vazir",size=20,weight='bold'),text='نمایش',command=lambda id_num=row[0]: show(id_num))
-                btn_show.grid(row=0,column=4,sticky=E,)
-                btn_del = CTkButton(s,50,font = CTkFont(family="Vazir",size=20,weight='bold'),text='حذف',fg_color='red',command=lambda id_num=row[0]: del_data(id_num))
-                btn_del.grid(row=0,column=3,sticky=E,)
-                list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
-                for sel in list_sel:
-                    sel.configure(state=DISABLED)
-            con.commit()
-            con.close()
-        elif len(search_entry.get()) == 10:
-            
-            clear_frame_sct()
-            s = CTkFrame(sct,border_width=3)
-            s.pack(pady=3,anchor=E)
-            s.grid_columnconfigure([0,1],weight=1)
-            s.grid_rowconfigure([0],weight=1)
-            ent_id = CTkEntry(s,63,28,0,font=CTkFont('Vazir',11))
-            ent_id.insert(END,'شماره پذیرش')
-            ent_id.grid(row=0,column=10,sticky=E)
-            ent_sys = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys.insert(END,"مالک دستگاه")
-            ent_sys.grid(row=0,column=9,sticky=E,)
-            ent_sys_type = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys_type.insert(END,"نام دستگاه")
-            ent_sys_type.grid(row=0,column=8,sticky=E,)
-            ent_sys_model = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys_model.insert(END,"مدل دستگاه")
-            ent_sys_model.grid(row=0,column=7,sticky=E,)
-            ent_sys_serial = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys_serial.insert(END,"کدملی")
-            ent_sys_serial.grid(row=0,column=6,sticky=E,)
-            ent_sys_war = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys_war.insert(END,"موبایل")
-            ent_sys_war.grid(row=0,column=5,sticky=E,)
-            
-            list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
-            for sell in list_sel:
-                sell.configure(state=DISABLED) 
-            for row in c.execute(f'SELECT * FROM paziresh WHERE code_meli={search_entry.get()} AND status=0'):
-                a=row[0]+1590
-                s = CTkFrame(sct,border_width=3,fg_color='blue')
-                s.pack(pady=3,anchor=E)
-                s.grid_columnconfigure([0,1],weight=1)
-                s.grid_rowconfigure([0],weight=1)
-                ent_id = CTkEntry(s,63,font=font_enry)
-                ent_id.insert(END,a)
-                ent_id.grid(row=0,column=10,sticky=E)
-                ent_sys = CTkEntry(s,font=font_enry,justify=RIGHT)
-                ent_sys.insert(END,row[7])
-                ent_sys.grid(row=0,column=9,sticky=E,)
-                ent_sys_type = CTkEntry(s,font=font_enry,justify=RIGHT)
-                ent_sys_type.insert(END,row[3])
-                ent_sys_type.grid(row=0,column=8,sticky=E,)
-                ent_sys_model = CTkEntry(s,font=font_enry,justify=RIGHT)
-                ent_sys_model.insert(END,row[5])
-                ent_sys_model.grid(row=0,column=7,sticky=E,)
-                ent_sys_serial = CTkEntry(s,font=font_enry,justify=RIGHT)
-                n = f"0{row[9]}"
-                ent_sys_serial.insert(END,n)
-                ent_sys_serial.grid(row=0,column=6,sticky=E,)
-                ent_sys_war = CTkEntry(s,font=font_enry,justify=RIGHT)
-                f = f"0{row[8]}"
-                ent_sys_war.insert(END,f)
-                ent_sys_war.grid(row=0,column=5,sticky=E,)
-                btn_show = CTkButton(s,50,font=CTkFont(family="Vazir",size=20,weight='bold'),text='نمایش',command=lambda id_num=row[0]: show(id_num))
-                btn_show.grid(row=0,column=4,sticky=E,)
-                btn_del = CTkButton(s,50,font = CTkFont(family="Vazir",size=20,weight='bold'),text='حذف',fg_color='red',command=lambda id_num=row[0]: del_data(id_num))
-                btn_del.grid(row=0,column=3,sticky=E,)
-                
-                
-                list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
-                for sel in list_sel:
-                    sel.configure(state=DISABLED)
-            con.commit()
-            con.close()
-        elif search_entry.get() == '':
-            
-            clear_frame_sct()
-            sel_()
+        Tarikh.clear_frame(sct_frame)
+
+        if len(entry_value) == 11:
+            query = "SELECT * FROM paziresh WHERE tel=?"
+            params = [entry_value]
+        elif len(entry_value) == 10:
+            query = "SELECT * FROM paziresh WHERE code_meli=?"
+            params = [entry_value]
+        elif entry_value == "":
+            return None
         else:
-            clear_frame_sct()
+            return "invalid"
+
+        # اگر وضعیت مشخص شده
+        if status is not None:
+            if isinstance(status, list):
+                placeholders = ",".join("?" for _ in status)
+                query += f" AND status IN ({placeholders})"
+                params.extend(status)
+            else:
+                query += " AND status=?"
+                params.append(status)
+
+        for row in c.execute(query, params):
+            a = row[0] + 1590
+            s = CTkFrame(sct_frame, border_width=3, fg_color='blue')
+            s.pack(pady=3, anchor=E)
+            s.grid_columnconfigure([0, 1], weight=1)
+            s.grid_rowconfigure([0], weight=1)
+            ent_id = CTkLabel(s,63,28,text=a,font=font_enry,text_color="black",fg_color="#d9d9d9",corner_radius=5,anchor=CENTER)
+
+            ent_id.grid(row=0, column=10, sticky=E)
+            Tarikh.create_data_row(s, font_enry, font, row, 0, show, del_data)
+
+        con.commit()
+        con.close()
+        return "ok"
+  
+    def search():
+        result = run_search(search_entry.get(), sct, status=0)
+        if result == "invalid":
             sel_()
-            return messagebox.showerror("مشکل",".شماره موبایل/کدملی اشتباه است")
-        
+            return messagebox.showerror("مشکل", ".شماره موبایل/کدملی اشتباه است")
+        elif result is None:
+            sel_()
         
     def search_2():
-        con = sqlite3.connect("pz.db")
-        c = con.cursor()
-        if len(search_entry_2.get()) == 11:
-            
-            clear_frame_sct_2()
-            s = CTkFrame(sct_2,border_width=3)
-            s.pack(pady=3,anchor=E)
-            s.grid_columnconfigure([0,1],weight=1)
-            s.grid_rowconfigure([0],weight=1)
-            ent_id = CTkEntry(s,63,28,0,font=CTkFont('Vazir',11))
-            ent_id.insert(END,'شماره پذیرش')
-            ent_id.grid(row=0,column=10,sticky=E)
-            ent_sys = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys.insert(END,"مالک دستگاه")
-            ent_sys.grid(row=0,column=9,sticky=E,)
-            ent_sys_type = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys_type.insert(END,"نام دستگاه")
-            ent_sys_type.grid(row=0,column=8,sticky=E,)
-            ent_sys_model = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys_model.insert(END,"مدل دستگاه")
-            ent_sys_model.grid(row=0,column=7,sticky=E,)
-            ent_sys_serial = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys_serial.insert(END,"کدملی")
-            ent_sys_serial.grid(row=0,column=6,sticky=E,)
-            ent_sys_war = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys_war.insert(END,"موبایل")
-            ent_sys_war.grid(row=0,column=5,sticky=E,)
-            list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
-            for sell in list_sel:
-                sell.configure(state=DISABLED) 
-            for row in c.execute(f'SELECT * FROM paziresh WHERE tel={search_entry_2.get()}'):
-                a=row[0]+1590
-                s = CTkFrame(sct_2,border_width=3,fg_color='blue')
-                s.pack(pady=3,anchor=E)
-                s.grid_columnconfigure([0,1],weight=1)
-                s.grid_rowconfigure([0],weight=1)
-                ent_id = CTkEntry(s,63,font=font_enry)
-                ent_id.insert(END,a)
-                ent_id.grid(row=0,column=10,sticky=E)
-                ent_sys = CTkEntry(s,font=font_enry,justify=RIGHT)
-                ent_sys.insert(END,row[7])
-                ent_sys.grid(row=0,column=9,sticky=E,)
-                ent_sys_type = CTkEntry(s,font=font_enry,justify=RIGHT)
-                ent_sys_type.insert(END,row[3])
-                ent_sys_type.grid(row=0,column=8,sticky=E,)
-                ent_sys_model = CTkEntry(s,font=font_enry,justify=RIGHT)
-                ent_sys_model.insert(END,row[5])
-                ent_sys_model.grid(row=0,column=7,sticky=E,)
-                ent_sys_serial = CTkEntry(s,font=font_enry,justify=RIGHT)
-                n = f"0{row[9]}"
-                ent_sys_serial.insert(END,n)
-                ent_sys_serial.grid(row=0,column=6,sticky=E,)
-                ent_sys_war = CTkEntry(s,font=font_enry,justify=RIGHT)
-                f = f"0{row[8]}"
-                ent_sys_war.insert(END,f)
-                ent_sys_war.grid(row=0,column=5,sticky=E,)
-                btn_show = CTkButton(s,50,font=CTkFont(family="Vazir",size=20,weight='bold'),text='نمایش',command=lambda id_num=row[0]: show(id_num))
-                btn_show.grid(row=0,column=4,sticky=E,)
-                btn_del = CTkButton(s,50,font = CTkFont(family="Vazir",size=20,weight='bold'),text='حذف',fg_color='red',command=lambda id_num=row[0]: del_data(id_num))
-                btn_del.grid(row=0,column=3,sticky=E,)
-                list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
-                for sel in list_sel:
-                    sel.configure(state=DISABLED)
-            con.commit()
-            con.close()
-        elif len(search_entry_2.get()) == 10:
-            clear_frame_sct_2()
-            s = CTkFrame(sct_2,border_width=3)
-            s.pack(pady=3,anchor=E)
-            s.grid_columnconfigure([0,1],weight=1)
-            s.grid_rowconfigure([0],weight=1)
-            ent_id = CTkEntry(s,63,28,0,font=CTkFont('Vazir',11))
-            ent_id.insert(END,'شماره پذیرش')
-            ent_id.grid(row=0,column=10,sticky=E)
-            ent_sys = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys.insert(END,"مالک دستگاه")
-            ent_sys.grid(row=0,column=9,sticky=E,)
-            ent_sys_type = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys_type.insert(END,"نام دستگاه")
-            ent_sys_type.grid(row=0,column=8,sticky=E,)
-            ent_sys_model = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys_model.insert(END,"مدل دستگاه")
-            ent_sys_model.grid(row=0,column=7,sticky=E,)
-            ent_sys_serial = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys_serial.insert(END,"کدملی")
-            ent_sys_serial.grid(row=0,column=6,sticky=E,)
-            ent_sys_war = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys_war.insert(END,"موبایل")
-            ent_sys_war.grid(row=0,column=5,sticky=E,)
-            list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
-            for sell in list_sel:
-                sell.configure(state=DISABLED) 
-            for row in c.execute(f'SELECT * FROM paziresh WHERE code_meli={search_entry_2.get()}'):
-                a=row[0]+1590
-                s = CTkFrame(sct_2,border_width=3,fg_color='blue')
-                s.pack(pady=3,anchor=E)
-                s.grid_columnconfigure([0,1],weight=1)
-                s.grid_rowconfigure([0],weight=1)
-                ent_id = CTkEntry(s,63,font=font_enry)
-                ent_id.insert(END,a)
-                ent_id.grid(row=0,column=10,sticky=E)
-                ent_sys = CTkEntry(s,font=font_enry,justify=RIGHT)
-                ent_sys.insert(END,row[7])
-                ent_sys.grid(row=0,column=9,sticky=E,)
-                ent_sys_type = CTkEntry(s,font=font_enry,justify=RIGHT)
-                ent_sys_type.insert(END,row[3])
-                ent_sys_type.grid(row=0,column=8,sticky=E,)
-                ent_sys_model = CTkEntry(s,font=font_enry,justify=RIGHT)
-                ent_sys_model.insert(END,row[5])
-                ent_sys_model.grid(row=0,column=7,sticky=E,)
-                ent_sys_serial = CTkEntry(s,font=font_enry,justify=RIGHT)
-                n = f"0{row[9]}"
-                ent_sys_serial.insert(END,n)
-                ent_sys_serial.grid(row=0,column=6,sticky=E,)
-                ent_sys_war = CTkEntry(s,font=font_enry,justify=RIGHT)
-                f = f"0{row[8]}"
-                ent_sys_war.insert(END,f)
-                ent_sys_war.grid(row=0,column=5,sticky=E,)
-                btn_show = CTkButton(s,50,font=CTkFont(family="Vazir",size=20,weight='bold'),text='نمایش',command=lambda id_num=row[0]: show(id_num))
-                btn_show.grid(row=0,column=4,sticky=E,)
-                btn_del = CTkButton(s,50,font = CTkFont(family="Vazir",size=20,weight='bold'),text='حذف',fg_color='red',command=lambda id_num=row[0]: del_data(id_num))
-                btn_del.grid(row=0,column=3,sticky=E,)
-                
-                list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
-                for sel in list_sel:
-                    sel.configure(state=DISABLED)
-            con.commit()
-            con.close()
-        elif search_entry_2.get() == '':
-            clear_frame_sct_2()
+        result = run_search(search_entry_2.get(), sct_2, status=[0,1])
+        if result == "invalid":
             sel_2()
-        else:
-            clear_frame_sct_2()
+            return messagebox.showerror("مشکل", ".شماره موبایل/کدملی اشتباه است")
+        elif result is None:
             sel_2()
-            return messagebox.showerror("مشکل",".شماره موبایل/کدملی اشتباه است")
-    
+
     def search_3():
-        con = sqlite3.connect("pz.db")
-        c = con.cursor()
-        if len(search_entry_3.get()) == 11:
-            clear_frame_sct_3()
-            s = CTkFrame(sct_3,border_width=3)
-            s.pack(pady=3,anchor=E)
-            s.grid_columnconfigure([0,1],weight=1)
-            s.grid_rowconfigure([0],weight=1)
-            ent_id = CTkEntry(s,63,28,0,font=CTkFont('Vazir',11))
-            ent_id.insert(END,'شماره پذیرش')
-            ent_id.grid(row=0,column=10,sticky=E)
-            ent_sys = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys.insert(END,"مالک دستگاه")
-            ent_sys.grid(row=0,column=9,sticky=E,)
-            ent_sys_type = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys_type.insert(END,"نام دستگاه")
-            ent_sys_type.grid(row=0,column=8,sticky=E,)
-            ent_sys_model = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys_model.insert(END,"مدل دستگاه")
-            ent_sys_model.grid(row=0,column=7,sticky=E,)
-            ent_sys_serial = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys_serial.insert(END,"کدملی")
-            ent_sys_serial.grid(row=0,column=6,sticky=E,)
-            ent_sys_war = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys_war.insert(END,"موبایل")
-            ent_sys_war.grid(row=0,column=5,sticky=E,)
-            
-            list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
-            for sell in list_sel:
-                sell.configure(state=DISABLED) 
-            for row in c.execute(f'SELECT * FROM paziresh WHERE tel={search_entry_3.get()} AND status=1'):
-                a=row[0]+1590
-                s = CTkFrame(sct_3,border_width=3,fg_color='blue')
-                s.pack(pady=3,anchor=E)
-                s.grid_columnconfigure([0,1],weight=1)
-                s.grid_rowconfigure([0],weight=1)
-                ent_id = CTkEntry(s,63,font=font_enry)
-                ent_id.insert(END,a)
-                ent_id.grid(row=0,column=10,sticky=E)
-                ent_sys = CTkEntry(s,font=font_enry,justify=RIGHT)
-                ent_sys.insert(END,row[7])
-                ent_sys.grid(row=0,column=9,sticky=E,)
-                ent_sys_type = CTkEntry(s,font=font_enry,justify=RIGHT)
-                ent_sys_type.insert(END,row[3])
-                ent_sys_type.grid(row=0,column=8,sticky=E,)
-                ent_sys_model = CTkEntry(s,font=font_enry,justify=RIGHT)
-                ent_sys_model.insert(END,row[5])
-                ent_sys_model.grid(row=0,column=7,sticky=E,)
-                ent_sys_serial = CTkEntry(s,font=font_enry,justify=RIGHT)
-                n = f"0{row[9]}"
-                ent_sys_serial.insert(END,n)
-                ent_sys_serial.grid(row=0,column=6,sticky=E,)
-                ent_sys_war = CTkEntry(s,font=font_enry,justify=RIGHT)
-                f = f"0{row[8]}"
-                ent_sys_war.insert(END,f)
-                ent_sys_war.grid(row=0,column=5,sticky=E,)
-                btn_show = CTkButton(s,50,font=CTkFont(family="Vazir",size=20,weight='bold'),text='نمایش',command=lambda id_num=row[0]: show(id_num))
-                btn_show.grid(row=0,column=4,sticky=E,)
-                btn_del = CTkButton(s,50,font = CTkFont(family="Vazir",size=20,weight='bold'),text='حذف',fg_color='red',command=lambda id_num=row[0]: del_data(id_num))
-                btn_del.grid(row=0,column=3,sticky=E,)
-                
-                list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
-                for sel in list_sel:
-                    sel.configure(state=DISABLED)
-            con.commit()
-            con.close()
-        elif len(search_entry_3.get()) == 10:
-            
-            clear_frame_sct_3()
-            s = CTkFrame(sct_3,border_width=3)
-            s.pack(pady=3,anchor=E)
-            s.grid_columnconfigure([0,1],weight=1)
-            s.grid_rowconfigure([0],weight=1)
-            ent_id = CTkEntry(s,63,28,0,font=CTkFont('Vazir',11))
-            ent_id.insert(END,'شماره پذیرش')
-            ent_id.grid(row=0,column=10,sticky=E)
-            ent_sys = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys.insert(END,"مالک دستگاه")
-            ent_sys.grid(row=0,column=9,sticky=E,)
-            ent_sys_type = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys_type.insert(END,"نام دستگاه")
-            ent_sys_type.grid(row=0,column=8,sticky=E,)
-            ent_sys_model = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys_model.insert(END,"مدل دستگاه")
-            ent_sys_model.grid(row=0,column=7,sticky=E,)
-            ent_sys_serial = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys_serial.insert(END,"کدملی")
-            ent_sys_serial.grid(row=0,column=6,sticky=E,)
-            ent_sys_war = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-            ent_sys_war.insert(END,"موبایل")
-            ent_sys_war.grid(row=0,column=5,sticky=E,)
-            
-            list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
-            for sell in list_sel:
-                sell.configure(state=DISABLED) 
-            for row in c.execute(f'SELECT * FROM paziresh WHERE code_meli={search_entry_3.get()} AND status=1'):
-                a=row[0]+1590
-                s = CTkFrame(sct_3,border_width=3,fg_color='blue')
-                s.pack(pady=3,anchor=E)
-                s.grid_columnconfigure([0,1],weight=1)
-                s.grid_rowconfigure([0],weight=1)
-                ent_id = CTkEntry(s,63,font=font_enry)
-                ent_id.insert(END,a)
-                ent_id.grid(row=0,column=10,sticky=E)
-                ent_sys = CTkEntry(s,font=font_enry,justify=RIGHT)
-                ent_sys.insert(END,row[7])
-                ent_sys.grid(row=0,column=9,sticky=E,)
-                ent_sys_type = CTkEntry(s,font=font_enry,justify=RIGHT)
-                ent_sys_type.insert(END,row[3])
-                ent_sys_type.grid(row=0,column=8,sticky=E,)
-                ent_sys_model = CTkEntry(s,font=font_enry,justify=RIGHT)
-                ent_sys_model.insert(END,row[5])
-                ent_sys_model.grid(row=0,column=7,sticky=E,)
-                ent_sys_serial = CTkEntry(s,font=font_enry,justify=RIGHT)
-                n = f"0{row[9]}"
-                ent_sys_serial.insert(END,n)
-                ent_sys_serial.grid(row=0,column=6,sticky=E,)
-                ent_sys_war = CTkEntry(s,font=font_enry,justify=RIGHT)
-                f = f"0{row[8]}"
-                ent_sys_war.insert(END,f)
-                ent_sys_war.grid(row=0,column=5,sticky=E,)
-                btn_show = CTkButton(s,50,font=CTkFont(family="Vazir",size=20,weight='bold'),text='نمایش',command=lambda id_num=row[0]: show(id_num))
-                btn_show.grid(row=0,column=4,sticky=E,)
-                btn_del = CTkButton(s,50,font = CTkFont(family="Vazir",size=20,weight='bold'),text='حذف',fg_color='red',command=lambda id_num=row[0]: del_data(id_num))
-                btn_del.grid(row=0,column=3,sticky=E,)
-                list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
-                for sel in list_sel:
-                    sel.configure(state=DISABLED)
-            con.commit()
-            con.close()
-        elif search_entry_3.get() == '':
-            clear_frame_sct_3()
+        result = run_search(search_entry_3.get(), sct_3, status=1)
+        if result == "invalid":
             sel_3()
-        else:
-            clear_frame_sct_3()
-            sel_3()
-            return messagebox.showerror("مشکل",".شماره موبایل/کدملی اشتباه است")
-            
+            return messagebox.showerror("مشکل", ".شماره موبایل/کدملی اشتباه است")
+        elif result is None:
+            sel_3()      
     
     def sel_():
         
@@ -987,63 +619,28 @@ def tarikh_():
         s.pack(pady=3,anchor=E)
         s.grid_columnconfigure([0,1],weight=1)
         s.grid_rowconfigure([0],weight=1)
-        ent_id = CTkEntry(s,63,28,0,font=CTkFont('Vazir',11))
-        ent_id.insert(END,'شماره پذیرش')
+        ent_id = CTkLabel(s,
+            text='شماره پذیرش',
+            font=CTkFont('Vazir',11),
+            fg_color="#d9d9d9",         # رنگ پس‌زمینه شبیه CTkEntry غیرفعال
+            text_color="black",         # رنگ متن
+            corner_radius=5,            # گوشه‌های گرد
+            width=63,
+            height=28,
+            anchor=CENTER )
         ent_id.grid(row=0,column=10,sticky=E)
-        ent_sys = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-        ent_sys.insert(END,"مالک دستگاه")
-        ent_sys.grid(row=0,column=9,sticky=E,)
-        ent_sys_type = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-        ent_sys_type.insert(END,"نام دستگاه")
-        ent_sys_type.grid(row=0,column=8,sticky=E,)
-        ent_sys_model = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-        ent_sys_model.insert(END,"مدل دستگاه")
-        ent_sys_model.grid(row=0,column=7,sticky=E,)
-        ent_sys_serial = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-        ent_sys_serial.insert(END,"کدملی")
-        ent_sys_serial.grid(row=0,column=6,sticky=E,)
-        ent_sys_war = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-        ent_sys_war.insert(END,"موبایل")
-        ent_sys_war.grid(row=0,column=5,sticky=E,)
-        list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
-        for sell in list_sel:
-            sell.configure(state=DISABLED)  
-        con = sqlite3.connect("pz.db")
+        Tarikh.create_header(s,font_enry)  
+        con = sqlite3.connect("database/pz.db")
         c = con.cursor()
-        for row in c.execute('SELECT * FROM paziresh WHERE status=0 ORDER BY id DESC LIMIT 20'):
+        for row in c.execute('SELECT * FROM paziresh WHERE status=0 ORDER BY id DESC LIMIT 10').fetchall():
             a=row[0]+1590
             s = CTkFrame(sct,border_width=3,fg_color='blue')
             s.pack(pady=3,anchor=E)
             s.grid_columnconfigure([0,1],weight=1)
             s.grid_rowconfigure([0],weight=1)
-            ent_id = CTkEntry(s,63,font=font_enry)
-            ent_id.insert(END,a)
+            ent_id = CTkLabel(s,63,28,text=a,font=font_enry,text_color="black",fg_color="#d9d9d9",corner_radius=5,anchor=CENTER)
             ent_id.grid(row=0,column=10,sticky=E)
-            ent_sys = CTkEntry(s,font=font_enry,justify=RIGHT)
-            ent_sys.insert(END,row[7])
-            ent_sys.grid(row=0,column=9,sticky=E,)
-            ent_sys_type = CTkEntry(s,font=font_enry,justify=RIGHT)
-            ent_sys_type.insert(END,row[3])
-            ent_sys_type.grid(row=0,column=8,sticky=E,)
-            ent_sys_model = CTkEntry(s,font=font_enry,justify=RIGHT)
-            ent_sys_model.insert(END,row[5])
-            ent_sys_model.grid(row=0,column=7,sticky=E,)
-            ent_sys_serial = CTkEntry(s,font=font_enry,justify=RIGHT)
-            n = f"0{row[9]}"
-            ent_sys_serial.insert(END,n)
-            ent_sys_serial.grid(row=0,column=6,sticky=E,)
-            ent_sys_war = CTkEntry(s,font=font_enry,justify=RIGHT)
-            f = f"0{row[8]}"
-            ent_sys_war.insert(END,f)
-            ent_sys_war.grid(row=0,column=5,sticky=E,)
-            
-            list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
-            for sel in list_sel:
-                sel.configure(state=DISABLED)
-            btn_show = CTkButton(s,50,font=CTkFont(family="Vazir",size=20,weight='bold'),text='نمایش',command=lambda id_num=row[0]: show(id_num))
-            btn_show.grid(row=0,column=4,sticky=E,)
-            btn_del = CTkButton(s,50,font = CTkFont(family="Vazir",size=20,weight='bold'),text='حذف',fg_color='red',command=lambda id_num=row[0]: del_data(id_num))
-            btn_del.grid(row=0,column=3,sticky=E,)
+            Tarikh.create_data_row(s, font_enry, font, row, 0, show, del_data)
         con.commit()
         con.close()
     
@@ -1052,64 +649,30 @@ def tarikh_():
         s.pack(pady=3,anchor=E)
         s.grid_columnconfigure([0,1],weight=1)
         s.grid_rowconfigure([0],weight=1)
-        ent_id = CTkEntry(s,63,28,0,font=CTkFont('Vazir',11))
-        ent_id.insert(END,'شماره پذیرش')
+        ent_id = CTkLabel(s,
+            text='شماره پذیرش',
+            font=CTkFont('Vazir',11),
+            fg_color="#d9d9d9",         # رنگ پس‌زمینه شبیه CTkEntry غیرفعال
+            text_color="black",         # رنگ متن
+            corner_radius=5,            # گوشه‌های گرد
+            width=63,
+            height=28,
+            anchor=CENTER )
         ent_id.grid(row=0,column=10,sticky=E)
-        ent_sys = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-        ent_sys.insert(END,"مالک دستگاه")
-        ent_sys.grid(row=0,column=9,sticky=E,)
-        ent_sys_type = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-        ent_sys_type.insert(END,"نام دستگاه")
-        ent_sys_type.grid(row=0,column=8,sticky=E,)
-        ent_sys_model = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-        ent_sys_model.insert(END,"مدل دستگاه")
-        ent_sys_model.grid(row=0,column=7,sticky=E,)
-        ent_sys_serial = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-        ent_sys_serial.insert(END,"کدملی")
-        ent_sys_serial.grid(row=0,column=6,sticky=E,)
-        ent_sys_war = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-        ent_sys_war.insert(END,"موبایل")
-        ent_sys_war.grid(row=0,column=5,sticky=E,)
-        list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
-        for sell in list_sel:
-            sell.configure(state=DISABLED)  
+        Tarikh.create_header(s,font_enry)
         
-        con = sqlite3.connect("pz.db")
+        con = sqlite3.connect("database/pz.db")
         c = con.cursor()
-        for row in c.execute('SELECT * FROM paziresh ORDER BY id DESC LIMIT 20'):
+        for row in c.execute('SELECT * FROM paziresh ORDER BY id DESC LIMIT 10').fetchall():
             a=row[0]+1590
             s = CTkFrame(sct_2,border_width=3,fg_color='blue')
             s.pack(pady=3,anchor=E)
             s.grid_columnconfigure([0,1],weight=1)
             s.grid_rowconfigure([0],weight=1)
-            ent_id = CTkEntry(s,63,font=font_enry)
-            ent_id.insert(END,a)
-            ent_id.grid(row=0,column=10,sticky=E)
-            ent_sys = CTkEntry(s,font=font_enry,justify=RIGHT)
-            ent_sys.insert(END,row[7])
-            ent_sys.grid(row=0,column=9,sticky=E,)
-            ent_sys_type = CTkEntry(s,font=font_enry,justify=RIGHT)
-            ent_sys_type.insert(END,row[3])
-            ent_sys_type.grid(row=0,column=8,sticky=E,)
-            ent_sys_model = CTkEntry(s,font=font_enry,justify=RIGHT)
-            ent_sys_model.insert(END,row[5])
-            ent_sys_model.grid(row=0,column=7,sticky=E,)
-            ent_sys_serial = CTkEntry(s,font=font_enry,justify=RIGHT)
-            n = f"0{row[9]}"
-            ent_sys_serial.insert(END,n)
-            ent_sys_serial.grid(row=0,column=6,sticky=E,)
-            ent_sys_war = CTkEntry(s,font=font_enry,justify=RIGHT)
-            f = f"0{row[8]}"
-            ent_sys_war.insert(END,f)
-            ent_sys_war.grid(row=0,column=5,sticky=E,)
+            ent_id = CTkLabel(s,63,28,text=a,font=font_enry,text_color="black",fg_color="#d9d9d9",corner_radius=5,anchor=CENTER)
             
-            list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
-            for sel in list_sel:
-                sel.configure(state=DISABLED)
-            btn_show = CTkButton(s,50,font=CTkFont(family="Vazir",size=20,weight='bold'),text='نمایش',command=lambda id_num=row[0]: show(id_num))
-            btn_show.grid(row=0,column=4,sticky=E,)
-            btn_del = CTkButton(s,50,font = CTkFont(family="Vazir",size=20,weight='bold'),text='حذف',fg_color='red',command=lambda id_num=row[0]: del_data(id_num))
-            btn_del.grid(row=0,column=3,sticky=E,)
+            ent_id.grid(row=0,column=10,sticky=E)
+            Tarikh.create_data_row(s, font_enry, font, row, 0, show, del_data)
         con.commit()
         con.close()
         
@@ -1118,63 +681,28 @@ def tarikh_():
         s.pack(pady=3,anchor=E)
         s.grid_columnconfigure([0,1],weight=1)
         s.grid_rowconfigure([0],weight=1)
-        ent_id = CTkEntry(s,63,28,0,font=CTkFont('Vazir',11))
-        ent_id.insert(END,'شماره پذیرش')
+        ent_id = CTkLabel(s,
+            text='شماره پذیرش',
+            font=CTkFont('Vazir',11),
+            fg_color="#d9d9d9",         # رنگ پس‌زمینه شبیه CTkEntry غیرفعال
+            text_color="black",         # رنگ متن
+            corner_radius=5,            # گوشه‌های گرد
+            width=63,
+            height=28,
+            anchor=CENTER )
         ent_id.grid(row=0,column=10,sticky=E)
-        ent_sys = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-        ent_sys.insert(END,"مالک دستگاه")
-        ent_sys.grid(row=0,column=9,sticky=E,)
-        ent_sys_type = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-        ent_sys_type.insert(END,"نام دستگاه")
-        ent_sys_type.grid(row=0,column=8,sticky=E,)
-        ent_sys_model = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-        ent_sys_model.insert(END,"مدل دستگاه")
-        ent_sys_model.grid(row=0,column=7,sticky=E,)
-        ent_sys_serial = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-        ent_sys_serial.insert(END,"کدملی")
-        ent_sys_serial.grid(row=0,column=6,sticky=E,)
-        ent_sys_war = CTkEntry(s,corner_radius=0,font=font_enry,justify=CENTER)
-        ent_sys_war.insert(END,"موبایل")
-        ent_sys_war.grid(row=0,column=5,sticky=E,)
-        list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
-        for sell in list_sel:
-            sell.configure(state=DISABLED)  
-        con = sqlite3.connect("pz.db")
+        Tarikh.create_header(s,font_enry)
+        con = sqlite3.connect("database/pz.db")
         c = con.cursor()
-        for row in c.execute('SELECT * FROM paziresh WHERE status=1 ORDER BY id DESC LIMIT 20'):
+        for row in c.execute('SELECT * FROM paziresh WHERE status=1 ORDER BY id DESC LIMIT 10').fetchall():
             a=row[0]+1590
             s = CTkFrame(sct_3,border_width=3,fg_color='blue')
             s.pack(pady=3,anchor=E)
             s.grid_columnconfigure([0,1],weight=1)
             s.grid_rowconfigure([0],weight=1)
-            ent_id = CTkEntry(s,63,font=font_enry)
-            ent_id.insert(END,a)
+            ent_id = CTkLabel(s,63,28,text=a,font=font_enry,text_color="black",fg_color="#d9d9d9",corner_radius=5,anchor=CENTER)
             ent_id.grid(row=0,column=10,sticky=E)
-            ent_sys = CTkEntry(s,font=font_enry,justify=RIGHT)
-            ent_sys.insert(END,row[7])
-            ent_sys.grid(row=0,column=9,sticky=E,)
-            ent_sys_type = CTkEntry(s,font=font_enry,justify=RIGHT)
-            ent_sys_type.insert(END,row[3])
-            ent_sys_type.grid(row=0,column=8,sticky=E,)
-            ent_sys_model = CTkEntry(s,font=font_enry,justify=RIGHT)
-            ent_sys_model.insert(END,row[5])
-            ent_sys_model.grid(row=0,column=7,sticky=E,)
-            ent_sys_serial = CTkEntry(s,font=font_enry,justify=RIGHT)
-            n = f"0{row[9]}"
-            ent_sys_serial.insert(END,n)
-            ent_sys_serial.grid(row=0,column=6,sticky=E,)
-            ent_sys_war = CTkEntry(s,font=font_enry,justify=RIGHT)
-            f = f"0{row[8]}"
-            ent_sys_war.insert(END,f)
-            ent_sys_war.grid(row=0,column=5,sticky=E,)
-            
-            list_sel = [ent_id,ent_sys,ent_sys_type,ent_sys_model,ent_sys_serial,ent_sys_war,]
-            for sel in list_sel:
-                sel.configure(state=DISABLED)
-            btn_show = CTkButton(s,50,font=CTkFont(family="Vazir",size=20,weight='bold'),text='نمایش',command=lambda id_num=row[0]: show(id_num))
-            btn_show.grid(row=0,column=4,sticky=E,)
-            btn_del = CTkButton(s,50,font = CTkFont(family="Vazir",size=20,weight='bold'),text='حذف',fg_color='red',command=lambda id_num=row[0]: del_data(id_num))
-            btn_del.grid(row=0,column=3,sticky=E,)
+            Tarikh.create_data_row(s, font_enry, font, row, 0, show, del_data)
         con.commit()
         con.close()
     
@@ -1243,11 +771,12 @@ def tarikh_():
     sct_3.grid(row=1, column=0,rowspan=4,padx=20,sticky=NSEW)
     sel_(),sel_2(),sel_3()
 
+
 ###########################################################################################
 def show(data):
     clear_frame()
     try:
-        conn = sqlite3.connect('pz.db')
+        conn = sqlite3.connect('database/pz.db')
         cursor = conn.cursor()
         cursor.execute("SELECT MAX(id) FROM paziresh")
         result = cursor.fetchone()
@@ -1373,7 +902,7 @@ def show(data):
     
     
     
-    con = sqlite3.connect("pz.db")
+    con = sqlite3.connect("database/pz.db")
     c = con.cursor()
     for i in c.execute(f'SELECT * FROM paziresh WHERE id={data}'):
         f_show = CTkFrame(root)
@@ -1473,9 +1002,7 @@ def show(data):
         lbl_input_name_adress = CTkLabel(frame_down,text=" : آدرس ",font=font)
         lbl_input_name_adress.grid(row=1,column=2,sticky=W)
         ent_input_name_adress = CTkTextbox(frame_down,height=100,font=font,corner_radius=10,width=400,border_width=3)
-        ent_input_name_adress.tag_config("rtl",justify=RIGHT)
-        ent_input_name_adress.tag_add("rtl",0.0,END)
-        ent_input_name_adress.insert(0.0,i[11],'rtl')
+        ent_input_name_adress.insert(0.0,i[11])
         ent_input_name_adress.grid(row=1,column=0,columnspan=2,)
         #############################################################################
         lbl_3 = CTkLabel(f_show, text="مشخصات مشکل",font=font)
@@ -1488,9 +1015,7 @@ def show(data):
         lbl_problem.grid(row=0,column=3,)
         ent_problem = CTkTextbox(frame_moshkel,font=font_enry,corner_radius=10,width=400,height=100,border_width=3)
         ent_problem.grid(row=0,column=2,sticky=E)
-        ent_problem.tag_config('rtl',justify=RIGHT)
-        ent_problem.tag_add('rtl',0.0,END)
-        ent_problem.insert(0.0,i[12],'rtl')
+        ent_problem.insert(0.0,i[12])
         lbl_cost = CTkLabel(frame_moshkel,text=' : هزینه ',font=font)
         lbl_cost.grid(row=0,column=1,sticky=E)
         ent_cost = CTkEntry(frame_moshkel,font=font_enry,justify=RIGHT)
@@ -1499,14 +1024,13 @@ def show(data):
         lbl_input_description = CTkLabel(frame_moshkel,text=" : توضیحات ",font=font)
         lbl_input_description.grid(row=1,column=3)
         ent_input_description = CTkTextbox(frame_moshkel,font=font_enry,corner_radius=10,width=400,height=100,border_width=3)
-        ent_input_description.tag_config("rtl",justify=RIGHT)
-        ent_input_description.tag_add("rtl",0.0,END)
-        ent_input_description.insert(0.0,i[14],'rtl')
+
+        ent_input_description.insert(0.0,i[14])
         ent_input_description.grid(row=1,column=2,sticky=E)
         lbl_tak = CTkLabel(frame_moshkel,text=": نظر تکنسین",font=font)
         lbl_tak.grid(row=2,column=3)
         ent_tak = CTkTextbox(frame_moshkel,font=font_enry,corner_radius=10,width=400,height=100,border_width=3)
-        ent_tak.insert(END,i[17],)
+        ent_tak.insert(END,i[17])
         ent_tak.grid(row=2,column=2,sticky=E,)
         lbl_chek = CTkLabel(frame_moshkel,0,28,font=font,text="آیاگارانتی دارد؟")
         lbl_chek.grid(row=1,column=1,sticky=E)
@@ -1547,7 +1071,7 @@ def login():
     lbl_user = CTkLabel(far,0,28,text='ورود به سیستم',font=CTkFont(family="Vazir",size=50,weight='bold'))
     lbl_user.grid(row=1,column=1,padx=20,sticky=S)
     def create_table_admin():
-        conn = sqlite3.connect('pz.db')
+        conn = sqlite3.connect('database/pz.db')
         cursor = conn.cursor()
         conn.execute('''create table if not exists ADMIN
                     (name_id INTEGER PRIMARY KEY,
@@ -1564,7 +1088,7 @@ def login():
         conn.close()
     
     def login_admin():
-        conn = sqlite3.connect('pz.db')
+        conn = sqlite3.connect('database/pz.db')
         cursor = conn.cursor()
         for i in conn.execute('SELECT * FROM ADMIN'):
             user = i[1]
@@ -1594,10 +1118,10 @@ def login():
     btn_login.grid(row=4, column=1, padx=20, pady=0)
     
     
-login()
+# login()
 # paziresh_()
 # tarikh_()
-# dashbord()
+dashbord()
 # show(1)
 # send_sms()
 

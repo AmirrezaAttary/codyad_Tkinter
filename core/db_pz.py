@@ -1,6 +1,6 @@
 import sqlite3
 def create_database():
-  conn = sqlite3.connect('pz.db')
+  conn = sqlite3.connect('database/pz.db')
   cursor = conn.cursor()
   cursor.execute('''CREATE TABLE IF NOT EXISTS paziresh
                 (id INTEGER PRIMARY KEY,
@@ -26,7 +26,7 @@ def create_database():
   conn.close()
 
 def db_tel():
-    conn = sqlite3.connect('pz.db')
+    conn = sqlite3.connect('database/pz.db')
     cursor = conn.cursor()
     cursor.execute('''CREATE TABLE IF NOT EXISTS PHONE
                     (id INTEGER PRIMARY KEY,
