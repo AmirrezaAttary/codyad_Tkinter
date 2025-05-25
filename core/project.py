@@ -432,16 +432,16 @@ def send_sms():
             taki(numb)
         lbl_sms = CTkLabel(far_3,height=10,text='ارسال تکی',font=font)
         lbl_sms.grid(row=0, column=0 ,padx=20,pady=10)
-        frame_send_taki = CTkFrame(far_3,width=300,height=200)
+        frame_send_taki = CTkFrame(far_3,fg_color="#f3f3f3",width=300,height=200)
         frame_send_taki.grid(row=1,column=0,rowspan=3,padx=20,)
         frame_send_taki.grid_columnconfigure(0,weight=1)
         frame_send_taki.grid_rowconfigure((0,1,2),weight=1)
-        lbl_sms_taki = CTkLabel(frame_send_taki,text=': شماره مورد نظر',font=font)
+        lbl_sms_taki = CTkLabel(frame_send_taki,height=100,text=': شماره مورد نظر',font=font)
         lbl_sms_taki.grid(row=0,column=0,padx=25)
         ent_sms_taki = CTkEntry(frame_send_taki,font=font_enry)
         ent_sms_taki.grid(row=1,column=0,pady=25,padx=25)
-        but_sms_taki = CTkButton(frame_send_taki,text='ارسال',font=font,fg_color="green",hover_color="#009933", command=get__)
-        but_sms_taki.grid(row=2,column=0,padx=25)
+        but_sms_taki = CTkButton(frame_send_taki,text='ارسال',font=font,fg_color="#d48afa",hover_color="#9d3ecc", command=get__)
+        but_sms_taki.grid(row=2,column=0,padx=80,pady=40)
    
     ####################################################################################
     def sel_koli():
@@ -449,8 +449,8 @@ def send_sms():
             for widget in sc_3.winfo_children():
                 widget.destroy()
         
-        frame_send_koli = CTkFrame(far_3,width=300,height=200)
-        frame_send_koli.grid(row=5,column=0,rowspan=3,padx=300,pady=5,sticky=NSEW)
+        frame_send_koli = CTkFrame(far_3,width=300,fg_color="#f3f3f3",height=200)
+        frame_send_koli.grid(row=5,column=0,rowspan=3,padx=300,pady=5)
         frame_send_koli.grid_columnconfigure((0),weight=1)
         frame_send_koli.grid_rowconfigure((0,1),weight=1)
         tab_w = CTkTabview(frame_send_koli)
@@ -467,7 +467,7 @@ def send_sms():
         tab_w.tab('شماره همه').grid_columnconfigure(0,weight=1)
         tab_w.tab('شده افزوده').grid_columnconfigure(0,weight=1)
         
-        tab_w.grid(row=0,column=0,)
+        tab_w.grid(row=0,column=0,padx=200,pady=50)
         lbl_sms_koli = CTkLabel(far_3,text='ارسال گروهی',font=font)
         lbl_sms_koli.grid(row=4, column=0 ,padx=20,pady=10)
         list_numb = []
@@ -491,11 +491,11 @@ def send_sms():
                 CTkButton(sc_3,font=font,text="ثبت",command=ins).pack()
             
             
-        bn = CTkButton(tab_w.tab('+افزودن'),text='بارگذاری',font=font,command=upload_file_1)
+        bn = CTkButton(tab_w.tab('+افزودن'),text='بارگذاری',fg_color="#d48afa",hover_color="#9d3ecc",font=font,command=upload_file_1)
         bn.grid(row=2,column=0)
         
         
-        sc = CTkScrollableFrame(tab_w.tab('دستگاه داخل'),300,250,3,3)
+        sc = CTkScrollableFrame(tab_w.tab('دستگاه داخل'),300,250,3,3,)
         sc.grid(row=0,rowspan=1,column=0)
         sc_2 = CTkScrollableFrame(tab_w.tab('شماره همه'),300,250,3,3)
         sc_2.grid(row=0,rowspan=1,column=0)
@@ -526,20 +526,20 @@ def send_sms():
             numb.configure(state=DISABLED)
        
         
-        btn_sms_koli = CTkButton(tab_w.tab('دستگاه داخل'),text='ارسال',font=font,fg_color="green",hover_color="#009933",command=lambda numb=list_person_name_2_str: koli(numb))
+        btn_sms_koli = CTkButton(tab_w.tab('دستگاه داخل'),text='ارسال',font=font,fg_color="#d48afa",hover_color="#9d3ecc",command=lambda numb=list_person_name_2_str: koli(numb))
         btn_sms_koli.grid(row=2,column=0,padx=20,pady=20)
-        btn_sms_koli_2 = CTkButton(tab_w.tab('شماره همه'),text='ارسال',font=font,fg_color="green",hover_color="#009933",command=lambda numb=list_jam: koli(numb))
+        btn_sms_koli_2 = CTkButton(tab_w.tab('شماره همه'),text='ارسال',font=font,fg_color="#d48afa",hover_color="#9d3ecc",command=lambda numb=list_jam: koli(numb))
         btn_sms_koli_2.grid(row=2,column=0,padx=20,pady=20)
-        btn_sms_koli_3 = CTkButton(tab_w.tab('شده افزوده'),text='ارسال',font=font,fg_color="green",hover_color="#009933",command=lambda numb=list_afzode_str: koli(numb))
+        btn_sms_koli_3 = CTkButton(tab_w.tab('شده افزوده'),text='ارسال',font=font,fg_color="#d48afa",hover_color="#9d3ecc",command=lambda numb=list_afzode_str: koli(numb))
         btn_sms_koli_3.grid(row=2,column=0,padx=20,pady=20)
     
     
     
-    far_3 = CTkFrame(root)
+    far_3 = CTkFrame(root,fg_color='#edcbff')
     far_3.grid(row=1, column=0,rowspan=7, sticky=NSEW)    
     far_3.grid_columnconfigure((0), weight=1)
     far_3.grid_rowconfigure((0, 1, 2, 3,4, 5, 6, 7, 8, 9, 10,11), weight=1)
-    bt_from_frame3 = customtkinter.CTkButton(far_3, text="بازگشت",font=font, command=dashbord)
+    bt_from_frame3 = customtkinter.CTkButton(far_3, text="بازگشت", fg_color= "#C74949", hover_color = '#B20000',font=font, command=dashbord)
     bt_from_frame3.grid(row=9, column=0, padx=20, pady=(10, 0))
     sel_taki()
     sel_koli()
@@ -706,19 +706,19 @@ def tarikh_():
         con.commit()
         con.close()
     
-    far_4 = CTkFrame(root)
+    far_4 = CTkFrame(root,fg_color="#d48afa",)
     far_4.grid(row=1, column=0,rowspan=7, sticky=NSEW)    
     far_4.grid_columnconfigure(0, weight=1)
     far_4.grid_rowconfigure((0, 1, 2, 3), weight=0)
     far_4.grid_rowconfigure((4, 5, 6, 7), weight=1)
     bt_from_frame3 = customtkinter.CTkButton(far_4, text="بازگشت",font=font, command=dashbord)
     bt_from_frame3.grid(row=7, column=0, padx=20, pady=(10, 0))
-    farame_garanti = CTkFrame(far_4,)
+    farame_garanti = CTkFrame(far_4,fg_color="#edcbff")
     farame_garanti.grid(row=0, column=0,rowspan=7, sticky=NSEW,padx=20,pady=20)
     farame_garanti.grid_columnconfigure(0, weight=1)
     farame_garanti.grid_rowconfigure((0, 1, 2, 3), weight=1)
     
-    tab_view = CTkTabview(farame_garanti,)
+    tab_view = CTkTabview(farame_garanti,fg_color="#d48afa")
     tab_view.grid(row=0,rowspan=4, column=0, padx=20, pady=20,sticky=NSEW)
     tab_view.add("تعمیر درحال")
     tab_view.add("سفارش همه")
@@ -730,7 +730,7 @@ def tarikh_():
     tab_view.tab("تحویل آماده").grid_rowconfigure((0, 1, 2, 3, 4), weight=1)
     tab_view.tab("تحویل آماده").grid_columnconfigure((0), weight=1)
     ################################################################################
-    search_frame = CTkFrame(tab_view.tab("تعمیر درحال"))
+    search_frame = CTkFrame(tab_view.tab("تعمیر درحال"),fg_color="#d48afa")
     search_frame.grid(row=0, column=0,padx=20,sticky=E)
     search_frame.grid_columnconfigure((0, 1, 2, 3), weight=1)
     search_frame.grid_rowconfigure(0,weight=1)
@@ -741,7 +741,7 @@ def tarikh_():
     search_btn = CTkButton(search_frame,text="جستوجو",font=font,command=search)
     search_btn.grid(row=0, column=1,padx=20,sticky=E)
     ##########################################################################
-    search_frame_2 = CTkFrame(tab_view.tab("سفارش همه"))
+    search_frame_2 = CTkFrame(tab_view.tab("سفارش همه"),fg_color="#d48afa")
     search_frame_2.grid(row=0, column=0,padx=20,sticky=E)
     search_frame_2.grid_columnconfigure((0, 1, 2, 3), weight=1)
     search_frame_2.grid_rowconfigure(0,weight=1)
@@ -752,7 +752,7 @@ def tarikh_():
     search_btn_2 = CTkButton(search_frame_2,text="جستوجو",font=font,command=search_2)
     search_btn_2.grid(row=0, column=1,padx=20,sticky=E)
     ################################################################################
-    search_frame_3 = CTkFrame(tab_view.tab("تحویل آماده"))
+    search_frame_3 = CTkFrame(tab_view.tab("تحویل آماده"),fg_color="#d48afa")
     search_frame_3.grid(row=0, column=0,padx=20,sticky=E)
     search_frame_3.grid_columnconfigure((0, 1, 2, 3), weight=1)
     search_frame_3.grid_rowconfigure(0,weight=1)
