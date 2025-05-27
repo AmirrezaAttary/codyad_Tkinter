@@ -47,7 +47,7 @@ customtkinter.set_default_color_theme("dark-blue")
 
 
 root = CTk()
-# root.iconbitmap('tv.ico')
+root.iconbitmap('icon/tv.ico')
 root.grid_columnconfigure(0, weight=1)
 root.grid_rowconfigure((0, 1, 2, 3), weight=0)
 root.grid_rowconfigure((4, 5, 6, 7), weight=1)
@@ -1118,10 +1118,10 @@ def login():
     btn_login.grid(row=4, column=1, padx=20, pady=0)
     
     
-# login()
+login()
 # paziresh_()
 # tarikh_()
-dashbord()
+# dashbord()
 # show(1)
 # send_sms()
 
