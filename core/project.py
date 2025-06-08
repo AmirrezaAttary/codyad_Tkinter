@@ -10,6 +10,7 @@ def hash_password(password):
 
 create_dictory()
 create_database()
+db_tel()
 create_settings_table()
 current_user = None
 
