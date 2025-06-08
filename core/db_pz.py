@@ -33,3 +33,35 @@ def db_tel():
                     tel INTEGER(11) NOT NULL)''')
     conn.commit()
     conn.close()
+    
+    
+    
+def create_settings_table():
+    conn = sqlite3.connect("database/pz.db")
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS sms_settings (
+            id INTEGER PRIMARY KEY,
+            sender_number TEXT NOT NULL
+        )
+    """)
+    conn.commit()
+    conn.close()
+    
+    
+def save_sender_number(number):
+    conn = sqlite3.connect("database/pz.db")
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM sms_settings")  # فقط یک شماره ذخیره می‌کنیم
+    cursor.execute("INSERT INTO sms_settings (sender_number) VALUES (?)", (number,))
+    conn.commit()
+    conn.close()
+
+
+def get_sender_number():
+    conn = sqlite3.connect("database/pz.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT sender_number FROM sms_settings LIMIT 1")
+    row = cursor.fetchone()
+    conn.close()
+    return row[0] if row else '200060006069'  # مقدار پیش‌فرض

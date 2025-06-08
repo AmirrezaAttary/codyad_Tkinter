@@ -1,11 +1,17 @@
 from project23 import *
-from db_pz import create_database,db_tel
+from db_pz import create_database,db_tel,create_settings_table,save_sender_number, get_sender_number
 from ines_data import insert_data,update_data,insert_tel
 from create_dictory import create_dictory
 import tarikheh as Tarikh 
+import hashlib
+
+def hash_password(password):
+    return hashlib.sha256(password.encode('utf-8')).hexdigest()
 
 create_dictory()
 create_database()
+create_settings_table()
+current_user = None
 
 
 
@@ -58,46 +64,109 @@ api = KavenegarAPI("742F364166354D7762516C617272357A545936513567685A506434485155
 font = CTkFont(family="Vazir",size=25,weight='bold')
 font_enry=CTkFont(family="Vazir",size=20)
 
+###################################################################################### SMS
+
+def taki(number, message):
+    try:
+        sender = get_sender_number()
+        params = {
+            'receptor': number,
+            'sender': sender,
+            'message': message,
+        }
+        response = api.sms_send(params)
+    except APIException as e:
+        return messagebox.showerror("خطا", f"Error: {e}")
+    except Exception as e:
+        dashbord()
+        return messagebox.showinfo('خطا', f"Unexpected error: {e}")
+
+def koli(numbers, message):
+    try:
+        sender = get_sender_number()
+        params = {
+            'receptor': numbers,
+            'sender': sender,
+            'message': message,
+        }
+        response = api.sms_send(params)
+    except APIException as e:
+        return messagebox.showerror("خطا", f"Error: {e}")
+    except Exception as e:
+        dashbord()
+        return messagebox.showinfo('خطا', f"Unexpected error: {e}")
 
 
-def taki(number):
-        
+def save_numbers_to_db(numbers: list[str]):
+    con = sqlite3.connect("database/pz.db")
+    c = con.cursor()
+    
+    for num in numbers:
+        num = num.strip()
+        if re.fullmatch(r"\d{11}", num):  # فقط 11 رقم عددی
+            exists = c.execute("SELECT 1 FROM PHONE WHERE tel = ?", (num,)).fetchone()
+            if not exists:
+                c.execute("INSERT INTO PHONE (tel) VALUES (?)", (num,))
+    
+    con.commit()
+    con.close()
+
+def handle_save_only(numbers_text: str):
+    numbers = [tel.strip() for tel in numbers_text.splitlines() if tel.strip()]
+    valid_numbers = [num for num in numbers if re.fullmatch(r"\d{11}", num)]
+
+    if valid_numbers:
+        save_numbers_to_db(valid_numbers)
+        messagebox.showinfo("موفقیت", "شماره‌های معتبر با موفقیت ذخیره شدند.")
+    else:
+        messagebox.showwarning("هشدار", "هیچ شماره‌ی ۱۱ رقمی معتبری وارد نشده است.")
+
+def load_numbers_from_file(textbox):
+    file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
+    if file_path:
         try:
-            params = {
-                'receptor':f"{number}", #Recipient phone number
-                'sender': '200060006069',    # Your Kavenegar sender ID
-                'message': '''با سلام
-کالا های شما در 
-شرکت قادری تعمیر و 
-آماده تحویل است.''',
-            }
-            response = api.sms_send(params)
-             # Check the response from the API
-        except APIException as e:
-            return messagebox.showerror("error",f"Error: {e}")
+            with open(file_path, 'r', encoding='utf-8') as f:
+                numbers = f.read()
+                textbox.delete("0.0", END)
+                textbox.insert("0.0", numbers)
         except Exception as e:
-            dashbord()
-            return messagebox.showinfo('yes',f"An unexpected error occurred: {e}")
-        
+            messagebox.showerror("خطا", f"خطا در خواندن فایل: {e}")
 
-def koli(numbers):
-        try:
-            params = {
-                'receptor': numbers, #Recipient phone number
-                'sender': '200060006069',    # Your Kavenegar sender ID
-                'message': '''با سلام
-کالا های شما در 
-شرکت قادری تعمیر و 
-آماده تحویل است.''',
-            }
-            response = api.sms_send(params)
-             # Check the response from the API
-        except APIException as e:
-            return messagebox.showerror("error",f"Error: {e}")
-        except Exception as e:
-            dashbord()
-            return messagebox.showinfo('yes',f"An unexpected error occurred: {e}")
-        
+
+###################################################################################### SMS
+
+########################################################################################## admin 
+
+
+def save_new_user(username, password):
+    hashed_pass = hash_password(password)
+    try:
+        conn = sqlite3.connect('database/pz.db')
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO ADMIN(USER, PASSWORD) VALUES (?, ?)", (username, hashed_pass))
+        conn.commit()
+        conn.close()
+        return True
+    except sqlite3.IntegrityError:
+        # نام کاربری قبلا ثبت شده است
+        return False
+
+def update_password(old_pass, new_pass, current_user):
+    hashed_old = hash_password(old_pass)
+    hashed_new = hash_password(new_pass)
+    conn = sqlite3.connect('database/pz.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT PASSWORD FROM ADMIN WHERE USER=?", (current_user,))
+    result = cursor.fetchone()
+    if result and result[0] == hashed_old:
+        cursor.execute("UPDATE ADMIN SET PASSWORD=? WHERE USER=?", (hashed_new, current_user))
+        conn.commit()
+        conn.close()
+        return True
+    conn.close()
+    return False
+
+########################################################################################## admin 
 
 def clear_frame():
   for widget in root.winfo_children():
@@ -109,27 +178,28 @@ def close_window():
     
 def dashbord():
     clear_frame()
-    far = CTkFrame(root,fg_color='#ffffff')
-    far.grid(row=1, column=0,rowspan=7, sticky=NSEW)    
+    far = CTkFrame(root, fg_color='#ffffff')
+    far.grid(row=1, column=0, rowspan=7, sticky=NSEW)    
     far.grid_columnconfigure(0, weight=1)
-    # far.grid_rowconfigure((0, 1, 2, 3, 4), weight=0)
-    far.grid_rowconfigure(( 0, 1, 2, 3, 4, 5,), weight=1)
-    bt_dashboard = customtkinter.CTkButton(far, text="پذیرش",height=60,font=font,fg_color="#d48afa",hover_color="#9d3ecc", command=paziresh_)
-    bt_dashboard.grid(row=1 ,column=0, padx=20, pady=20)
+    far.grid_rowconfigure((0, 1, 2, 3, 4, 5, 6 ,7), weight=1)
 
+    bt_dashboard = customtkinter.CTkButton(far, text="پذیرش", height=60, font=font, fg_color="#d48afa", hover_color="#9d3ecc", command=paziresh_)
+    bt_dashboard.grid(row=1, column=0, padx=20, pady=20)
 
-    bt_sms = customtkinter.CTkButton(far, text="ارسال پیامک",height=60,font=font,fg_color="#d48afa",hover_color="#9d3ecc", command=send_sms)
-    bt_sms.grid(row=2 ,column=0, padx=20, pady=20)
+    bt_sms = customtkinter.CTkButton(far, text="ارسال پیامک", height=60, font=font, fg_color="#d48afa", hover_color="#9d3ecc", command=send_sms_ui)
+    bt_sms.grid(row=2, column=0, padx=20, pady=20)
 
+    bt_tarikh = customtkinter.CTkButton(far, text="تاریخچه", height=60, font=font, fg_color="#d48afa", hover_color="#9d3ecc", command=tarikh_)
+    bt_tarikh.grid(row=3, column=0, padx=20, pady=20)
 
-
-    bt_tarikh = customtkinter.CTkButton(far, text="تاریخچه",height=60,font=font,fg_color="#d48afa",hover_color="#9d3ecc", command=tarikh_)
-    bt_tarikh.grid(row=3 ,column=0, padx=20, pady=20)
+    bt_settings = customtkinter.CTkButton(far, text="تنظیمات", height=60, font=font, fg_color="#d48afa", hover_color="#9d3ecc", command=settings_ui)
+    bt_settings.grid(row=4, column=0, padx=20, pady=20)
     
+    bt_settings_sms = customtkinter.CTkButton(far, text="تنظیمات اس‌ام‌اس", height=60, font=font, fg_color="#d48afa", hover_color="#9d3ecc", command=sms_settings_ui)
+    bt_settings_sms.grid(row=5, column=0, padx=20, pady=20)
 
-    btn_quit = customtkinter.CTkButton(far, text="خروج",height=60, fg_color= "#C74949", hover_color = '#B20000',font=font, command= close_window)
-    btn_quit.grid(row=4, column=0, padx=20, pady=0)
-
+    btn_quit = customtkinter.CTkButton(far, text="خروج", height=60, fg_color="#C74949", hover_color='#B20000', font=font, command=close_window)
+    btn_quit.grid(row=6, column=0, padx=20, pady=0)
 
 def paziresh_():
     create_database()
@@ -392,158 +462,260 @@ def paziresh_():
     chek_2 = CTkCheckBox(frame_moshkel,30,text="خیر",font=font,onvalue="خیر",offvalue="بلی",variable=str_,command=modat)
     chek_2.grid(row=1,column=0,)
     
-
-
-
-def send_sms():
-    db_tel()
+def send_sms_ui():
     con = sqlite3.connect("database/pz.db")
     c = con.cursor()
-    list_jam = []
-    list_person_name = []
-    for p in c.execute('SELECT tel FROM paziresh '):
-        a = list(p)
-        list_person_name.append(a)
-    list_person_name_2 = []
-    list_person_name_2_str = []
-    for i in list_person_name:
-        a= int(i[0])
-        list_person_name_2.append(a)
-        list_person_name_2_str.append(f'0{a}')
-        list_jam.append(f'0{a}')
-        
-    list_afzode = []
-    list_afzode_str = []
-    for l in c.execute('SELECT tel FROM PHONE '):
-        n = int(l[0])
-        list_afzode.append(n)
-        list_afzode_str.append(f'0{n}')
-        list_jam.append(f'0{n}')
-    con.commit()
-    con.close()
-    
-    
-    
-    def sel_taki():
-        
-        def get__():
-            
-            numb=ent_sms_taki.get() 
-            taki(numb)
-        lbl_sms = CTkLabel(far_3,height=10,text='ارسال تکی',font=font)
-        lbl_sms.grid(row=0, column=0 ,padx=20,pady=10)
-        frame_send_taki = CTkFrame(far_3,fg_color="#f3f3f3",width=300,height=200)
-        frame_send_taki.grid(row=1,column=0,rowspan=3,padx=20,)
-        frame_send_taki.grid_columnconfigure(0,weight=1)
-        frame_send_taki.grid_rowconfigure((0,1,2),weight=1)
-        lbl_sms_taki = CTkLabel(frame_send_taki,height=100,text=': شماره مورد نظر',font=font)
-        lbl_sms_taki.grid(row=0,column=0,padx=25)
-        ent_sms_taki = CTkEntry(frame_send_taki,font=font_enry)
-        ent_sms_taki.grid(row=1,column=0,pady=25,padx=25)
-        but_sms_taki = CTkButton(frame_send_taki,text='ارسال',font=font,fg_color="#d48afa",hover_color="#9d3ecc", command=get__)
-        but_sms_taki.grid(row=2,column=0,padx=80,pady=40)
-   
-    ####################################################################################
-    def sel_koli():
-        def clear_kol():
-            for widget in sc_3.winfo_children():
-                widget.destroy()
-        
-        frame_send_koli = CTkFrame(far_3,width=300,fg_color="#f3f3f3",height=200)
-        frame_send_koli.grid(row=5,column=0,rowspan=3,padx=300,pady=5)
-        frame_send_koli.grid_columnconfigure((0),weight=1)
-        frame_send_koli.grid_rowconfigure((0,1),weight=1)
-        tab_w = CTkTabview(frame_send_koli)
-        tab_w.add('دستگاه داخل')
-        tab_w.add('+افزودن')
-        tab_w.add('شده افزوده')
-        tab_w.add('شماره همه')
-        tab_w.tab('دستگاه داخل').grid_rowconfigure((0,1,2),weight=1)
-        tab_w.tab('+افزودن').grid_rowconfigure((0,1,2),weight=1)
-        tab_w.tab('شماره همه').grid_rowconfigure((0,1,2),weight=1)
-        tab_w.tab('شده افزوده').grid_rowconfigure((0,1,2),weight=1)
-        tab_w.tab('دستگاه داخل').grid_columnconfigure(0,weight=1)
-        tab_w.tab('+افزودن').grid_columnconfigure(0,weight=1)
-        tab_w.tab('شماره همه').grid_columnconfigure(0,weight=1)
-        tab_w.tab('شده افزوده').grid_columnconfigure(0,weight=1)
-        
-        tab_w.grid(row=0,column=0,padx=200,pady=50)
-        lbl_sms_koli = CTkLabel(far_3,text='ارسال گروهی',font=font)
-        lbl_sms_koli.grid(row=4, column=0 ,padx=20,pady=10)
-        list_numb = []
-        list_numb_str = []
-        def upload_file_1():
-            def ins():
-                
-                insert_tel(list_numb)
-                send_sms()
-                return messagebox.showinfo('Upload','اطلاعات با موفقیت ذخیره شد')
-            clear_kol()
-            file_path = filedialog.askopenfilename()
-            with open(file_path,'r') as f:
-                for line in f:
-                    numbb = CTkEntry(sc_3,font=font_enry)
-                    numbb.insert(END,f'{line}')
-                    numbb.pack()
-                    a = int(numbb.get())
-                    list_numb.append(a)
-                    list_numb_str.append(f'0{a}')
-                CTkButton(sc_3,font=font,text="ثبت",command=ins).pack()
-            
-            
-        bn = CTkButton(tab_w.tab('+افزودن'),text='بارگذاری',fg_color="#d48afa",hover_color="#9d3ecc",font=font,command=upload_file_1)
-        bn.grid(row=2,column=0)
-        
-        
-        sc = CTkScrollableFrame(tab_w.tab('دستگاه داخل'),300,250,3,3,)
-        sc.grid(row=0,rowspan=1,column=0)
-        sc_2 = CTkScrollableFrame(tab_w.tab('شماره همه'),300,250,3,3)
-        sc_2.grid(row=0,rowspan=1,column=0)
-        sc_3 = CTkScrollableFrame(tab_w.tab('+افزودن'),300,250,3,3)
-        sc_3.grid(row=0,rowspan=1,column=0)
-        sc_4 = CTkScrollableFrame(tab_w.tab('شده افزوده'),300,250,3,3)
-        sc_4.grid(row=0,rowspan=1,column=0)
-        
-        for j in list_person_name_2:
-            numb = CTkEntry(sc,font=font_enry)
-            numb.insert(END,f'0{j}')
-            numb.pack()
-            numb.configure(state=DISABLED)
-        for j in list_person_name_2:
-            numb = CTkEntry(sc_2,font=font_enry)
-            numb.insert(END,f'0{j}')
-            numb.pack()
-            numb.configure(state=DISABLED)
-        for o in list_afzode:
-            numb = CTkEntry(sc_2,font=font_enry)
-            numb.insert(END,f'0{o}')
-            numb.pack()
-            numb.configure(state=DISABLED)
-        for x in list_afzode:
-            numb = CTkEntry(sc_4,font=font_enry)
-            numb.insert(END,f'0{x}')
-            numb.pack()
-            numb.configure(state=DISABLED)
-       
-        
-        btn_sms_koli = CTkButton(tab_w.tab('دستگاه داخل'),text='ارسال',font=font,fg_color="#d48afa",hover_color="#9d3ecc",command=lambda numb=list_person_name_2_str: koli(numb))
-        btn_sms_koli.grid(row=2,column=0,padx=20,pady=20)
-        btn_sms_koli_2 = CTkButton(tab_w.tab('شماره همه'),text='ارسال',font=font,fg_color="#d48afa",hover_color="#9d3ecc",command=lambda numb=list_jam: koli(numb))
-        btn_sms_koli_2.grid(row=2,column=0,padx=20,pady=20)
-        btn_sms_koli_3 = CTkButton(tab_w.tab('شده افزوده'),text='ارسال',font=font,fg_color="#d48afa",hover_color="#9d3ecc",command=lambda numb=list_afzode_str: koli(numb))
-        btn_sms_koli_3.grid(row=2,column=0,padx=20,pady=20)
-    
-    
-    
-    far_3 = CTkFrame(root,fg_color='#edcbff')
-    far_3.grid(row=1, column=0,rowspan=7, sticky=NSEW)    
-    far_3.grid_columnconfigure((0), weight=1)
-    far_3.grid_rowconfigure((0, 1, 2, 3,4, 5, 6, 7, 8, 9, 10,11), weight=1)
-    bt_from_frame3 = customtkinter.CTkButton(far_3, text="بازگشت", fg_color= "#C74949", hover_color = '#B20000',font=font, command=dashbord)
-    bt_from_frame3.grid(row=9, column=0, padx=20, pady=(10, 0))
-    sel_taki()
-    sel_koli()
 
+    tel_dakheli = [f'0{int(t[0])}' for t in c.execute('SELECT tel FROM paziresh')]
+    tel_afzode = [f'0{int(t[0])}' for t in c.execute('SELECT tel FROM PHONE')]
+    con.close()
+    tel_all = tel_dakheli + tel_afzode
+
+    parent_frame = CTkFrame(root, fg_color='#edcbff')
+    parent_frame.grid(row=1, column=0, rowspan=7, sticky=NSEW)
+    parent_frame.grid_columnconfigure(0, weight=1)
+    parent_frame.grid_rowconfigure((1,2,3,4,5,6,7), weight=1)
+
+    # متن پیام ورودی
+    lbl_msg = CTkLabel(parent_frame, text='متن پیام:', font=font)
+    lbl_msg.grid(row=0, column=0, pady=5, padx=10)
+    txt_msg = CTkTextbox(parent_frame, height=200, font=font_enry, width=600)
+    txt_msg.grid(row=1, column=0, padx=20, pady=10)
+
+    # تب‌ها
+    tabs = CTkTabview(parent_frame, width=600)
+    tabs.grid(row=2, column=0, padx=20, pady=10)
+    tabs.add("ارسال تکی")
+    tabs.add("دستگاه داخل")
+    tabs.add("شده افزوده")
+    tabs.add("همه شماره‌ها")
+    tabs.add("افزودن دستی / از فایل")
+
+    # تب ارسال تکی
+    CTkLabel(tabs.tab("ارسال تکی"), text="شماره موبایل (یا چندتا با کاما جدا کنید):", font=font).pack(pady=5)
+    entry_single = CTkEntry(tabs.tab("ارسال تکی"), font=font_enry, width=400)
+    entry_single.pack(pady=5)
+    CTkButton(
+        tabs.tab("ارسال تکی"),
+        text="ارسال",
+        font=font,
+        command=lambda: taki(entry_single.get(), txt_msg.get("0.0", END).strip())
+    ).pack(pady=10)
+
+    # تب دستگاه داخل
+    sc1 = CTkScrollableFrame(tabs.tab("دستگاه داخل"), height=200)
+    sc1.pack(pady=5)
+    for tel in tel_dakheli:
+        e = CTkEntry(sc1, font=font_enry, width=400)
+        e.insert(END, tel)
+        e.configure(state="disabled")
+        e.pack(padx=10, pady=2)
+    CTkButton(
+        tabs.tab("دستگاه داخل"),
+        text="ارسال گروهی",
+        font=font,
+        command=lambda: koli(tel_dakheli, txt_msg.get("0.0", END).strip())
+    ).pack(pady=10)
+
+    # تب شده افزوده
+    sc2 = CTkScrollableFrame(tabs.tab("شده افزوده"), height=200)
+    sc2.pack(pady=5)
+    for tel in tel_afzode:
+        e = CTkEntry(sc2, font=font_enry, width=400)
+        e.insert(END, tel)
+        e.configure(state="disabled")
+        e.pack(padx=10, pady=2)
+    CTkButton(
+        tabs.tab("شده افزوده"),
+        text="ارسال گروهی",
+        font=font,
+        command=lambda: koli(tel_afzode, txt_msg.get("0.0", END).strip())
+    ).pack(pady=10)
+
+    # تب همه شماره‌ها
+    sc3 = CTkScrollableFrame(tabs.tab("همه شماره‌ها"), height=200)
+    sc3.pack(pady=5)
+    for tel in tel_all:
+        e = CTkEntry(sc3, font=font_enry, width=400)
+        e.insert(END, tel)
+        e.configure(state="disabled")
+        e.pack(padx=10, pady=2)
+    CTkButton(
+        tabs.tab("همه شماره‌ها"),
+        text="ارسال گروهی",
+        font=font,
+        command=lambda: koli(tel_all, txt_msg.get("0.0", END).strip())
+    ).pack(pady=10)
+
+    # تب افزودن دستی / فایل
+    manual_entry = CTkTextbox(tabs.tab("افزودن دستی / از فایل"), height=150, width=550, font=font_enry)
+    manual_entry.pack(pady=5)
+    CTkButton(
+        tabs.tab("افزودن دستی / از فایل"),
+        text="بارگذاری شماره‌ها از فایل",
+        font=font,
+        command=lambda: load_numbers_from_file(manual_entry)
+    ).pack(pady=5)
+    CTkButton(
+        tabs.tab("افزودن دستی / از فایل"),
+        text="ذخیره",
+        font=font,
+        command=lambda: handle_save_only(manual_entry.get("0.0", END))
+    ).pack(pady=10)
+
+
+    # دکمه بازگشت
+    CTkButton(parent_frame, text="بازگشت", fg_color="#C74949", hover_color='#B20000', font=font, command=dashbord).grid(row=5, column=0, pady=(5, 10))
+
+def settings_ui():
+    clear_frame()
+    frame_settings = CTkFrame(root, fg_color='#ffffff')
+    frame_settings.grid(row=1, column=0, rowspan=7, sticky=NSEW)
+    frame_settings.grid_columnconfigure(0, weight=1)
+    frame_settings.grid_rowconfigure(tuple(range(13)), weight=1)
+
+    # --- عنوان اصلی ---
+    CTkLabel(frame_settings, text="تنظیمات", font=CTkFont(family="Vazir", size=36, weight="bold"),
+             text_color="#333").grid(row=0, column=0, pady=10)
+
+    # --- فقط admin مجاز به تعریف کاربر جدید ---
+    if current_user == "admin":
+        CTkLabel(frame_settings, text="تعریف کاربر جدید", font=font, text_color="#222").grid(row=1, column=0, pady=(5, 0))
+
+        entry_username = CTkEntry(frame_settings, placeholder_text="نام کاربری")
+        entry_username.grid(row=2, column=0, padx=20, pady=5)
+
+        entry_password = CTkEntry(frame_settings, placeholder_text="رمز عبور", show="*")
+        entry_password.grid(row=3, column=0, padx=20, pady=5)
+
+        lbl_user_result = CTkLabel(frame_settings, text="", text_color="green")
+        lbl_user_result.grid(row=4, column=0, pady=5)
+
+        def add_user():
+            username = entry_username.get()
+            password = entry_password.get()
+            if username and password:
+                save_new_user(username, password)
+                lbl_user_result.configure(text="✅ کاربر جدید ثبت شد.", text_color="green")
+                entry_username.delete(0, "end")
+                entry_password.delete(0, "end")
+            else:
+                lbl_user_result.configure(text="⚠ لطفاً نام کاربری و رمز عبور را وارد کنید.", text_color="red")
+
+        btn_add_user = CTkButton(frame_settings, text="ثبت کاربر جدید", command=add_user, fg_color="#0066cc", hover_color="#005bb5")
+        btn_add_user.grid(row=5, column=0, pady=10)
+
+    # --- بخش تغییر رمز عبور ---
+    CTkLabel(frame_settings, text="تغییر رمز عبور", font=font, text_color="#222").grid(row=6, column=0, pady=(20, 5))
+
+    entry_old_pass = CTkEntry(frame_settings, placeholder_text="رمز فعلی", show="*")
+    entry_old_pass.grid(row=7, column=0, padx=20, pady=5)
+
+    entry_new_pass = CTkEntry(frame_settings, placeholder_text="رمز جدید", show="*")
+    entry_new_pass.grid(row=8, column=0, padx=20, pady=5)
+
+    lbl_pass_result = CTkLabel(frame_settings, text="", text_color="red")
+    lbl_pass_result.grid(row=9, column=0, pady=5)
+
+    def change_password():
+        old_pass = entry_old_pass.get()
+        new_pass = entry_new_pass.get()
+
+        global current_user
+        if current_user is None:
+            lbl_pass_result.configure(text="❌ کاربر شناسایی نشد!", text_color="red")
+            return
+
+        if old_pass and new_pass:
+            result = update_password(old_pass, new_pass, current_user)
+            if result:
+                lbl_pass_result.configure(text="✅ رمز با موفقیت تغییر کرد.", text_color="green")
+                entry_old_pass.delete(0, "end")
+                entry_new_pass.delete(0, "end")
+            else:
+                lbl_pass_result.configure(text="❌ رمز فعلی اشتباه است.", text_color="red")
+        else:
+            lbl_pass_result.configure(text="⚠ لطفا هر دو فیلد را پر کنید.", text_color="red")
+
+    btn_change_pass = CTkButton(frame_settings, text="تغییر رمز", command=change_password,
+                                fg_color="#009933", hover_color="#007a29")
+    btn_change_pass.grid(row=10, column=0, pady=10)
+
+    # --- دکمه بازگشت به داشبورد ---
+    btn_back = CTkButton(frame_settings, text="بازگشت", command=dashbord,
+                         fg_color="#aaaaaa", hover_color="#888888", text_color="black")
+    btn_back.grid(row=11, column=0, pady=10)
+
+
+def sms_settings_ui():
+    clear_frame()
+    frame_sms = CTkFrame(root, fg_color="#ffffff", corner_radius=20)
+    frame_sms.grid(row=1, column=0, rowspan=7, sticky=NSEW)
+    frame_sms.grid_columnconfigure(0, weight=1)
+    frame_sms.grid_rowconfigure(tuple(range(6)), weight=1)
+
+    # --- عنوان اصلی ---
+    CTkLabel(
+        frame_sms,
+        text="تنظیم شماره ارسال پیامک",
+        font=CTkFont(family="Vazir", size=32, weight="bold"),
+        text_color="#222"
+    ).grid(row=0, column=0, pady=(40, 20))
+
+    # --- فیلد شماره ---
+    sender_var = customtkinter.StringVar(value=get_sender_number())
+
+    entry_sender = CTkEntry(
+        frame_sms,
+        textvariable=sender_var,
+        placeholder_text="مثلاً: 200060006069",
+        font=CTkFont(family="Vazir", size=20),
+        height=50,
+        width=300,
+        corner_radius=12,
+        border_width=2,
+        border_color="#cccccc"
+    )
+    entry_sender.grid(row=1, column=0, padx=40, pady=10)
+
+    # --- پیام وضعیت ---
+    lbl_sms_status = CTkLabel(frame_sms, text="", text_color="green", font=font)
+    lbl_sms_status.grid(row=2, column=0, pady=10)
+
+    # --- دکمه ذخیره ---
+    CTkButton(
+        frame_sms,
+        text="💾 ذخیره شماره",
+        command=lambda: save_number(),
+        fg_color="#00b894",
+        hover_color="#019170",
+        font=CTkFont(family="Vazir", size=18, weight="bold"),
+        text_color="white",
+        height=45,
+        corner_radius=12
+    ).grid(row=3, column=0, pady=20)
+
+    # --- دکمه بازگشت ---
+    CTkButton(
+        frame_sms,
+        text="⬅ بازگشت به داشبورد",
+        command=dashbord,
+        fg_color="#dfe6e9",
+        hover_color="#b2bec3",
+        font=CTkFont(family="Vazir", size=16),
+        text_color="black",
+        height=40,
+        corner_radius=12
+    ).grid(row=4, column=0, pady=10)
+
+    # --- تابع ذخیره شماره ---
+    def save_number():
+        number = sender_var.get().strip()
+        if number:
+            save_sender_number(number)
+            lbl_sms_status.configure(text="✅ شماره ذخیره شد.", text_color="green")
+        else:
+            lbl_sms_status.configure(text="⚠ لطفاً شماره را وارد کنید.", text_color="red")
 
 
 def tarikh_():
@@ -1059,6 +1231,7 @@ def show(data):
         chek_2.grid(row=1,column=0,)
 
 
+
 def login():
     far = CTkFrame(root)
     far.grid(row=1, column=0,rowspan=7, sticky=NSEW)    
@@ -1073,33 +1246,39 @@ def login():
     def create_table_admin():
         conn = sqlite3.connect('database/pz.db')
         cursor = conn.cursor()
-        conn.execute('''create table if not exists ADMIN
-                    (name_id INTEGER PRIMARY KEY,
-                    USER varchar(20) NOT NULL,
-                    PASSWORD varchar(20) NOT NULL)''')
-        admin = [('admin', '7070816')]
-        cursor.execute("SELECT MAX(name_id) FROM ADMIN")
+        conn.execute('''CREATE TABLE IF NOT EXISTS ADMIN
+                    (name_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    USER TEXT NOT NULL UNIQUE,
+                    PASSWORD TEXT NOT NULL)''')
+        cursor.execute("SELECT COUNT(*) FROM ADMIN")
         result = cursor.fetchone()
-        if result[0] == 1:
-            pass
-        else:
-            conn.executemany('INSERT INTO ADMIN(USER, PASSWORD) VALUES (?,?)', admin)
+        if result[0] == 0:
+            admin = [('admin', hash_password('7070816'))]
+            cursor.executemany('INSERT INTO ADMIN(USER, PASSWORD) VALUES (?,?)', admin)
         conn.commit()
         conn.close()
+
     
     def login_admin():
+        username = ent_user_login.get()
+        password = ent_password_login.get()
+        hashed_pass = hash_password(password)
+
         conn = sqlite3.connect('database/pz.db')
         cursor = conn.cursor()
-        for i in conn.execute('SELECT * FROM ADMIN'):
-            user = i[1]
-            password = i[2]
-        conn.commit()
+        cursor.execute("SELECT PASSWORD FROM ADMIN WHERE USER=?", (username,))
+        result = cursor.fetchone()
         conn.close()
-        if user == ent_user_login.get() and password == ent_password_login.get():
+
+        if result and result[0] == hashed_pass:
             dashbord()
-            return messagebox.showinfo("ورود به سیستم", ".با موفقیت وارد شدید")
+            messagebox.showinfo("ورود به سیستم", "با موفقیت وارد شدید.")
+            global current_user
+            current_user = username
+
         else:
-            return messagebox.showerror("مشکل", ".نام کاربری/رمز عبور نادرست است")
+            messagebox.showerror("مشکل", "نام کاربری یا رمز عبور نادرست است.")
+
     create_table_admin()
     
         
