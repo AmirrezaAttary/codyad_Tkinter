@@ -48,7 +48,7 @@ def validate_code_meli(code_meli):
 
 
 
-DARK_MODE = "light"
+DARK_MODE = "dark"
 customtkinter.set_appearance_mode(DARK_MODE)
 customtkinter.set_default_color_theme("dark-blue")
 
@@ -179,24 +179,24 @@ def close_window():
     
 def dashbord():
     clear_frame()
-    far = CTkFrame(root, fg_color='#ffffff')
+    far = CTkFrame(root)
     far.grid(row=1, column=0, rowspan=7, sticky=NSEW)    
     far.grid_columnconfigure(0, weight=1)
     far.grid_rowconfigure((0, 1, 2, 3, 4, 5, 6 ,7), weight=1)
 
-    bt_dashboard = customtkinter.CTkButton(far, text="پذیرش", height=60, font=font, fg_color="#d48afa", hover_color="#9d3ecc", command=paziresh_)
+    bt_dashboard = customtkinter.CTkButton(far, text="پذیرش", height=60, font=font,  command=paziresh_)
     bt_dashboard.grid(row=1, column=0, padx=20, pady=20)
 
-    bt_sms = customtkinter.CTkButton(far, text="ارسال پیامک", height=60, font=font, fg_color="#d48afa", hover_color="#9d3ecc", command=send_sms_ui)
+    bt_sms = customtkinter.CTkButton(far, text="ارسال پیامک", height=60, font=font,  command=send_sms_ui)
     bt_sms.grid(row=2, column=0, padx=20, pady=20)
 
-    bt_tarikh = customtkinter.CTkButton(far, text="تاریخچه", height=60, font=font, fg_color="#d48afa", hover_color="#9d3ecc", command=tarikh_)
+    bt_tarikh = customtkinter.CTkButton(far, text="تاریخچه", height=60, font=font,  command=tarikh_)
     bt_tarikh.grid(row=3, column=0, padx=20, pady=20)
 
-    bt_settings = customtkinter.CTkButton(far, text="تنظیمات", height=60, font=font, fg_color="#d48afa", hover_color="#9d3ecc", command=settings_ui)
+    bt_settings = customtkinter.CTkButton(far, text="تنظیمات", height=60, font=font,  command=settings_ui)
     bt_settings.grid(row=4, column=0, padx=20, pady=20)
     
-    bt_settings_sms = customtkinter.CTkButton(far, text="تنظیمات اس‌ام‌اس", height=60, font=font, fg_color="#d48afa", hover_color="#9d3ecc", command=sms_settings_ui)
+    bt_settings_sms = customtkinter.CTkButton(far, text="تنظیمات اس‌ام‌اس", height=60, font=font,  command=sms_settings_ui)
     bt_settings_sms.grid(row=5, column=0, padx=20, pady=20)
 
     btn_quit = customtkinter.CTkButton(far, text="خروج", height=60, fg_color="#C74949", hover_color='#B20000', font=font, command=close_window)
@@ -332,7 +332,7 @@ def paziresh_():
             
         
         
-    far_2 = CTkFrame(root,fg_color="#edcbff",)
+    far_2 = CTkFrame(root,)
     far_2.grid(row=1, column=0,rowspan=7, sticky=NSEW)    
     far_2.grid_columnconfigure((0,1,2,3,4,5), weight=1)
     far_2.grid_rowconfigure((0, 1, 2, 3), weight=1)
@@ -365,7 +365,7 @@ def paziresh_():
     ent_departure_date = CTkEntry(far_2,font=font_enry)
     ent_departure_date.grid(row=0, column=0,pady=5)
     #########################################################################################
-    frame_top = CTkFrame(far_2,fg_color="#e0a7ff")
+    frame_top = CTkFrame(far_2,)
     frame_top.grid(row=2,column=0,columnspan=6,rowspan=3,sticky=NSEW) 
     frame_top.grid_columnconfigure((0,1,2,3,4,5),weight=1)
     frame_top.grid_rowconfigure((0,1),weight=1)
@@ -389,7 +389,7 @@ def paziresh_():
     #########################################################################
     lbl_2 = CTkLabel(far_2, text="مشخصات مالک",font=font)
     lbl_2.grid(row=5,column=5,sticky=E,padx=10)
-    frame_down = CTkFrame(far_2,fg_color="#e0a7ff")
+    frame_down = CTkFrame(far_2,)
     frame_down.grid(row=6,column=0,columnspan=6,rowspan=3,sticky=NSEW) 
     frame_down.grid_columnconfigure((0,1,2,3,4,5),weight=1)
     frame_down.grid_rowconfigure((0,1),weight=1)
@@ -417,7 +417,7 @@ def paziresh_():
     #############################################################################
     lbl_3 = CTkLabel(far_2, text="مشخصات مشکل",font=font)
     lbl_3.grid(row=9,column=5,sticky=E,padx=10)
-    frame_moshkel = CTkFrame(far_2,fg_color="#e0a7ff")
+    frame_moshkel = CTkFrame(far_2,)
     frame_moshkel.grid(row=10,column=0,columnspan=6,rowspan=3,sticky=NSEW) 
     frame_moshkel.grid_columnconfigure((0,1,2,3,4),weight=1)
     frame_moshkel.grid_rowconfigure((0,1,2),weight=1)
@@ -472,7 +472,7 @@ def send_sms_ui():
     con.close()
     tel_all = tel_dakheli + tel_afzode
 
-    parent_frame = CTkFrame(root, fg_color='#edcbff')
+    parent_frame = CTkFrame(root, )
     parent_frame.grid(row=1, column=0, rowspan=7, sticky=NSEW)
     parent_frame.grid_columnconfigure(0, weight=1)
     parent_frame.grid_rowconfigure((1,2,3,4,5,6,7), weight=1)
@@ -570,7 +570,7 @@ def send_sms_ui():
 
 def settings_ui():
     clear_frame()
-    frame_settings = CTkFrame(root, fg_color='#ffffff')
+    frame_settings = CTkFrame(root, )
     frame_settings.grid(row=1, column=0, rowspan=7, sticky=NSEW)
     frame_settings.grid_columnconfigure(0, weight=1)
     frame_settings.grid_rowconfigure(tuple(range(13)), weight=1)
@@ -644,13 +644,13 @@ def settings_ui():
 
     # --- دکمه بازگشت به داشبورد ---
     btn_back = CTkButton(frame_settings, text="بازگشت", command=dashbord,
-                         fg_color="#aaaaaa", hover_color="#888888", text_color="black")
+                         fg_color="#cc5050", hover_color="#D61010", text_color="black")
     btn_back.grid(row=11, column=0, pady=10)
 
 
 def sms_settings_ui():
     clear_frame()
-    frame_sms = CTkFrame(root, fg_color="#ffffff", corner_radius=20)
+    frame_sms = CTkFrame(root,  corner_radius=20)
     frame_sms.grid(row=1, column=0, rowspan=7, sticky=NSEW)
     frame_sms.grid_columnconfigure(0, weight=1)
     frame_sms.grid_rowconfigure(tuple(range(6)), weight=1)
@@ -879,19 +879,19 @@ def tarikh_():
         con.commit()
         con.close()
     
-    far_4 = CTkFrame(root,fg_color="#d48afa",)
+    far_4 = CTkFrame(root,)
     far_4.grid(row=1, column=0,rowspan=7, sticky=NSEW)    
     far_4.grid_columnconfigure(0, weight=1)
     far_4.grid_rowconfigure((0, 1, 2, 3), weight=0)
     far_4.grid_rowconfigure((4, 5, 6, 7), weight=1)
     bt_from_frame3 = customtkinter.CTkButton(far_4, text="بازگشت",font=font, command=dashbord)
     bt_from_frame3.grid(row=7, column=0, padx=20, pady=(10, 0))
-    farame_garanti = CTkFrame(far_4,fg_color="#edcbff")
+    farame_garanti = CTkFrame(far_4,)
     farame_garanti.grid(row=0, column=0,rowspan=7, sticky=NSEW,padx=20,pady=20)
     farame_garanti.grid_columnconfigure(0, weight=1)
     farame_garanti.grid_rowconfigure((0, 1, 2, 3), weight=1)
     
-    tab_view = CTkTabview(farame_garanti,fg_color="#d48afa")
+    tab_view = CTkTabview(farame_garanti,)
     tab_view.grid(row=0,rowspan=4, column=0, padx=20, pady=20,sticky=NSEW)
     tab_view.add("تعمیر درحال")
     tab_view.add("سفارش همه")
@@ -903,7 +903,7 @@ def tarikh_():
     tab_view.tab("تحویل آماده").grid_rowconfigure((0, 1, 2, 3, 4), weight=1)
     tab_view.tab("تحویل آماده").grid_columnconfigure((0), weight=1)
     ################################################################################
-    search_frame = CTkFrame(tab_view.tab("تعمیر درحال"),fg_color="#d48afa")
+    search_frame = CTkFrame(tab_view.tab("تعمیر درحال"),)
     search_frame.grid(row=0, column=0,padx=20,sticky=E)
     search_frame.grid_columnconfigure((0, 1, 2, 3), weight=1)
     search_frame.grid_rowconfigure(0,weight=1)
@@ -914,7 +914,7 @@ def tarikh_():
     search_btn = CTkButton(search_frame,text="جستوجو",font=font,command=search)
     search_btn.grid(row=0, column=1,padx=20,sticky=E)
     ##########################################################################
-    search_frame_2 = CTkFrame(tab_view.tab("سفارش همه"),fg_color="#d48afa")
+    search_frame_2 = CTkFrame(tab_view.tab("سفارش همه"),)
     search_frame_2.grid(row=0, column=0,padx=20,sticky=E)
     search_frame_2.grid_columnconfigure((0, 1, 2, 3), weight=1)
     search_frame_2.grid_rowconfigure(0,weight=1)
@@ -925,7 +925,7 @@ def tarikh_():
     search_btn_2 = CTkButton(search_frame_2,text="جستوجو",font=font,command=search_2)
     search_btn_2.grid(row=0, column=1,padx=20,sticky=E)
     ################################################################################
-    search_frame_3 = CTkFrame(tab_view.tab("تحویل آماده"),fg_color="#d48afa")
+    search_frame_3 = CTkFrame(tab_view.tab("تحویل آماده"),)
     search_frame_3.grid(row=0, column=0,padx=20,sticky=E)
     search_frame_3.grid_columnconfigure((0, 1, 2, 3), weight=1)
     search_frame_3.grid_rowconfigure(0,weight=1)
@@ -1298,10 +1298,10 @@ def login():
     btn_login.grid(row=4, column=1, padx=20, pady=0)
     
     
-login()
+# login()
 # paziresh_()
 # tarikh_()
-# dashbord()
+dashbord()
 # show(1)
 # send_sms()
 
